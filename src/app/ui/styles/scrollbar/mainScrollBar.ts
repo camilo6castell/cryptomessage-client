@@ -1,0 +1,23 @@
+import { css } from 'styled-components';
+
+export const mainScrollBar = css`
+  &&::-webkit-scrollbar {
+    width: var(--scroll-bar-size);
+  }
+
+  &&::-webkit-scrollbar-track {
+    background: var(--scroll-bar-track-color);
+    border-radius: var(--scroll-bar-radius);
+  }
+
+  &&::-webkit-scrollbar-thumb {
+    background: var(--scroll-bar-color);
+    border-radius: var(--scroll-bar-radius);
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    body {
+      scrollbar-color: var(--scroll-bar-color) var(--scroll-bar-track-color);
+    }
+  }
+`;
