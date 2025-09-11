@@ -1,12 +1,12 @@
-import { createGlobalStyle } from 'styled-components';
+import { css } from 'styled-components';
 
-export const Reset = createGlobalStyle`
-    * {
-
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+export const Reset = css`
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
 
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -61,18 +61,5 @@ export const Reset = createGlobalStyle`
 
         border-collapse: collapse;
         border-spacing: 0;
-    }
-
-    /* MINE */
-
-    html {
-        /* overflow: hidden; */
-        background-color: var(--main-background-color);
-    }
-
-    html, body, #root {
-        scroll-behavior: smooth;
-        width: 100dvw;
-        height: 100dvh;
     }
   `;

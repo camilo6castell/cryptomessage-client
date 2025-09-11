@@ -29,7 +29,9 @@ const StyledUserInfoAux = styled.div`
   overflow-y: scroll;
 
   background-color: var(--aux-background-color);
-
+  
+  border: 1px solid #ffff;
+  border-radius: 0 1rem 0 0;
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -45,6 +47,7 @@ const StyledUserInfoAux = styled.div`
     font-weight: 400;
     margin-bottom: 1rem;
     line-height: 1.5;
+    word-break: break-all;
   }
 
   width: 100%;

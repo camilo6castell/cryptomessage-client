@@ -72,6 +72,9 @@ const StyledUserInfoAux = styled.div`
 
   background-color: var(--aux-background-color);
 
+  border: 1px solid #ffff;
+  border-radius: 0 1rem 0 0;
+
   h1 {
     font-size: 2.5rem;
     font-weight: 700;

@@ -36,4 +36,7 @@ const StyledUserInfoAux = styled.div`
   overflow-y: hidden;
 
   background-color: var(--aux-background-color);
+
+  border: 1px solid #ffff;
+  border-radius: 0 1rem 0 0;
 `;

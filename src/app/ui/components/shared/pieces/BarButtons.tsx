@@ -20,7 +20,6 @@ export const BarButtons = (): ReactElement => {
     <StyledBarButtons>
       <BarButton
         isFor={MainComponentsEnum.ContactList}
-        cssClass="react-icons contact-list "
         onClick={() => {
           dispatch({
             type: Actions.SetMainState,
@@ -38,7 +37,6 @@ export const BarButtons = (): ReactElement => {
 
       <BarButton
         isFor={MainComponentsEnum.ChatList}
-        cssClass="react-icons chat-list "
         onClick={() => {
           dispatch({
             type: Actions.SetMainState,
@@ -56,7 +54,6 @@ export const BarButtons = (): ReactElement => {
 
       <BarButton
         isFor={MainComponentsEnum.UserInfo}
-        cssClass="react-icons user-info "
         onClick={() => {
           dispatch({
             type: Actions.SetMainState,
@@ -80,7 +77,11 @@ const StyledBarButtons = styled.div`
   align-items: center;
   justify-content: space-around;
 
-  height: 100%;
-  width: 100%;
-  margin: 0 2.5rem;
+  height: 70%;
+  width: 40%;
+  margin: 0;
+
+  border: 1px solid #ffffff;
+  border-radius: 1rem;
+  background-color: rgba(49, 46, 0, 0.318);
 `;

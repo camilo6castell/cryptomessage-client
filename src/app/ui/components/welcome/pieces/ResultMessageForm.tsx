@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { colorMap } from '../../../styles/maps/ColorMap.map';
-import { colorTextAnimation } from '../../../styles/keyframes/colorTextAnimation';
+import { colorTextAnimation } from '../../../styles/keyframes';
 import { IMessageForm } from '../../../../core/models/ui/IMessageForm.model';
 
 export const ResultMessageForm = ({

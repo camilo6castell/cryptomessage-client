@@ -9,7 +9,7 @@ export const UserInfoContainer = (): ReactElement => {
   const { state } = useContext(AppContext);
   return (
     <>
-      <MainBar>
+      <MainBar isMain={true}>
         <Logo />
         <BarButtons />
       </MainBar>

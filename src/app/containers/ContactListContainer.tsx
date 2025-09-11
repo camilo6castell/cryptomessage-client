@@ -11,7 +11,7 @@ export const ContactListContainer = (): ReactElement => {
   const { deleteContact } = useDeleteContact();
   return (
     <>
-      <MainBar>
+      <MainBar isMain={true}>
         <Logo />
         <BarButtons />
       </MainBar>

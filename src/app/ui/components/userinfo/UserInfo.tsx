@@ -31,6 +31,9 @@ const StyledUserInfo = styled.div`
   justify-content: center;
   align-items: center;
 
+  border-radius: 1rem 0 0 0;
+  border: 1px solid #ffffff;
+
   width: 100%;
   height: var(--section-under-mainbar);
 

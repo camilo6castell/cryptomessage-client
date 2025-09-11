@@ -35,4 +35,7 @@ const StyledContactList = styled.div`
 
   width: 100%;
   height: var(--section-under-mainbar);
+
+  border-radius: 1rem 0 0 0;
+  border: 1px solid #ffffff;
 `;
