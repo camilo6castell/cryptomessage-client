@@ -1,3 +1,94 @@
+src/app
+├── core                # dominio + infraestructura
+│   ├── api             # comunicación backend (nuevo)
+│   ├── crypto          # cifrado/descifrado (extraer lógica)
+│   ├── hooks           # hooks de dominio
+│   ├── models          # interfaces y enums
+│   ├── services        # storage, http, auth
+│   └── state           # context + reducer
+│
+├── features            # casos de uso (nuevo)
+│   ├── auth
+│   ├── chats
+│   ├── contacts
+│   └── messages
+│
+├── pages               # rutas
+├── routes              # guards + router
+├── ui                  # puro presentacional
+└── environment
+
+
+core/
+├── api
+│   ├── auth.api.ts
+│   ├── users.api.ts
+│   ├── chats.api.ts
+│   └── messages.api.ts
+│
+├── hooks
+│   ├── useAuth.ts
+│   ├── useChats.ts
+│   └── useMessages.ts
+│
+├── models
+│   ├── api
+│   └── domain
+│
+└── services
+    ├── http.service.ts
+    └── storage.service.ts
+
+******
+
+Falta crítica: capa API explícita ⚠️
+
+Ahora mismo:
+
+http.service.ts es muy genérico
+
+Los hooks hablan casi directo con endpoints
+
+Esto rompe el contrato frontend ↔ backend que dijiste que querías respetar.
+
+Solución correcta (y profesional)
+
+Crear /core/api/
+
+core/api
+├── auth.api.ts
+├── chats.api.ts
+├── messages.api.ts
+└── contacts.api.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
