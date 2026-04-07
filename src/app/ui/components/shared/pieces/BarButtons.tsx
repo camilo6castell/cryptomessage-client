@@ -7,7 +7,7 @@ import { IoIosHappy } from 'react-icons/io';
 import { TbMessageFilled } from 'react-icons/tb';
 import { RiContactsBook2Fill } from 'react-icons/ri';
 import { AppContext } from '../../../../core/state/AppContext';
-import { StorageService } from '../../../../core/services/general/storage.service';
+import { StorageService } from '../../../../core/services/storage.service';
 import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 

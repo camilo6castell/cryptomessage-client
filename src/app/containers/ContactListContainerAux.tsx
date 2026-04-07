@@ -1,111 +1,72 @@
+// src/app/containers/ContactListContainerAux.tsx
 import { ReactElement, useContext, useState } from 'react';
 import { MainBar } from '../ui/components/shared/MainBar.tsx';
 import { ContactListAux } from '../ui/components/contactlist/ContactListAux.tsx';
 import { SearchBox } from '../ui/components/contactlist/pieces/SearchBox.tsx';
 import { useHandleInput } from '../core/hooks/useHandleInput';
-import httpService from '../core/services/general/http.service';
-import urls from '../core/resources/url.resource.ts';
-import {
-  IContact,
-  initialContact,
-} from '../core/models/main/IContact.model.ts';
-import { ElementStyles } from '../core/models/enums/ElementStyles.enum.ts';
 
+import { IContact, initialContact } from '../core/models/main/IContact.model.ts';
+import { ElementStyles } from '../core/models/enums/ElementStyles.enum.ts';
 import { AppContext } from '../core/state/AppContext.tsx';
-import {
-  IMessageForm,
-  initialMessageForm,
-} from '../core/models/ui/IMessageForm.model.ts';
-import {
-  IContactSearchFormResponse,
-  initialContactSearchForm,
-} from '../core/models/ui/IContactSearchForm.model.ts';
+import { IMessageForm, initialMessageForm } from '../core/models/ui/IMessageForm.model.ts';
+import { initialContactSearchForm } from '../core/models/ui/IContactSearchForm.model.ts';
 import { Actions } from '../core/models/enums/Actions.enum.ts';
+import { ApiError } from '../core/errors/ApiError.ts';
+import { contactsApi } from '../core/api/contacts.api.ts';
 
 export const ContactListContainerAux = (): ReactElement => {
-  // CONTEXT
   const { state, dispatch } = useContext(AppContext);
-
-  //SEARCH
   const [isContact, setIsContact] = useState<IContact>(initialContact);
-
-  // SEARCH CONTACT FORM
+  const [messageForm, setMessageForm] = useState<IMessageForm>(initialMessageForm);
   const { form, handleInput, resetForm } = useHandleInput(
     initialContactSearchForm as unknown as Record<string, string>,
   );
 
-  // MESSAGE FORM
-  const [messageForm, setMessageForm] =
-    useState<IMessageForm>(initialMessageForm);
-
-  // SEARCH CONTACT HANDLESUBMIT
-  const handleSearchContactSubmit = (
+  // ── Buscar contacto ──────────────────────────────────────────
+  const handleSearchContactSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
-  ): void => {
+  ): Promise<void> => {
     e.preventDefault();
     setIsContact(initialContact);
     setMessageForm(initialMessageForm);
-    console.log('form:', form);
-    httpService
-      .post(urls.searchContact, form)
-      .then((response) => {
-        console.log(response);
-        const { status, data } = response as IContactSearchFormResponse;
-        if (status === 200) {
-          if (data!.username !== state.user.username) {
-            setIsContact(data!);
-            setMessageForm({
-              style: ElementStyles.Success,
-              message: 'Se encontró el siguiente resultado',
-            });
-          } else {
-            setMessageForm({
-              style: ElementStyles.Danger,
-              message: 'No se encontraron resultados',
-            });
-          }
-        } else if (status === 404) {
-          setMessageForm({
-            style: ElementStyles.Danger,
-            message: 'No se encontraron resultados',
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
 
-    resetForm();
+    try {
+      const data = await contactsApi.search(form.username);
+
+      if (data.username === state.user.username) {
+        setMessageForm({ style: ElementStyles.Danger, message: 'No se encontraron resultados' });
+      } else {
+        setIsContact({ contactId: data.contactId, username: data.username, publicKey: data.publicKey, addedAt: null });
+        setMessageForm({ style: ElementStyles.Success, message: 'Se encontró el siguiente resultado' });
+      }
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) {
+        setMessageForm({ style: ElementStyles.Danger, message: 'No se encontraron resultados' });
+      } else {
+        setMessageForm({ style: ElementStyles.Danger, message: 'Error al buscar contacto' });
+      }
+    } finally {
+      resetForm();
+    }
   };
 
-  // // ADD CONTACT STATE
-
-  // const [idContact, setIdContact] = useState<number | null>(isContact.contactId);
-
-  // ADD CONTACT HANDLESUBMIT
-
-  const handleAddContactSubmit = (
+  // ── Agregar contacto ─────────────────────────────────────────
+  const handleAddContactSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
-  ): void => {
+  ): Promise<void> => {
     e.preventDefault();
-    httpService
-      .post(urls.addContact, {
-        contactId: isContact.contactId,
-        appUserId: state.user.userId,
-      })
-      .then((response) => {
-        const { status } = response as IContactSearchFormResponse;
-        if (status === 201) {
-          dispatch({ type: Actions.AddContact, payload: isContact });
-        } else {
-          console.log('Error agregado contacto');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      await contactsApi.add(isContact.contactId!);
+      dispatch({ type: Actions.AddContact, payload: isContact });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        console.error(`Error agregando contacto: HTTP ${err.status}`, err.data);
+      } else {
+        console.error('Error agregando contacto:', err);
+      }
+    }
   };
-  // END HANDLESUBMIT
+
   return (
     <>
       <MainBar>

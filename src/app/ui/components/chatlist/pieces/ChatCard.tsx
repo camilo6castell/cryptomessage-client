@@ -1,112 +1,113 @@
+// src/app/ui/components/chatlist/pieces/ChatCard.tsx
 import { ReactElement, useContext } from 'react';
-
 import styled from 'styled-components';
 import { Avatar } from '../../../elements/Avatar';
 import { IChat } from '../../../../core/models/main/IChat.model';
 import { AppContext } from '../../../../core/state/AppContext';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
+import { useFirendlyDateFormat } from '../../../../core/hooks/useFirendlyDateFormat';
 
 export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
-  console.log(state);
-  console.log(chat);
 
-  const lastMessageStatusForUser = (): boolean => {
-    if (!chat.lastMessage) {
-      // No hay último mensaje, se considera como leído por defecto
-      return true;
-    }
+  // Con el nuevo modelo, participant ES el otro usuario — no hay ambigüedad
+  const otherUsername = chat.participant.username;
 
-    const isSender = chat.lastMessage.senderId === state.user.userId;
+  const isUnread =
+    chat.lastMessage !== null &&
+    chat.lastMessage.senderId !== state.user.userId &&
+    !chat.lastMessage.isRead;
 
-    // Si no es el remitente y el mensaje no ha sido leído, devolver false
-    return isSender || chat.lastMessage.isRead;
-  };
+  const lastMessagePreview = chat.lastMessage
+    ? '🔒 Mensaje cifrado'
+    : 'Sin mensajes aún';
+
+  const lastMessageTime = chat.lastMessage
+    ? useFirendlyDateFormat(chat.lastMessage.sentAt)  // lo usaremos como valor, no como hook
+    : '';
 
   return (
     <StyledChatCard
-      $isRead={lastMessageStatusForUser()}
+      $isUnread={isUnread}
       onClick={() =>
         dispatch({ type: Actions.SetMainAuxChat, payload: chat.chatId })
       }
     >
-      <Avatar
-        username={
-          chat.participants[1].contactId! === state.user.userId
-            ? chat.participants[0].username!
-            : chat.participants[1].username!
-        }
-        size={50}
-        cssSide="5rem"
-      />
-      <div className="contact-card__details">
-        <div className="contact-card__header">
-          <span className="contact-card__name">
-            {chat.participants[1].contactId! === state.user.userId
-              ? chat.participants[0].username!
-              : chat.participants[1].username!}
-          </span>
-          <span className="contact-card__time">10:45 AM</span>
+      <Avatar username={otherUsername} size={50} cssSide="3rem" />
+      <div className="card__details">
+        <div className="card__header">
+          <span className="card__name">{otherUsername}</span>
+          {chat.lastMessage && (
+            <span className="card__time">
+              {chat.lastMessage.sentAt
+                ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+                : ''}
+            </span>
+          )}
         </div>
-        <div className="contact-card__message">
-          This is a preview of the last message...
-        </div>
+        <div className="card__preview">{lastMessagePreview}</div>
+        {chat.status === 'PENDING' && (
+          <span className="card__status-badge">Pendiente</span>
+        )}
       </div>
     </StyledChatCard>
   );
 };
 
-const StyledChatCard = styled.div<{ $isRead: boolean }>`
+const StyledChatCard = styled.div<{ $isUnread: boolean }>`
   display: flex;
   align-items: center;
-  padding: 10px;
-  margin-bottom: 0.5rem;
-  background-color: ${({ $isRead }): string =>
-    $isRead ? '#201f1f' : '#a95b5b'};
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.4rem;
+  background-color: ${({ $isUnread }) => ($isUnread ? '#3a1f1f' : '#201f1f')};
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s;
 
   &:hover {
-    cursor: pointer;
+    background-color: #2a2a2a;
   }
 
-  .contact-card__image {
-    width: 50px;
-
-    border-radius: 50%;
-    margin-right: 10px;
-    aspect-ratio: 1/1;
-  }
-
-  .contact-card__details {
+  .card__details {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 
-  .contact-card__header {
+  .card__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .contact-card__name {
-    font-weight: bold;
-    font-size: 16px;
+  .card__name {
+    font-weight: 700;
+    font-size: 0.95rem;
   }
 
-  .contact-card__time {
-    font-size: 12px;
-    color: #999999;
+  .card__time {
+    font-size: 0.7rem;
+    color: #999;
+    white-space: nowrap;
   }
 
-  .contact-card__message {
-    font-size: 14px;
-    color: #666666;
+  .card__preview {
+    font-size: 0.82rem;
+    color: #888;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-top: 0.2rem;
+  }
+
+  .card__status-badge {
+    font-size: 0.7rem;
+    color: var(--warning-color);
+    margin-top: 0.2rem;
   }
 `;

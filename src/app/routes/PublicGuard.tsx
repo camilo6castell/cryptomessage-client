@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { IReactElementChildrenProps } from '../core/models/reactElementChildren.model';
 import { Navigate } from 'react-router-dom';
 
-import { StorageService } from '../core/services/general/storage.service';
+import { StorageService } from '../core/services/storage.service';
 
 export const PublicGuard = ({
   children,

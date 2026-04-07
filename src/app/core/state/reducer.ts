@@ -87,19 +87,19 @@ const useCases: {
       chats: state.user.chats.map((chat) =>
         chat.chatId === payload.chatId
           ? {
-              ...chat,
-              messages: chat.messages
-                .map((message) =>
-                  message.messageId === payload.messageId
-                    ? { ...message, isRead: true }
-                    : message,
-                )
-                .sort((a, b) => a.messageId - b.messageId),
-              lastMessage:
-                chat.lastMessage.messageId === payload.messageId
-                  ? { ...chat.lastMessage, isRead: true }
-                  : chat.lastMessage,
-            }
+            ...chat,
+            messages: chat.messages
+              .map((message) =>
+                message.messageId === payload.messageId
+                  ? { ...message, isRead: true }
+                  : message,
+              )
+              .sort((a, b) => a.messageId - b.messageId),
+            lastMessage:
+              chat.lastMessage?.messageId === payload.messageId
+                ? { ...chat.lastMessage, isRead: true }
+                : chat.lastMessage,
+          }
           : chat,
       ),
     },
@@ -114,14 +114,4 @@ export const reducer = (
   return useCases[action.type](state, action.payload) || state;
 };
 
-// PARA OTROS CASOS
-// esto es un ejemplo de como se puede hacer un reducer con varios casos de varias entidades
-// import { userCases, userInitialState } from './user';
-// import { otherCases, otherInitialState } from './other';
 
-// export const userInitialState = {... userInitialState. ... otherInitialState};
-
-// export const reducer = (state: any, action: {type: string | number; payload: any;}) => {
-//   const cases = {...userCases, ...otherCases};
-//   return cases[action.type](state, action.payload) || state;
-// };

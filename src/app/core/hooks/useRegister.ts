@@ -1,73 +1,56 @@
+// src/app/core/hooks/useRegister.ts
 import { useState } from 'react';
-import http from '../../core/services/general/http.service';
-import urls from '../../core/resources/url.resource.ts';
-import { useHandleInput } from '../../core/hooks/useHandleInput';
-import {
-  IMessageForm,
-  initialMessageForm,
-} from '../../core/models/ui/IMessageForm.model.ts';
-import { ElementStyles } from '../../core/models/enums/ElementStyles.enum.ts';
-import {
-  IGatewayRegisterFormResponse,
-  initialGatewayForm,
-} from '../../core/models/ui/IGatewayForm.model.ts';
 
-export const useRegister = (): {
-  form: Record<string, string>;
-  handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  messageForm: IMessageForm;
-} => {
-  const [messageForm, setMessageForm] =
-    useState<IMessageForm>(initialMessageForm);
+import { useHandleInput } from './useHandleInput';
+import { authApi } from '../api/auth.api';
+import { ConflictError } from '../errors/ConflictError';
+import { ApiError } from '../errors/ApiError';
+import { ElementStyles } from '../models/enums/ElementStyles.enum';
+
+import type { IMessageForm } from '../models/ui/IMessageForm.model';
+import { initialMessageForm } from '../models/ui/IMessageForm.model';
+import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
+
+export const useRegister = () => {
+  const [messageForm, setMessageForm] = useState<IMessageForm>(initialMessageForm);
   const { form, handleInput, resetForm } = useHandleInput(
     initialGatewayForm as unknown as Record<string, string>,
   );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    http
-      .post(urls.register, form)
-      .then((response) => {
-        const { status } = response as IGatewayRegisterFormResponse;
+    try {
+      await authApi.register({
+        username: form.username,
+        passphrase: form.passphrase,
+      });
 
-        switch (status) {
-          case 201:
-            setMessageForm({
-              style: ElementStyles.Success,
-              message: 'Usuario creado exitosamente.',
-            });
-            break;
+      setMessageForm({
+        style: ElementStyles.Success,
+        message: 'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
+      });
+      resetForm();
 
-          case 409:
-            setMessageForm({
-              style: ElementStyles.Warning,
-              message: 'Usuario restringido. Intenta con otro',
-            });
-            break;
-
-          default:
-            setMessageForm({
-              style: ElementStyles.Warning,
-              message: `Error desde el servidor. CODE: ${status}`,
-            });
-        }
-        resetForm();
-      })
-      .catch((error) => {
-        console.error('Error desconocido:', error);
+    } catch (err) {
+      if (err instanceof ConflictError) {
+        setMessageForm({
+          style: ElementStyles.Warning,
+          message: 'Ese nombre de usuario ya existe. Intenta con otro.',
+        });
+      } else if (err instanceof ApiError) {
+        setMessageForm({
+          style: ElementStyles.Warning,
+          message: `Error del servidor (${err.status})`,
+        });
+      } else {
         setMessageForm({
           style: ElementStyles.Danger,
-          message: 'Error de conexión o servidor',
+          message: 'Error de conexión',
         });
-      });
+      }
+    }
   };
 
-  return {
-    form,
-    handleInput,
-    handleSubmit,
-    messageForm,
-  };
+  return { form, handleInput, handleSubmit, messageForm };
 };

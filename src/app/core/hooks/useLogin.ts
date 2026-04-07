@@ -1,110 +1,90 @@
+// src/app/core/hooks/useLogin.ts
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { AppContext } from '../state/AppContext';
-import { useHandleInput } from './useHandleInput';
-import {
-  IMessageForm,
-  initialMessageForm,
-} from '../models/ui/IMessageForm.model';
-import {
-  IGatewayLoginFormResponse,
-  initialGatewayForm,
-} from '../models/ui/IGatewayForm.model';
-import httpService from '../services/general/http.service';
-import { ElementStyles } from '../models/enums/ElementStyles.enum';
 import { Actions } from '../models/enums/Actions.enum';
-import { StorageService } from '../services/general/storage.service';
-import urls from '../../core/resources/url.resource';
-import loadUserMap from '../mappers/loadUser.map';
+import { ElementStyles } from '../models/enums/ElementStyles.enum';
+import { useHandleInput } from './useHandleInput';
+import { authApi } from '../api/auth.api';
+import { contactsApi } from '../api/contacts.api';
+import { chatsApi } from '../api/chats.api';
+import { StorageService } from '../services/storage.service';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
+import { ApiError } from '../errors/ApiError';
+import { mapLoginToUser, mapContact, mapChat } from '../mappers/loadUser.map';
 
-export const useLogin = (): {
-  form: Record<string, string>;
-  handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  submitHandler: (e: React.FormEvent<HTMLFormElement>) => void;
-  messageForm: IMessageForm;
-} => {
-  // NAVIGATION
+import type { IMessageForm } from '../models/ui/IMessageForm.model';
+import { initialMessageForm } from '../models/ui/IMessageForm.model';
+import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
+
+const storage = new StorageService();
+
+export const useLogin = () => {
   const navigate = useNavigate();
-  // END NAVIGATION
-
-  // MESSAGE FORM
-  const [messageForm, setMessageForm] =
-    useState<IMessageForm>(initialMessageForm);
-  // END MESSAGE FORM
-
-  // CONTEXT
   const { dispatch } = useContext(AppContext);
-  // END CONTEXT
-
-  // FORM
+  const [messageForm, setMessageForm] = useState<IMessageForm>(initialMessageForm);
   const { form, handleInput, resetForm } = useHandleInput(
     initialGatewayForm as unknown as Record<string, string>,
   );
-  // END FORM
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    httpService
-      .post(urls.authenticate, form)
-      .then((response) => {
-        const { status, data } = response as IGatewayLoginFormResponse;
+    try {
+      // 1. Login — obtenemos token y datos base del usuario
+      const loginData = await authApi.login({
+        username: form.username,
+        passphrase: form.passphrase,
+      });
 
-        switch (status) {
-          case 200: {
-            setMessageForm({
-              style: ElementStyles.Success,
-              message: 'Inicio de sesión exitoso',
-            });
-            const storageService = new StorageService();
-            storageService.set<string>('TOKEN', data!.token);
+      storage.set('TOKEN', loginData.token);
+      storage.set('ENCRYPTED_PRIVATE_KEY', loginData.encryptedPrivateKey);
 
-            dispatch({
-              type: Actions.LoadUser,
-              payload: loadUserMap.toModel(data!),
-            });
-            resetForm();
-            navigate('/');
-            break;
-          }
+      // 2. Cargar usuario base en el estado
+      dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
 
-          case 404:
-            setMessageForm({
-              style: ElementStyles.Danger,
-              message: `Usuario no encontrado. ${status}`,
-            });
-            break;
+      // 3. Cargar contactos y chats en paralelo
+      const [contacts, chats] = await Promise.all([
+        contactsApi.list(),
+        chatsApi.list(),
+      ]);
 
-          case 401:
-            setMessageForm({
-              style: ElementStyles.Danger,
-              message: `Información incorrecta. ${status}`,
-            });
-            break;
+      contacts.forEach(c =>
+        dispatch({ type: Actions.AddContact, payload: mapContact(c) })
+      );
 
-          default:
-            setMessageForm({
-              style: ElementStyles.Warning,
-              message: `Falla desconocida, contacte al desarrollador. ${status}`,
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
+      chats.forEach(c =>
+        dispatch({ type: Actions.AddChat, payload: mapChat(c) })
+      );
+
+      setMessageForm({
+        style: ElementStyles.Success,
+        message: 'Inicio de sesión exitoso',
+      });
+
+      resetForm();
+      navigate('/');
+
+    } catch (err) {
+      if (err instanceof UnauthorizedError) {
         setMessageForm({
           style: ElementStyles.Danger,
-          message: 'Error de conexión o servidor',
+          message: 'Usuario o passphrase incorrectos',
         });
-      })
-      .finally(() => {
-        resetForm();
-      });
+      } else if (err instanceof ApiError) {
+        setMessageForm({
+          style: ElementStyles.Warning,
+          message: `Error del servidor (${err.status})`,
+        });
+      } else {
+        setMessageForm({
+          style: ElementStyles.Danger,
+          message: 'Error de conexión',
+        });
+      }
+    }
   };
 
-  return {
-    form,
-    handleInput,
-    submitHandler,
-    messageForm,
-  };
+  return { form, handleInput, submitHandler, messageForm };
 };
