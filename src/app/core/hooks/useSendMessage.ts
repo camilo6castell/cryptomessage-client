@@ -14,7 +14,7 @@ export const useSendMessage = (): {
 
   const sendMessage = async (
     chatId: number,
-    messageContent: string,
+    messageContent: string
   ): Promise<void> => {
     try {
       const newMessage = await httpClient.post<IMessage>(urls.messages.send, {

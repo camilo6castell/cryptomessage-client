@@ -14,7 +14,9 @@ import { mapContact, mapChat } from '../core/mappers/loadUser.map';
 
 const storage = new StorageService();
 
-export const PrivateGuard = ({ children }: IReactElementChildrenProps): ReactNode => {
+export const PrivateGuard = ({
+  children,
+}: IReactElementChildrenProps): ReactNode => {
   const { dispatch } = useContext(AppContext);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -49,22 +51,22 @@ export const PrivateGuard = ({ children }: IReactElementChildrenProps): ReactNod
           chatsApi.list(),
         ]);
 
-        contacts.forEach(c =>
+        contacts.forEach((c) =>
           dispatch({ type: Actions.AddContact, payload: mapContact(c) })
         );
 
-        chats.forEach(c =>
+        chats.forEach((c) =>
           dispatch({ type: Actions.AddChat, payload: mapChat(c) })
         );
 
         // 3. Restaurar o inicializar el estado de navegación
         const savedState = storage.get<MainComponentsEnum>('CURRENT');
         const mainState = savedState ?? MainComponentsEnum.ChatList;
-        if (savedState === null) storage.set('CURRENT', MainComponentsEnum.ChatList);
+        if (savedState === null)
+          storage.set('CURRENT', MainComponentsEnum.ChatList);
         dispatch({ type: Actions.SetMainState, payload: mainState });
 
         setIsAuthenticated(true);
-
       } catch {
         storage.remove('TOKEN');
         storage.remove('ENCRYPTED_PRIVATE_KEY');

@@ -18,7 +18,12 @@ export const BarButton = ({
 }: IBarButtonProps): ReactElement => {
   const { state } = useContext(AppContext);
   return (
-    <StyledBarButton onClick={onClick} className={(state.app.mainState === isFor ? 'active' : '')}>{children}</StyledBarButton>
+    <StyledBarButton
+      onClick={onClick}
+      className={state.app.mainState === isFor ? 'active' : ''}
+    >
+      {children}
+    </StyledBarButton>
   );
 };
 
@@ -28,7 +33,6 @@ const StyledBarButton = styled.div`
     color: #ffffff;
     background-color: rgba(255, 255, 255, 0);
 
-    
     font-size: 2rem;
     justify-content: center;
     align-items: center;
@@ -37,16 +41,15 @@ const StyledBarButton = styled.div`
     transition: all 0.3s;
     svg {
       vertical-align: top;
-      
     }
   }
   &:hover {
     background-color: #a3a3a35d;
-    box-shadow: 0px 0px 2px .6rem #a3a3a382;
+    box-shadow: 0px 0px 2px 0.6rem #a3a3a382;
   }
   &.active {
     /* animation: ${pulse('#a3a3a3')} .8s infinite; */
     background-color: #a3a3a35d;
-    box-shadow: 0px 0px 2px .6rem #a3a3a382;
+    box-shadow: 0px 0px 2px 0.6rem #a3a3a382;
   }
 `;

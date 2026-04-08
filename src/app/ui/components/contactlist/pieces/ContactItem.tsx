@@ -22,7 +22,7 @@ export const ContactItem = ({
 
   // Buscar chat existente por participant.userId === contact.contactId
   const existingChat = state.user.chats.find(
-    (c) => c.participant.userId === contact.contactId,
+    (c) => c.participant.userId === contact.contactId
   );
 
   return (

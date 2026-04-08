@@ -8,33 +8,31 @@ const base = `${API_BASE_URL}/api/v1`;
 
 // Lo que el backend devuelve para un chat
 export interface ChatApiResponse {
-    chatId: number;
-    status: ChatStatus;
-    participant: {
-        userId: number;
-        username: string;
-        publicKey: string;
-    };
-    createdAt: string;
+  chatId: number;
+  status: ChatStatus;
+  participant: {
+    userId: number;
+    username: string;
+    publicKey: string;
+  };
+  createdAt: string;
 }
 
 export const chatsApi = {
-    list: (status?: ChatStatus) => {
-        const url = status
-            ? `${base}/chats?status=${status}`
-            : `${base}/chats`;
-        return httpClient.get<ChatApiResponse[]>(url);
-    },
+  list: (status?: ChatStatus) => {
+    const url = status ? `${base}/chats?status=${status}` : `${base}/chats`;
+    return httpClient.get<ChatApiResponse[]>(url);
+  },
 
-    create: (username: string) =>
-        httpClient.post<ChatApiResponse>(`${base}/chats`, { username }),
+  create: (username: string) =>
+    httpClient.post<ChatApiResponse>(`${base}/chats`, { username }),
 
-    accept: (chatId: number) =>
-        httpClient.post<void>(`${base}/chats/${chatId}/accept`),
+  accept: (chatId: number) =>
+    httpClient.post<void>(`${base}/chats/${chatId}/accept`),
 
-    block: (chatId: number) =>
-        httpClient.post<void>(`${base}/chats/${chatId}/block`),
+  block: (chatId: number) =>
+    httpClient.post<void>(`${base}/chats/${chatId}/block`),
 
-    getMessages: (chatId: number) =>
-        httpClient.get<IMessage[]>(`${base}/messages/chat/${chatId}`),
+  getMessages: (chatId: number) =>
+    httpClient.get<IMessage[]>(`${base}/messages/chat/${chatId}`),
 };

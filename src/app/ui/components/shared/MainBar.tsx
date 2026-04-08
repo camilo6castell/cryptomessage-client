@@ -6,9 +6,7 @@ interface MainBarProps extends IReactElementChildrenProps {
   isMain?: boolean;
 }
 
-export const MainBar = ({
-  children, isMain
-}: MainBarProps): ReactElement => {
+export const MainBar = ({ children, isMain }: MainBarProps): ReactElement => {
   return <StyledMainBar $isMain={isMain}>{children}</StyledMainBar>;
 };
 
@@ -26,9 +24,8 @@ const StyledMainBar = styled.div<{ $isMain?: boolean }>`
   z-index: 1;
 
   border: 1px solid #ffff;
-  border-radius: ${props => (props.$isMain ? '0 0 0 1rem' : '0 0 1rem 0')};
+  border-radius: ${(props) => (props.$isMain ? '0 0 0 1rem' : '0 0 1rem 0')};
   box-shadow: 0px 0px 2px 2px var(--aux-background-color);
 
   transition: all 1s ease-in-out;
 `;
-

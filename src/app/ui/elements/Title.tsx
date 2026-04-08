@@ -1,37 +1,42 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 
-import { useDynamicHeightFontSize } from '../../core/hooks/useDynamicHeightFontSize';
-
 export const Title = ({
   textTitle,
-  heightTitle,
 }: {
   textTitle: string;
   heightTitle: number;
 }): ReactElement => {
-  const [titleRef, fontSize] = useDynamicHeightFontSize(0.25);
-
   return (
-    <StyledTitle ref={titleRef} $heightTitle={heightTitle} $fontSize={fontSize}>
+    <StyledTitle>
       <h1 className="myTitle">{textTitle}</h1>
+      <h2 className="mySubtitle">
+        Please fill-up this form to be able to use CryptoMessage.
+      </h2>
     </StyledTitle>
   );
 };
 
-const StyledTitle = styled.div<{
-  $heightTitle: number;
-  $fontSize: number;
-}>`
+const StyledTitle = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: ${({ $heightTitle }): number => $heightTitle}%;
-  width: 100%;
+
+  width: 20rem;
+
+  padding-bottom: 0.5rem;
 
   .myTitle {
-    font-size: ${({ $fontSize }): number =>
-      $fontSize < 35 ? 35 : $fontSize}px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+    padding-bottom: 1.5rem;
+  }
+  .mySubtitle {
+    font-size: 1rem;
+    font-weight: 400;
     margin: 0;
     text-align: center;
   }

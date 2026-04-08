@@ -11,7 +11,7 @@ export const useDecryptMessage = (
   messageId: number,
   senderId: number,
   shouldFetch: boolean,
-  setMessageWidth: (width: number) => void,
+  setMessageWidth: (width: number) => void
 ): { decryptedMessage: string; isLoading: boolean; error: string | null } => {
   const { state, dispatch } = useContext(AppContext);
   const [decryptedMessage, setDecryptedMessage] = useState<string>('');
@@ -30,7 +30,7 @@ export const useDecryptMessage = (
       try {
         // TODO: confirmar URL exacta cuando el endpoint de descifrado esté definido en el backend
         const data = await httpClient.get<IMessage>(
-          `${API_BASE_URL}/api/v1/messages/decrypt/${state.user.userId}/${messageId}`,
+          `${API_BASE_URL}/api/v1/messages/decrypt/${state.user.userId}/${messageId}`
         );
 
         if (!mounted) return;
@@ -57,8 +57,18 @@ export const useDecryptMessage = (
 
     void fetchDecrypted();
 
-    return () => { mounted = false; };
-  }, [chatId, messageId, senderId, shouldFetch, dispatch, setMessageWidth, state.user.userId]);
+    return () => {
+      mounted = false;
+    };
+  }, [
+    chatId,
+    messageId,
+    senderId,
+    shouldFetch,
+    dispatch,
+    setMessageWidth,
+    state.user.userId,
+  ]);
 
   return { decryptedMessage, isLoading, error };
 };

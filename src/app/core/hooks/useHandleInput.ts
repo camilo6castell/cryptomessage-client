@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IUseHandleInput } from '../models/hooks/IUseHandleInput.model';
 
 export const useHandleInput = <T extends Record<string, unknown>>(
-  initialForm: T,
+  initialForm: T
 ): IUseHandleInput<T> => {
   const [form, setForm] = useState(initialForm);
 

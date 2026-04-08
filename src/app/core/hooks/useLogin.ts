@@ -23,12 +23,15 @@ const storage = new StorageService();
 export const useLogin = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
-  const [messageForm, setMessageForm] = useState<IMessageForm>(initialMessageForm);
+  const [messageForm, setMessageForm] =
+    useState<IMessageForm>(initialMessageForm);
   const { form, handleInput, resetForm } = useHandleInput(
-    initialGatewayForm as unknown as Record<string, string>,
+    initialGatewayForm as unknown as Record<string, string>
   );
 
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const submitHandler = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     try {
@@ -50,11 +53,11 @@ export const useLogin = () => {
         chatsApi.list(),
       ]);
 
-      contacts.forEach(c =>
+      contacts.forEach((c) =>
         dispatch({ type: Actions.AddContact, payload: mapContact(c) })
       );
 
-      chats.forEach(c =>
+      chats.forEach((c) =>
         dispatch({ type: Actions.AddChat, payload: mapChat(c) })
       );
 
@@ -65,7 +68,6 @@ export const useLogin = () => {
 
       resetForm();
       navigate('/');
-
     } catch (err) {
       if (err instanceof UnauthorizedError) {
         setMessageForm({

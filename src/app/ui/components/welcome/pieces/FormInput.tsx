@@ -39,22 +39,21 @@ export const FormInput = ({
 };
 
 const StyledFormInput = styled.div`
-  margin: 0.5rem;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 20px 0 0;
-  width: 100%;
+  padding: 2rem 0 0;
+  width: 20rem;
 
   .form__field {
     font-family: inherit;
     width: 100%;
-    border: none;
-    border-bottom: 2px solid #9b9b9b;
+    border: 1px solid #9b9b9b;
+    border-radius: 0.5rem;
     outline: 0;
     font-size: 17px;
     color: #fff;
-    padding: 7px 0;
+    padding: 0.5rem;
     background: transparent;
     transition: border-color 0.2s;
   }
@@ -68,7 +67,8 @@ const StyledFormInput = styled.div`
     font-size: 1rem;
     cursor: text;
     /* top: 20px; */
-    top: 2rem;
+    top: 2.7rem;
+    padding-left: 0.7rem;
   }
 
   .form__label {
@@ -82,29 +82,17 @@ const StyledFormInput = styled.div`
   }
 
   .form__field:focus {
-    padding-bottom: 6px;
-    font-weight: 700;
-    border-width: 3px;
-    border-image: linear-gradient(
-      to right,
-      var(--button-primary-background-color),
-      var(--primary-color)
-    );
-    border-image-slice: 1;
+    box-shadow: 0 0 1px 2px var(--primary-color);
+    border: none;
   }
 
   .form__field:focus ~ .form__label {
     position: absolute;
-    top: 0;
+    top: 0.8rem;
     display: block;
     transition: 0.2s;
-    font-size: 17px;
-    color: #38caef;
+    font-size: 0.8rem;
+    color: var(--primary-color);
     font-weight: 700;
-  }
-
-  .form__field:required,
-  .form__field:invalid {
-    box-shadow: none;
   }
 `;

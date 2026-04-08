@@ -1,45 +1,44 @@
 src/app
-├── core                # dominio + infraestructura
-│   ├── api             # comunicación backend (nuevo)
-│   ├── crypto          # cifrado/descifrado (extraer lógica)
-│   ├── hooks           # hooks de dominio
-│   ├── models          # interfaces y enums
-│   ├── services        # storage, http, auth
-│   └── state           # context + reducer
+├── core # dominio + infraestructura
+│ ├── api # comunicación backend (nuevo)
+│ ├── crypto # cifrado/descifrado (extraer lógica)
+│ ├── hooks # hooks de dominio
+│ ├── models # interfaces y enums
+│ ├── services # storage, http, auth
+│ └── state # context + reducer
 │
-├── features            # casos de uso (nuevo)
-│   ├── auth
-│   ├── chats
-│   ├── contacts
-│   └── messages
+├── features # casos de uso (nuevo)
+│ ├── auth
+│ ├── chats
+│ ├── contacts
+│ └── messages
 │
-├── pages               # rutas
-├── routes              # guards + router
-├── ui                  # puro presentacional
+├── pages # rutas
+├── routes # guards + router
+├── ui # puro presentacional
 └── environment
-
 
 core/
 ├── api
-│   ├── auth.api.ts
-│   ├── users.api.ts
-│   ├── chats.api.ts
-│   └── messages.api.ts
+│ ├── auth.api.ts
+│ ├── users.api.ts
+│ ├── chats.api.ts
+│ └── messages.api.ts
 │
 ├── hooks
-│   ├── useAuth.ts
-│   ├── useChats.ts
-│   └── useMessages.ts
+│ ├── useAuth.ts
+│ ├── useChats.ts
+│ └── useMessages.ts
 │
 ├── models
-│   ├── api
-│   └── domain
+│ ├── api
+│ └── domain
 │
 └── services
-    ├── http.service.ts
-    └── storage.service.ts
+├── http.service.ts
+└── storage.service.ts
 
-******
+---
 
 Falta crítica: capa API explícita ⚠️
 
@@ -60,34 +59,6 @@ core/api
 ├── chats.api.ts
 ├── messages.api.ts
 └── contacts.api.ts
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # React + TypeScript + Vite
 
@@ -113,7 +84,7 @@ export default tseslint.config({
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
@@ -122,7 +93,7 @@ export default tseslint.config({
 
 ```js
 // eslint.config.js
-import react from 'eslint-plugin-react'
+import react from 'eslint-plugin-react';
 
 export default tseslint.config({
   // Set the react version
@@ -137,5 +108,5 @@ export default tseslint.config({
     ...react.configs.recommended.rules,
     ...react.configs['jsx-runtime'].rules,
   },
-})
+});
 ```

@@ -1,4 +1,4 @@
-// Reemplanzado por nuevo archivo en src/app/core/api/http.client.ts 
+// Reemplanzado por nuevo archivo en src/app/core/api/http.client.ts
 
 // /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -64,4 +64,3 @@
 //     return handleResponse<T>(response);
 //   },
 // };
-

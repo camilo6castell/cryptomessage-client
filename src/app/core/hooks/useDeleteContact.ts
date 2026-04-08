@@ -14,9 +14,7 @@ export const useDeleteContact = (): {
 
   const deleteContact = async (contact: IContact): Promise<void> => {
     try {
-      await httpClient.delete<void>(
-        urls.contacts.remove(contact.contactId!),
-      );
+      await httpClient.delete<void>(urls.contacts.remove(contact.contactId!));
       dispatch({ type: Actions.DeleteContact, payload: contact.contactId });
     } catch (err) {
       console.error('Error al eliminar contacto:', err);

@@ -18,14 +18,19 @@ export const Button = ({
 };
 
 const StyledButton = styled.button<{ $styles: IBotonStylesMap }>`
+  width: 20rem;
+  margin: 2rem 0;
+  padding: 0.5rem 1rem;
+
+  border: 1px solid #9b9b9b;
+  border-radius: 0.5rem;
+
   color: ${({ $styles }): string => $styles.color};
+  background-color: #181a1b;
+
   text-shadow: 0px 1px 5px black;
   font-weight: 900;
 
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  background-color: ${({ $styles }): string => $styles.backgroundColor};
-  border: 1px solid ${({ $styles }): string => $styles.border};
   cursor: pointer;
 
   transition: all 0.3s ease;

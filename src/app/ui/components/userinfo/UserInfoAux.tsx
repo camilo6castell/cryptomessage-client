@@ -29,7 +29,7 @@ const StyledUserInfoAux = styled.div`
   overflow-y: scroll;
 
   background-color: var(--aux-background-color);
-  
+
   border: 1px solid #ffff;
   border-radius: 0 1rem 0 0;
   h1 {

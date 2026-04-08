@@ -27,9 +27,9 @@ export const Form = ({
         <ResultMessageForm messageForm={messageForm} />
       </GenericContainer>
 
-      <GenericContainer containerHeight={10}>
-        {helpText} <Link to={helpLink}>{helpTextLink}</Link>
-      </GenericContainer>
+      <div className="aux-link-container">
+        <span>{helpText}</span> <Link to={helpLink}>{helpTextLink}</Link>
+      </div>
     </StyledLoginForm>
   );
 };
@@ -40,15 +40,33 @@ const StyledLoginForm = styled.form`
   justify-content: center;
   align-items: center;
 
-  height: var(--section-under-mainbar);
+  height: fit-content;
+  width: fit-content;
+  padding: 5rem 4rem;
 
-  flex: 1;
-  width: 100%;
-  padding: 10% 20% 10% 20%;
+  border-radius: 0.5rem;
 
-  background-color: var(--main-background-color);
+  background-color: #0a0d1247;
+  backdrop-filter: blur(3rem);
+  box-shadow:
+    -1px -1px 0px #ffffff3a,
+    1px 1px 2px #69686879;
 
-  button {
-    margin: 2rem 0;
+  z-index: 1;
+  .aux-link-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  span {
+    padding-right: 1rem;
+  }
+  a {
+    color: var(--primary-color);
+    font-weight: 700;
+    transition: all 0.3s ease;
+    &:hover {
+      color: var(--primary-color-hover);
+    }
   }
 `;

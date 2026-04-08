@@ -3,8 +3,8 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
-
 import react from 'eslint-plugin-react';
+import prettier from 'eslint-plugin-prettier'; // 👈 Añadir
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -12,6 +12,7 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
+      'prettier', // 👈 Debe ser el ÚLTIMO
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -22,16 +23,12 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    // ts
     settings: { react: { version: 'detect' } },
-    //
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      // ts
       react,
-      tseslint,
-      //
+      prettier: prettier, // 👈 Añadir
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -39,6 +36,7 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      'prettier/prettier': ['error', { tabWidth: 2 }], // 👈 Añadir
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
       'react/self-closing-comp': [
@@ -52,11 +50,12 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs.strictTypeChecked.rules,
-      '@typescript-eslint/explicit-function-return-type': 'error', // Obliga a definir el tipo de retorno en funciones
-      '@typescript-eslint/explicit-module-boundary-types': 'error', // Obliga a definir tipos en los bordes del módulo
-      '@typescript-eslint/no-explicit-any': 'error', // Evita el uso de 'any'
-      '@typescript-eslint/no-inferrable-types': 'error', // Evita la inferencia de tipos
-      '@typescript-eslint/no-non-null-assertion': 'off', // Evita el uso de '!'
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-module-boundary-types': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-inferrable-types': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      indent: 'off', // 👈 Desactivar regla de indentación de ESLint
     },
-  },
+  }
 );

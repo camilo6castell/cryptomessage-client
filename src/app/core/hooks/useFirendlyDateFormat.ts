@@ -3,7 +3,7 @@ export const useFirendlyDateFormat = (dateString: string): string => {
 
   const day = new Intl.DateTimeFormat('es-ES', { day: 'numeric' }).format(date);
   const month = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(
-    date,
+    date
   );
   const time = new Intl.DateTimeFormat('es-ES', {
     hour: 'numeric',

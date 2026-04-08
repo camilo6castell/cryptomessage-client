@@ -12,8 +12,8 @@ export interface IParticipant {
 export interface IChat {
   chatId: number;
   status: ChatStatus;
-  participant: IParticipant;   // el OTRO usuario, no tú
-  messages: IMessage[];        // se carga por separado, empieza vacío
+  participant: IParticipant; // el OTRO usuario, no tú
+  messages: IMessage[]; // se carga por separado, empieza vacío
   lastMessage: IMessage | null;
   createdAt: string;
 }

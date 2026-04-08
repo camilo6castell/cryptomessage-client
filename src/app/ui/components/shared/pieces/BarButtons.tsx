@@ -28,7 +28,7 @@ export const BarButtons = (): ReactElement => {
           const storageService = new StorageService();
           storageService.set<MainComponentsEnum>(
             'CURRENT',
-            MainComponentsEnum.ContactList,
+            MainComponentsEnum.ContactList
           );
         }}
       >
@@ -45,7 +45,7 @@ export const BarButtons = (): ReactElement => {
           const storageService = new StorageService();
           storageService.set<MainComponentsEnum>(
             'CURRENT',
-            MainComponentsEnum.ChatList,
+            MainComponentsEnum.ChatList
           );
         }}
       >
@@ -62,7 +62,7 @@ export const BarButtons = (): ReactElement => {
           const storageService = new StorageService();
           storageService.set<MainComponentsEnum>(
             'CURRENT',
-            MainComponentsEnum.UserInfo,
+            MainComponentsEnum.UserInfo
           );
         }}
       >

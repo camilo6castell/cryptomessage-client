@@ -23,7 +23,7 @@ export const ChatBubbleMessage = ({
     message.messageId,
     message.senderId,
     isShown,
-    setMessageWidth,
+    setMessageWidth
   );
   return (
     <StyledChatBubbleMessage
@@ -41,8 +41,8 @@ export const ChatBubbleMessage = ({
           ? isLoading
             ? 'Loading...' // Indicador de carga
             : error
-            ? 'Error al desencriptar'
-            : decryptedMessage
+              ? 'Error al desencriptar'
+              : decryptedMessage
           : message.content}
       </p>
       <span className="message-time">{sentAt}</span>

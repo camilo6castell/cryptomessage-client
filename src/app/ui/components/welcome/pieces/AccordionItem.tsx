@@ -18,17 +18,13 @@ export const AccordionItem = ({
     <StyledAccordionItem
       $isOpen={isOpen}
       id={subtitle.toLowerCase().replace(/ /g, '-')}
+      onClick={(e) => {
+        e.preventDefault();
+        onToggle();
+      }}
     >
       <div className="title">
-        <a
-          href={`#${subtitle.toLowerCase().replace(/ /g, '-')}`}
-          onClick={(e) => {
-            e.preventDefault();
-            onToggle();
-          }}
-        >
-          {subtitle}
-        </a>
+        <a href={`#${subtitle.toLowerCase().replace(/ /g, '-')}`}>{subtitle}</a>
       </div>
       <div className="content">
         <div className="wrapper">
@@ -46,15 +42,25 @@ interface StyledAccordionItemProps {
 }
 
 const StyledAccordionItem = styled.section<StyledAccordionItemProps>`
-  color: #ffffff;
-  background-color: #8c7c68;
-  /* max-width: 56ch; */
-  margin-bottom: 1rem;
-  border-radius: 8px;
   display: grid;
+  margin-bottom: 1rem;
+  max-width: 30rem;
   grid-template-rows: ${({ $isOpen }): string =>
     $isOpen ? '0fr 1fr' : '0fr 0fr'};
-  transition: grid-template-rows 400ms ease, box-shadow 200ms;
+
+  background-color: ${({ $isOpen }): string =>
+    $isOpen ? '#3a555522' : '#0a0d1247'};
+  backdrop-filter: blur(3rem);
+  box-shadow:
+    -1px -1px 0px #ffffff3a,
+    1px 1px 2px #69686879;
+
+  border-radius: 8px;
+
+  transition:
+    grid-template-rows 400ms ease,
+    box-shadow 200ms;
+  cursor: pointer;
 
   &:not(:target):hover {
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);

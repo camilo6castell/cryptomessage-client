@@ -19,18 +19,26 @@ export const useCreateChat = (): {
 
       dispatch({ type: Actions.AddChat, payload: mapChat(newChat) });
       dispatch({ type: Actions.SetMainAuxChat, payload: newChat.chatId });
-      dispatch({ type: Actions.SetMainState, payload: MainComponentsEnum.ChatList });
-
+      dispatch({
+        type: Actions.SetMainState,
+        payload: MainComponentsEnum.ChatList,
+      });
     } catch (err) {
       if (err instanceof ConflictError) {
         // Chat ya existe — buscarlo por participant.userId
         const existingChat = state.user.chats.find(
-          (chat) => chat.participant.userId === contact.contactId,
+          (chat) => chat.participant.userId === contact.contactId
         );
 
         if (existingChat) {
-          dispatch({ type: Actions.SetMainAuxChat, payload: existingChat.chatId });
-          dispatch({ type: Actions.SetMainState, payload: MainComponentsEnum.ChatList });
+          dispatch({
+            type: Actions.SetMainAuxChat,
+            payload: existingChat.chatId,
+          });
+          dispatch({
+            type: Actions.SetMainState,
+            payload: MainComponentsEnum.ChatList,
+          });
         }
       } else {
         console.error('Error al crear el chat:', err);

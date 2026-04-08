@@ -47,7 +47,23 @@ const StyledFrontPage = styled.div`
 
   transition: all 1s ease-in-out;
 
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
   h3 {
     padding-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1.5;
   }
 `;

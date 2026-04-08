@@ -13,14 +13,14 @@ const useCases: {
 } = {
   [Actions.LoadUser]: (
     state: IAppState,
-    payload: ILoginFormDataResponse,
+    payload: ILoginFormDataResponse
   ): IAppState => ({
     ...state,
     user: payload,
   }),
   [Actions.SetMainState]: (
     state: IAppState,
-    payload: MainComponentsEnum,
+    payload: MainComponentsEnum
   ): IAppState => ({
     ...state,
     app: {
@@ -47,7 +47,7 @@ const useCases: {
     user: {
       ...state.user,
       contacts: state.user.contacts.filter(
-        (contact) => contact.contactId !== payload,
+        (contact) => contact.contactId !== payload
       ),
     },
   }),
@@ -65,7 +65,7 @@ const useCases: {
       chats: state.user.chats.map((chat) => {
         if (chat.chatId === payload.chatId) {
           const updatedMessages = [...chat.messages, payload].sort(
-            (a, b) => a.messageId - b.messageId,
+            (a, b) => a.messageId - b.messageId
           );
           return {
             ...chat,
@@ -79,7 +79,7 @@ const useCases: {
   }),
   [Actions.SetMessageAsRead]: (
     state: IAppState,
-    payload: { chatId: number; messageId: number },
+    payload: { chatId: number; messageId: number }
   ): IAppState => ({
     ...state,
     user: {
@@ -87,20 +87,20 @@ const useCases: {
       chats: state.user.chats.map((chat) =>
         chat.chatId === payload.chatId
           ? {
-            ...chat,
-            messages: chat.messages
-              .map((message) =>
-                message.messageId === payload.messageId
-                  ? { ...message, isRead: true }
-                  : message,
-              )
-              .sort((a, b) => a.messageId - b.messageId),
-            lastMessage:
-              chat.lastMessage?.messageId === payload.messageId
-                ? { ...chat.lastMessage, isRead: true }
-                : chat.lastMessage,
-          }
-          : chat,
+              ...chat,
+              messages: chat.messages
+                .map((message) =>
+                  message.messageId === payload.messageId
+                    ? { ...message, isRead: true }
+                    : message
+                )
+                .sort((a, b) => a.messageId - b.messageId),
+              lastMessage:
+                chat.lastMessage?.messageId === payload.messageId
+                  ? { ...chat.lastMessage, isRead: true }
+                  : chat.lastMessage,
+            }
+          : chat
       ),
     },
   }),
@@ -109,9 +109,7 @@ const useCases: {
 
 export const reducer = (
   state: IAppState,
-  action: { type: Actions; payload: any },
+  action: { type: Actions; payload: any }
 ): IAppState => {
   return useCases[action.type](state, action.payload) || state;
 };
-
-

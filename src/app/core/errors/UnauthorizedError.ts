@@ -1,7 +1,7 @@
-import { ApiError } from './ApiError'
+import { ApiError } from './ApiError';
 
 export class UnauthorizedError extends ApiError {
-    constructor(data?: unknown) {
-        super(401, 'Unauthorized', data);
-    }
+  constructor(data?: unknown) {
+    super(401, 'Unauthorized', data);
+  }
 }

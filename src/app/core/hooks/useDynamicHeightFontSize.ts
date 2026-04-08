@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 
 export const useDynamicHeightFontSize = (
-  heightFactor: number,
+  heightFactor: number
 ): [React.RefObject<HTMLDivElement>, number] => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState(0);

@@ -23,7 +23,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
     : 'Sin mensajes aún';
 
   const lastMessageTime = chat.lastMessage
-    ? useFirendlyDateFormat(chat.lastMessage.sentAt)  // lo usaremos como valor, no como hook
+    ? useFirendlyDateFormat(chat.lastMessage.sentAt) // lo usaremos como valor, no como hook
     : '';
 
   return (
@@ -41,9 +41,9 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
             <span className="card__time">
               {chat.lastMessage.sentAt
                 ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
                 : ''}
             </span>
           )}

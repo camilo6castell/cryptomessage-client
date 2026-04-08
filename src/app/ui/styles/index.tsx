@@ -1,94 +1,68 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 import { Reset } from './reset';
-
+// import { themeConfig } from "./config/ThemeConfig.tsx";
+import { Waves } from './variables/waves.tsx';
+import { Buttons } from './variables/buttons.tsx';
+import { Scrollbar } from './variables/scrollbar.tsx';
+import { themeConfig } from './config/ThemeConfig.tsx';
 
 export const GlobalStyle = createGlobalStyle`
-  ${Reset}
+  ${Reset}   
 
   :root {
-  /* SECTIONS WIDTH SIZES */
-  --main-section-width: 35dvw;
-  --aux-section-width: 65dvw;
-  /* FONTS */
-  /* --main-font: 'Roboto', sans-serif; */
-  --main-font: 'Montserrat', sans-serif;
-  --main-font-weight: 450;
-  --main-font-color: #ffffff;
+    /* SECTIONS WIDTH SIZES */
+    /* --main-section-width: 35dvw;
+    --aux-section-width: 65dvw; */
+    --main-section-width: 50dvw;
+    --aux-section-width: 50dvw;
+    
+    /* FONTS */
+    /* --main-font: 'Roboto', sans-serif; */
+    --main-font: 'Montserrat', sans-serif;
+    --main-font-weight: 450;
+    --main-font-color: ${({ theme }) => theme.mainFontColor};
 
-  /* MAINBAR */
-  --flex-on-main-bar: 1;
-  --height-mainbar: 10%;
+    /* MAINBAR */
+    --flex-on-main-bar: 1;
+    --height-mainbar: 10%;
 
-  --flex-under-main-bar: 3;
-  --section-under-mainbar: 90%;
+    --flex-under-main-bar: 3;
+    --section-under-mainbar: 90%;
 
-  /* COLORS */
-  --main-background-color: #000000;
-  --aux-background-color: #000000;
+    /* COLORS */
+    --main-background-color: ${({ theme }) => theme.mainBackgroundColor};
 
-  --element-background-color: #000000;
-  --component-background-color: #000000;
+    --element-background-color: #000000;
+    --component-background-color: #000000;
 
-  --primary-color: rgb(42, 156, 185);
-  --disable-color: rgb(157, 157, 157);
-  --success-color: rgb(0, 255, 0);
-  --danger-color: rgb(255, 0, 0);
-  --warning-color: rgb(255, 255, 0);
+    --primary-color: rgb(42, 156, 185);
+    --disable-color: rgb(157, 157, 157);
+    --success-color: rgb(0, 255, 0);
+    --danger-color: rgb(255, 0, 0);
+    --warning-color: rgb(255, 255, 0);
 
-  /* --primary-gradient: linear-gradient(to right, var(--button-primary-background-color), var(--primary-color)); */
+    /* --primary-gradient: linear-gradient(to right, var(--button-primary-background-color), var(--primary-color)); */
 
-  /* BREAKPOINTS ----- NO FUNCIONA */
-  --md-breakpoint: 900px;
-
-  /* SCROLLBAR */
-  --scroll-bar-color: #26454c;
-  --scroll-bar-track-color: #00000000;
-  --scroll-bar-size: 0.2rem;
-  --scroll-bar-radius: 3px;
-
-  /* BUTTONS */
-  /* PRIMARY */
-  --button-primary-color: var(--main-font-color);
-  --button-primary-border-color: var(--primary-color);
-  --button-primary-background-color: rgb(17, 99, 153);
-  --button-primary-hover-background-color: var(--primary-color);
-
-  /* DISABLED */
-  --button-disabled-color: var(--main-font-color);
-  --button-disabled-border-color: var(rgb(157, 157, 157));
-  --button-disabled-background-color: var(rgb(157, 157, 157));
-  --button-disabled-hover-background-color: var(rgb(157, 157, 157));
-
-  /* SUCCESS */
-  --button-success-color: var(--main-font-color);
-  --button-success-border-color: var(--success-color);
-  --button-success-background-color: rgb(0, 107, 0);
-  --button-success-hover-background-color: var(--success-color);
-
-  /* DANGER */
-  --button-danger-color: var(--main-font-color);
-  --button-danger-border-color: var(--danger-color);
-  --button-danger-background-color: rgb(107, 0, 0);
-  --button-danger-hover-background-color: var(--danger-color);
-
-  /* WARNING */
-  --button-warning-color: var(--main-font-color);
-  --button-warning-border-color: var(--warning-color);
-  --button-warning-background-color: rgb(107, 107, 0);
-  --button-warning-hover-background-color: var(--warning-color);
-
-  /* COLOR-TESTER */
-  /* color: #ffffffc1; */
+    /* BREAKPOINTS ----- NO FUNCIONA */
+    --md-breakpoint: 900px;
+    ${Scrollbar}
+    ${Buttons}  
+    ${Waves}
+    /* COLOR-TESTER */
+    /* color: #404040; */
   }
-  
-  html, body, #root {
-    width: 100dvw;
-    height: 100dvh;
+
+  body {
+    font-family: var(--main-font);
+    font-weight: var(--main-font-weight);
+    color: var(--main-font-color);
+    
+    background-color: var(--main-background-color);
+
+    transition: all ${themeConfig.animation.general_duration}s ease-in-out;      
+    
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.456);
+    -webkit-font-smoothing: antialiased;
   }
-  
-  /* html { */
-    /* overflow: hidden; */
-    /* background-color: var(--main-background-color);
-  } */
 `;

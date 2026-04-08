@@ -12,12 +12,15 @@ import { initialMessageForm } from '../models/ui/IMessageForm.model';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
 
 export const useRegister = () => {
-  const [messageForm, setMessageForm] = useState<IMessageForm>(initialMessageForm);
+  const [messageForm, setMessageForm] =
+    useState<IMessageForm>(initialMessageForm);
   const { form, handleInput, resetForm } = useHandleInput(
-    initialGatewayForm as unknown as Record<string, string>,
+    initialGatewayForm as unknown as Record<string, string>
   );
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     try {
@@ -31,7 +34,6 @@ export const useRegister = () => {
         message: 'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
       });
       resetForm();
-
     } catch (err) {
       if (err instanceof ConflictError) {
         setMessageForm({
