@@ -1,6 +1,7 @@
-import { ReactElement } from 'react';
-import { IReactElementChildrenProps } from '../../../core/models/reactElementChildren.model';
 import styled from 'styled-components';
+import { ReactElement } from 'react';
+import { GenericContainer } from '../../layouts/GenericContainer';
+import { IReactElementChildrenProps } from '../../../core/models/reactElementChildren.model';
 
 export const MainSection = ({
   children,
@@ -8,12 +9,7 @@ export const MainSection = ({
   return <StyledMainSection>{children}</StyledMainSection>;
 };
 
-const StyledMainSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+const StyledMainSection = styled(GenericContainer)`
   width: var(--main-section-width);
   height: 100%;
 

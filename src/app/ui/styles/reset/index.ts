@@ -1,4 +1,5 @@
 import { css } from 'styled-components';
+import { themeConfig } from '../config/ThemeConfig';
 
 export const Reset = css`
   *,
@@ -118,6 +119,7 @@ export const Reset = css`
 
   body {
     line-height: 1;
+    transition: all ${themeConfig.animation.general_duration}s ease-in-out;
   }
 
   ol,
@@ -148,6 +150,6 @@ export const Reset = css`
   #root {
     width: 100dvw;
     height: 100dvh;
-    z-index: -3;
+    z-index: 1;
   }
 `;

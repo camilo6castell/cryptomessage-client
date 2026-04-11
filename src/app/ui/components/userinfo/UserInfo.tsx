@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
-import { Title } from '../../elements/Title';
+import { H1 } from '../../elements/font';
 import { UserCard } from './pieces/UserCard';
 import { Button } from '../../elements/Button';
 
@@ -12,7 +12,7 @@ export const UserInfo = ({ username }: { username: string }): ReactElement => {
 
   return (
     <StyledUserInfo>
-      <Title textTitle="User Information" heightTitle={20} />
+      <H1>User Information</H1>
       <UserCard username={username} heightUserCard={60} />
       <div className="button-container">
         <Button

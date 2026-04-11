@@ -1,4 +1,5 @@
 import { keyframes } from 'styled-components';
+import { themeConfig } from '../config/ThemeConfig';
 
 export const colorTextAnimation = (color: string): unknown => keyframes`
     0%, 100% {
@@ -42,5 +43,64 @@ export const waves = {
     70%  { transform: translate3d(-45%,  -8%, 0)   rotate(-3deg)  scale(0.98); opacity: 0.72; filter: blur(108px); }
     88%  { transform: translate3d(-95%,   6%, 0)    rotate(-5deg)  scale(0.96); opacity: 0.66; filter: blur(116px); }
     100% { transform: translate3d(-120%,  28%, 0)   rotate(-7deg)  scale(0.95); opacity: 0.60; filter: blur(120px); }
+  `,
+};
+
+export const fade = {
+  up: keyframes`
+    from {
+      opacity: 0;
+      transform: translate3d(0, ${themeConfig.animation.general_fade_rem_traslation}rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  `,
+  down: keyframes`
+    from {
+      opacity: 0;
+      transform: translate3d(0, -${themeConfig.animation.general_fade_rem_traslation}rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  `,
+  left: keyframes`
+    from {
+      opacity: 0;
+      transform: translate3d(${themeConfig.animation.general_fade_rem_traslation}rem, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  `,
+  right: keyframes`
+    from {
+      opacity: 0;
+      transform: translate3d(-${themeConfig.animation.general_fade_rem_traslation}rem, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  `,
+  fadeIn: keyframes`
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  `,
+  fadeOut: keyframes`
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   `,
 };

@@ -19,6 +19,7 @@ export interface IGatewayFormProps {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   messageForm: IMessageForm;
   formTitle: string;
+  formText: string;
   helpText: string;
   helpLink: string;
   helpTextLink: string;

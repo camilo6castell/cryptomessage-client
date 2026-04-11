@@ -1,43 +1,35 @@
-// import { createHashRouter } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom';
-
 import { MainLayout } from '../ui/layouts/MainLayout';
+import { StartLayout } from '../ui/layouts/StartLayout';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { MainPage } from '../pages/MainPage';
-
 import { PrivateGuard } from './PrivateGuard';
 import { PublicGuard } from './PublicGuard';
 
 export const router = createBrowserRouter([
+  // Rutas públicas
   {
     path: '',
-    Component: MainLayout,
+    element: (
+      <PublicGuard>
+        <StartLayout />
+      </PublicGuard>
+    ),
     children: [
-      {
-        path: '',
-        element: (
-          <PrivateGuard>
-            <MainPage />
-          </PrivateGuard>
-        ),
-      },
-      {
-        path: 'register',
-        element: (
-          <PublicGuard>
-            <RegisterPage />
-          </PublicGuard>
-        ),
-      },
-      {
-        path: 'login',
-        element: (
-          <PublicGuard>
-            <LoginPage />
-          </PublicGuard>
-        ),
-      },
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'login', element: <LoginPage /> },
     ],
+  },
+
+  // Rutas privadas
+  {
+    path: '',
+    element: (
+      <PrivateGuard>
+        <MainLayout />
+      </PrivateGuard>
+    ),
+    children: [{ path: '', element: <MainPage /> }],
   },
 ]);

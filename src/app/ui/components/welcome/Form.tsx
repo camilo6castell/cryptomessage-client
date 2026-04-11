@@ -3,27 +3,32 @@ import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
 
-import { Title } from '../../elements/Title';
-import { GenericContainer } from '../../elements/GenericContainer';
+import { H1, P1 } from '../../elements/font';
+import { GenericContainer } from '../../layouts/GenericContainer';
 import { ResultMessageForm } from './pieces/ResultMessageForm';
 import { IGatewayFormProps } from '../../../core/models/ui/IGatewayForm.model';
+import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+
+import { fade } from '../../../../../src/app/ui/styles/keyframes';
 
 export const Form = ({
   children,
   handleSubmit,
   messageForm,
   formTitle,
+  formText,
   helpText,
   helpLink,
   helpTextLink,
 }: IGatewayFormProps): ReactElement => {
   return (
     <StyledLoginForm onSubmit={handleSubmit}>
-      <Title textTitle={formTitle} heightTitle={80} />
+      <H1>{formTitle}</H1>
+      <P1>{formText}</P1>
 
       {children}
 
-      <GenericContainer containerHeight={10}>
+      <GenericContainer>
         <ResultMessageForm messageForm={messageForm} />
       </GenericContainer>
 
@@ -42,15 +47,16 @@ const StyledLoginForm = styled.form`
 
   height: fit-content;
   width: fit-content;
-  padding: 5rem 4rem;
+  max-width: 30rem;
+  padding: 4rem;
 
-  border-radius: 0.5rem;
+  ${darkGlassEffect}
 
-  background-color: #0a0d1247;
-  backdrop-filter: blur(3rem);
-  box-shadow:
-    -1px -1px 0px #ffffff3a,
-    1px 1px 2px #69686879;
+  animation: ${fade.fadeIn} .5s ease both;
+
+  .fade-out {
+    animation: ${fade.fadeOut} 0.5s both;
+  }
 
   z-index: 1;
   .aux-link-container {

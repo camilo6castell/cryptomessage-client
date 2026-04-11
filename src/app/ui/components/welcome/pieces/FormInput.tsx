@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
+import { GenericContainer } from '../../../layouts/GenericContainer';
 
 interface FormInputProps {
   value: string;
@@ -38,12 +39,10 @@ export const FormInput = ({
   );
 };
 
-const StyledFormInput = styled.div`
-  display: flex;
-  flex-direction: column;
+const StyledFormInput = styled(GenericContainer)`
+  align-items: flex-start;
   position: relative;
   padding: 2rem 0 0;
-  width: 20rem;
 
   .form__field {
     font-family: inherit;
@@ -62,13 +61,40 @@ const StyledFormInput = styled.div`
     color: transparent;
   }
 
+  /* Sin valor y sin foco — label centrado en el input */
   .form__field:placeholder-shown ~ .form__label {
-    /* font-size: 17px; */
     font-size: 1rem;
     cursor: text;
-    /* top: 20px; */
     top: 2.7rem;
     padding-left: 0.7rem;
+    color: #9b9b9b;
+    font-weight: 400;
+  }
+
+  /* Con valor O con foco — label arriba, pequeño */
+  .form__field:focus ~ .form__label,
+  .form__field:not(:placeholder-shown) ~ .form__label {
+    position: absolute;
+    top: 0.8rem;
+    display: block;
+    transition: 0.2s;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding-left: 0;
+  }
+
+  /* Color del label: azul en foco, gris con valor */
+  .form__field:focus ~ .form__label {
+    color: var(--primary-color);
+  }
+
+  .form__field:not(:placeholder-shown):not(:focus) ~ .form__label {
+    color: #9b9b9b;
+  }
+
+  .form__field:focus {
+    box-shadow: 0 0 1px 2px var(--primary-color);
+    border-color: transparent;
   }
 
   .form__label {
@@ -79,20 +105,5 @@ const StyledFormInput = styled.div`
     font-size: 17px;
     color: #9b9b9b;
     pointer-events: none;
-  }
-
-  .form__field:focus {
-    box-shadow: 0 0 1px 2px var(--primary-color);
-    border: none;
-  }
-
-  .form__field:focus ~ .form__label {
-    position: absolute;
-    top: 0.8rem;
-    display: block;
-    transition: 0.2s;
-    font-size: 0.8rem;
-    color: var(--primary-color);
-    font-weight: 700;
   }
 `;

@@ -1,11 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
 
 import { Reset } from './reset';
-// import { themeConfig } from "./config/ThemeConfig.tsx";
-import { Waves } from './variables/waves.tsx';
 import { Buttons } from './variables/buttons.tsx';
 import { Scrollbar } from './variables/scrollbar.tsx';
-import { themeConfig } from './config/ThemeConfig.tsx';
+import { font } from './variables/fonts.tsx';
 
 export const GlobalStyle = createGlobalStyle`
   ${Reset}   
@@ -17,12 +15,6 @@ export const GlobalStyle = createGlobalStyle`
     --main-section-width: 50dvw;
     --aux-section-width: 50dvw;
     
-    /* FONTS */
-    /* --main-font: 'Roboto', sans-serif; */
-    --main-font: 'Montserrat', sans-serif;
-    --main-font-weight: 450;
-    --main-font-color: ${({ theme }) => theme.mainFontColor};
-
     /* MAINBAR */
     --flex-on-main-bar: 1;
     --height-mainbar: 10%;
@@ -46,23 +38,12 @@ export const GlobalStyle = createGlobalStyle`
 
     /* BREAKPOINTS ----- NO FUNCIONA */
     --md-breakpoint: 900px;
+    ${font}
     ${Scrollbar}
-    ${Buttons}  
-    ${Waves}
-    /* COLOR-TESTER */
-    /* color: #404040; */
-  }
-
-  body {
-    font-family: var(--main-font);
-    font-weight: var(--main-font-weight);
-    color: var(--main-font-color);
+    ${Buttons} 
     
-    background-color: var(--main-background-color);
-
-    transition: all ${themeConfig.animation.general_duration}s ease-in-out;      
-    
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.456);
-    -webkit-font-smoothing: antialiased;
-  }
+    a {
+      transition-delay: 0.5s !important;
+    }
+  }  
 `;

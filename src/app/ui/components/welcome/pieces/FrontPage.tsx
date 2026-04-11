@@ -1,6 +1,9 @@
 import { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 import { AccordionItem } from './AccordionItem';
+import { GenericContainer } from '../../../layouts/GenericContainer';
+import { H1, P2 } from '../../../../ui/elements/font';
+import { fade } from '../../../../ui/styles/keyframes';
 
 export const FrontPage = ({
   frontPageContent,
@@ -21,8 +24,8 @@ export const FrontPage = ({
   };
   return (
     <StyledFrontPage>
-      <h3>{frontPageContent.pretitle}</h3>
-      <h1>{frontPageContent.title}</h1>
+      <P2FrontPage>{frontPageContent.pretitle}</P2FrontPage>
+      <H1>{frontPageContent.title}</H1>
       {frontPageContent.elements.map((element, index) => (
         <AccordionItem
           key={index}
@@ -36,34 +39,15 @@ export const FrontPage = ({
   );
 };
 
-const StyledFrontPage = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* align-items: center; */
-
-  width: 100%;
-  height: 100%;
+const StyledFrontPage = styled(GenericContainer)`
+  align-items: flex-start;
+  width: fit-content;
+  height: fit-content;
 
   transition: all 1s ease-in-out;
+  animation: ${fade.fadeIn} 0.5s both;
+`;
 
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 2.5rem;
-  }
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  h3 {
-    padding-bottom: 0.5rem;
-  }
-  p {
-    font-size: 1rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
+const P2FrontPage = styled(P2)`
+  padding-bottom: 0.5rem;
 `;
