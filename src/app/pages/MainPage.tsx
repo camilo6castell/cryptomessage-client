@@ -50,27 +50,3 @@ export const MainPage = (): ReactElement => {
     </>
   );
 };
-
-// another way to get this but using a map
-// export const MainPage = (): ReactElement => {
-//   // CONTEXT
-//   const { state } = useContext(AppContext);
-//   // END CONTEXT
-//   const mainComponentMap = {
-//     [MainComponents.Login]: <LoginContainer />,
-//     [MainComponents.Register]: <RegisterContainer />,
-//     [MainComponents.UserInfo]: <UserInfoContainer />,
-//     [MainComponents.ChatList]: <ChatList />,
-//     [MainComponents.ContactList]: <div>Chat</div>,
-//   };
-//   return (
-//     <>
-//       <MainSection>
-//         {mainComponentMap[state.mainState] || <div>This is an error</div>}
-//       </MainSection>
-//       <AuxSection>
-//         <AuxContainer />
-//       </AuxSection>
-//     </>
-//   );
-// };

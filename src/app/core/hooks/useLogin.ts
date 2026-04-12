@@ -23,64 +23,57 @@ const storage = new StorageService();
 export const useLogin = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
-  const [messageForm, setMessageForm] =
-    useState<IMessageForm>(initialMessageForm);
-  const { form, handleInput, resetForm } = useHandleInput(
-    initialGatewayForm as unknown as Record<string, string>
-  );
 
-  const submitHandler = async (
+  const [loginMessage, setLoginMessage] =
+    useState<IMessageForm>(initialMessageForm);
+
+  const {
+    form: loginForm,
+    handleInput: handleLoginInput,
+    resetForm: resetLoginForm,
+  } = useHandleInput(initialGatewayForm as unknown as Record<string, string>);
+
+  const handleLoginSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-
     try {
-      // 1. Login — obtenemos token y datos base del usuario
       const loginData = await authApi.login({
-        username: form.username,
-        passphrase: form.passphrase,
+        username: loginForm.username,
+        passphrase: loginForm.passphrase,
       });
-
       storage.set('TOKEN', loginData.token);
       storage.set('ENCRYPTED_PRIVATE_KEY', loginData.encryptedPrivateKey);
-
-      // 2. Cargar usuario base en el estado
       dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
-
-      // 3. Cargar contactos y chats en paralelo
       const [contacts, chats] = await Promise.all([
         contactsApi.list(),
         chatsApi.list(),
       ]);
-
       contacts.forEach((c) =>
         dispatch({ type: Actions.AddContact, payload: mapContact(c) })
       );
-
       chats.forEach((c) =>
         dispatch({ type: Actions.AddChat, payload: mapChat(c) })
       );
-
-      setMessageForm({
+      setLoginMessage({
         style: ElementStyles.Success,
         message: 'Inicio de sesión exitoso',
       });
-
-      resetForm();
+      resetLoginForm();
       navigate('/');
     } catch (err) {
       if (err instanceof UnauthorizedError) {
-        setMessageForm({
+        setLoginMessage({
           style: ElementStyles.Danger,
           message: 'Usuario o passphrase incorrectos',
         });
       } else if (err instanceof ApiError) {
-        setMessageForm({
+        setLoginMessage({
           style: ElementStyles.Warning,
           message: `Error del servidor (${err.status})`,
         });
       } else {
-        setMessageForm({
+        setLoginMessage({
           style: ElementStyles.Danger,
           message: 'Error de conexión',
         });
@@ -88,5 +81,5 @@ export const useLogin = () => {
     }
   };
 
-  return { form, handleInput, submitHandler, messageForm };
+  return { loginForm, handleLoginInput, handleLoginSubmit, loginMessage };
 };

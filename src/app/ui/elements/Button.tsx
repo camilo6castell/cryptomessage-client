@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IButtonProps } from '../../core/models/ui/IBotonProps.model';
+
 
 export const Button = ({
   textButton,
   onClick,
-}: IButtonProps): React.ReactElement => {
+}: {
+  textButton: string;
+  onClick: () => void;
+}): React.ReactElement => {
   return (
     <StyledButton onClick={onClick} type="submit">
       {textButton}

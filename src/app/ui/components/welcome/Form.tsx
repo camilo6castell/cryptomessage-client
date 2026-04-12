@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
@@ -10,6 +10,9 @@ import { IGatewayFormProps } from '../../../core/models/ui/IGatewayForm.model';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 
 import { fade } from '../../../../../src/app/ui/styles/keyframes';
+import { AppContext } from '../../../core/state/AppContext';
+import { Actions } from '../../../core/models/enums/Actions.enum';
+import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
 
 export const Form = ({
   children,
@@ -21,6 +24,7 @@ export const Form = ({
   helpLink,
   helpTextLink,
 }: IGatewayFormProps): ReactElement => {
+  const { dispatch, state } = useContext(AppContext);
   return (
     <StyledLoginForm onSubmit={handleSubmit}>
       <P2Form>{formText}</P2Form>
@@ -33,7 +37,23 @@ export const Form = ({
       </GenericContainer>
 
       <div className="aux-link-container">
-        <span>{helpText}</span> <Link to={helpLink}>{helpTextLink}</Link>
+        <span>{helpText}</span>{' '}
+        <Link
+          to={helpLink}
+          onClick={() =>
+            state.app.mainState == MainComponentsEnum.Login
+              ? dispatch({
+                  type: Actions.SetMainState,
+                  payload: MainComponentsEnum.Register,
+                })
+              : dispatch({
+                  type: Actions.SetMainState,
+                  payload: MainComponentsEnum.Login,
+                })
+          }
+        >
+          {helpTextLink}
+        </Link>
       </div>
     </StyledLoginForm>
   );

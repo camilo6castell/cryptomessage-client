@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../ui/layouts/MainLayout';
 import { StartLayout } from '../ui/layouts/StartLayout';
-import { LoginPage } from '../pages/LoginPage';
-import { RegisterPage } from '../pages/RegisterPage';
+import { StartPage } from '../pages/StartPage';
 import { MainPage } from '../pages/MainPage';
 import { PrivateGuard } from './PrivateGuard';
 import { PublicGuard } from './PublicGuard';
@@ -16,8 +15,8 @@ export const router = createBrowserRouter([
       </PublicGuard>
     ),
     children: [
-      { path: 'login', element: <LoginPage /> },
-      { path: 'register', element: <RegisterPage /> },
+      { path: 'login', element: <StartPage /> },
+      { path: 'register', element: <StartPage /> },
     ],
   },
 
@@ -29,8 +28,6 @@ export const router = createBrowserRouter([
         <MainLayout />
       </PrivateGuard>
     ),
-    children: [
-      { index: true, element: <MainPage /> }, // 👈 esto representa "/"
-    ],
+    children: [{ index: true, element: <MainPage /> }],
   },
 ]);

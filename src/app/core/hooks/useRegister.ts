@@ -12,41 +12,42 @@ import { initialMessageForm } from '../models/ui/IMessageForm.model';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
 
 export const useRegister = () => {
-  const [messageForm, setMessageForm] =
+  const [registerMessage, setRegisterMessage] =
     useState<IMessageForm>(initialMessageForm);
-  const { form, handleInput, resetForm } = useHandleInput(
-    initialGatewayForm as unknown as Record<string, string>
-  );
 
-  const handleSubmit = async (
+  const {
+    form: registerForm,
+    handleInput: handleRegisterInput,
+    resetForm: resetRegisterForm,
+  } = useHandleInput(initialGatewayForm as unknown as Record<string, string>);
+
+  const handleRegisterSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-
     try {
       await authApi.register({
-        username: form.username,
-        passphrase: form.passphrase,
+        username: registerForm.username,
+        passphrase: registerForm.passphrase,
       });
-
-      setMessageForm({
+      setRegisterMessage({
         style: ElementStyles.Success,
         message: 'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
       });
-      resetForm();
+      resetRegisterForm();
     } catch (err) {
       if (err instanceof ConflictError) {
-        setMessageForm({
+        setRegisterMessage({
           style: ElementStyles.Warning,
           message: 'Ese nombre de usuario ya existe. Intenta con otro.',
         });
       } else if (err instanceof ApiError) {
-        setMessageForm({
+        setRegisterMessage({
           style: ElementStyles.Warning,
           message: `Error del servidor (${err.status})`,
         });
       } else {
-        setMessageForm({
+        setRegisterMessage({
           style: ElementStyles.Danger,
           message: 'Error de conexión',
         });
@@ -54,5 +55,10 @@ export const useRegister = () => {
     }
   };
 
-  return { form, handleInput, handleSubmit, messageForm };
+  return {
+    registerForm,
+    handleRegisterInput,
+    handleRegisterSubmit,
+    registerMessage,
+  };
 };
