@@ -11,7 +11,6 @@ const baseFont = styled.span`
 export const H1 = styled(baseFont)`
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 2.5rem;
 `;
 
 export const H2 = styled(baseFont)`
@@ -32,12 +31,6 @@ export const P2 = styled(baseFont)`
   letter-spacing: 0.3px;
 `;
 
-export const Link = styled.a`
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 500;
-
-  &:hover {
-    text-decoration: underline;
-  }
+export const Link1 = styled.a`
+  color: red;
 `;

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { themeConfig } from './ThemeConfig';
+import { themes } from './Themes';
 
 type ThemeContextType = {
   theme: 'dark' | 'light';
@@ -32,10 +32,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Selección del objeto de styled-components
-  const currentTheme =
-    theme === 'dark'
-      ? themeConfig.colors.darkTheme
-      : themeConfig.colors.lightTheme;
+  const currentTheme = theme === 'dark' ? themes.dark : themes.light;
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

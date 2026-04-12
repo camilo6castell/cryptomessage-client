@@ -25,7 +25,7 @@ export const FrontPage = ({
   return (
     <StyledFrontPage>
       <P2FrontPage>{frontPageContent.pretitle}</P2FrontPage>
-      <H1>{frontPageContent.title}</H1>
+      <H1FrontPage>{frontPageContent.title}</H1FrontPage>
       {frontPageContent.elements.map((element, index) => (
         <AccordionItem
           key={index}
@@ -46,6 +46,10 @@ const StyledFrontPage = styled(GenericContainer)`
 
   transition: all 1s ease-in-out;
   animation: ${fade.fadeIn} 0.5s both;
+`;
+
+const H1FrontPage = styled(H1)`
+  margin-bottom: 2.5rem;
 `;
 
 const P2FrontPage = styled(P2)`

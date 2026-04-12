@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
 
-import { H1, P1 } from '../../elements/font';
+import { H1, P2 } from '../../elements/font';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { ResultMessageForm } from './pieces/ResultMessageForm';
 import { IGatewayFormProps } from '../../../core/models/ui/IGatewayForm.model';
@@ -23,8 +23,8 @@ export const Form = ({
 }: IGatewayFormProps): ReactElement => {
   return (
     <StyledLoginForm onSubmit={handleSubmit}>
-      <H1>{formTitle}</H1>
-      <P1>{formText}</P1>
+      <P2Form>{formText}</P2Form>
+      <H1Form>{formTitle}</H1Form>
 
       {children}
 
@@ -68,11 +68,21 @@ const StyledLoginForm = styled.form`
     padding-right: 1rem;
   }
   a {
-    color: var(--primary-color);
+    font-size: 1.1rem;
+    color: ${({ theme }) => theme.color.highlight};
     font-weight: 700;
     transition: all 0.3s ease;
     &:hover {
-      color: var(--primary-color-hover);
+      color: ${({ theme }) => theme.mainFontColor};
+      text-shadow: ${({ theme }) => theme.shadow.textHighlighted};
     }
   }
+`;
+
+const H1Form = styled(H1)`
+  margin-bottom: 1rem;
+`;
+
+const P2Form = styled(P2)`
+  padding-bottom: 0.5rem;
 `;

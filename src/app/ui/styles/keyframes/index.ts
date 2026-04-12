@@ -1,5 +1,5 @@
 import { keyframes } from 'styled-components';
-import { themeConfig } from '../config/ThemeConfig';
+import { animationConfig } from '../config/Themes';
 
 export const colorTextAnimation = (color: string): unknown => keyframes`
     0%, 100% {
@@ -10,12 +10,12 @@ export const colorTextAnimation = (color: string): unknown => keyframes`
     }
   `;
 
-export const pulse = (color: string) => keyframes`
+export const pulse = (color: string, pulseSize: number = 1) => keyframes`
   0% {
     box-shadow: 0 0 0 0 ${color}66;
   }
   70% {
-    box-shadow: 0 0 0 1rem ${color}00;
+    box-shadow: 0 0 0 ${pulseSize}rem ${color}00;
   }
   100% {
     box-shadow: 0 0 0 0 ${color}00;
@@ -50,7 +50,7 @@ export const fade = {
   up: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, ${themeConfig.animation.general_fade_rem_traslation}rem, 0);
+      transform: translate3d(0, ${animationConfig.general_fade_rem_traslation}rem, 0);
     }
     to {
       opacity: 1;
@@ -60,7 +60,7 @@ export const fade = {
   down: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, -${themeConfig.animation.general_fade_rem_traslation}rem, 0);
+      transform: translate3d(0, -${animationConfig.general_fade_rem_traslation}rem, 0);
     }
     to {
       opacity: 1;
@@ -70,7 +70,7 @@ export const fade = {
   left: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(${themeConfig.animation.general_fade_rem_traslation}rem, 0, 0);
+      transform: translate3d(${animationConfig.general_fade_rem_traslation}rem, 0, 0);
     }
     to {
       opacity: 1;
@@ -80,7 +80,7 @@ export const fade = {
   right: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(-${themeConfig.animation.general_fade_rem_traslation}rem, 0, 0);
+      transform: translate3d(-${animationConfig.general_fade_rem_traslation}rem, 0, 0);
     }
     to {
       opacity: 1;

@@ -19,7 +19,7 @@ export const RegisterContainer = (): ReactElement => {
         handleSubmit={handleSubmit}
         messageForm={messageForm}
         formTitle={'Sign-up'}
-        formText="Join us! Create your account to start sending encrypted messages."
+        formText="Join us!"
         helpText={'Already registered?'}
         helpLink={'/login'}
         helpTextLink={'Login'}

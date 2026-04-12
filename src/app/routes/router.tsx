@@ -10,26 +10,27 @@ import { PublicGuard } from './PublicGuard';
 export const router = createBrowserRouter([
   // Rutas públicas
   {
-    path: '',
     element: (
       <PublicGuard>
         <StartLayout />
       </PublicGuard>
     ),
     children: [
-      { path: 'register', element: <RegisterPage /> },
       { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
     ],
   },
 
   // Rutas privadas
   {
-    path: '',
+    path: '/',
     element: (
       <PrivateGuard>
         <MainLayout />
       </PrivateGuard>
     ),
-    children: [{ path: '', element: <MainPage /> }],
+    children: [
+      { index: true, element: <MainPage /> }, // 👈 esto representa "/"
+    ],
   },
 ]);

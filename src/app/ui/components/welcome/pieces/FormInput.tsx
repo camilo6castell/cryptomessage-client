@@ -47,7 +47,7 @@ const StyledFormInput = styled(GenericContainer)`
   .form__field {
     font-family: inherit;
     width: 100%;
-    border: 1px solid #9b9b9b;
+    border: 1px solid ${({ theme }): string => theme.color.disable};
     border-radius: 0.5rem;
     outline: 0;
     font-size: 17px;
@@ -67,7 +67,7 @@ const StyledFormInput = styled(GenericContainer)`
     cursor: text;
     top: 2.7rem;
     padding-left: 0.7rem;
-    color: #9b9b9b;
+    color: ${({ theme }): string => theme.color.disable};
     font-weight: 400;
   }
 
@@ -83,17 +83,17 @@ const StyledFormInput = styled(GenericContainer)`
     padding-left: 0;
   }
 
-  /* Color del label: azul en foco, gris con valor */
+  /* Color del label: en foco, gris con valor */
   .form__field:focus ~ .form__label {
-    color: var(--primary-color);
+    color: ${({ theme }): string => theme.color.highlight};
   }
-
+  /* Laabel Con valor sin foco */
   .form__field:not(:placeholder-shown):not(:focus) ~ .form__label {
-    color: #9b9b9b;
+    color: ${({ theme }): string => theme.mainFontColor};
   }
 
   .form__field:focus {
-    box-shadow: 0 0 1px 2px var(--primary-color);
+    box-shadow: 0 0 1px 2px ${({ theme }): string => theme.color.highlight};
     border-color: transparent;
   }
 

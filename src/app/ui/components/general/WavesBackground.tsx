@@ -14,18 +14,19 @@ export default function BackgroundWaves() {
 }
 
 const Wrap = styled.div`
-  position: absolute; // O absolute, dependiendo de tu layout
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: -1; // Para que quede detrás del contenido
+  z-index: -2;
   overflow: hidden;
 
   .background-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; // CRUCIAL: Esto hace que el video llene el espacio sin estirarse
-    /* filter: brightness(0.6); // Aquí puedes ajustar la oscuridad por código si prefieres */
+    object-fit: cover; // CRUCIAL: Esto hace que el video llene el espacio sin estirarse}
+
+    filter: ${({ theme }) => theme.waves.filter};
   }
 `;

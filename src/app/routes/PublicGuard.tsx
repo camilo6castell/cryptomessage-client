@@ -21,8 +21,7 @@ export const PublicGuard = ({
   }, []);
 
   if (isAuthenticated === null) {
-    // return <div>Cargando...</div>;
-    return <Navigate to={'/login'} replace />;
+    return <div>Cargando...</div>;
   }
   if (isAuthenticated) {
     return <Navigate to={'/'} replace />;

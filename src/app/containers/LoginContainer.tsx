@@ -18,7 +18,7 @@ export const LoginContainer = (): ReactElement => {
         handleSubmit={submitHandler}
         messageForm={messageForm}
         formTitle="Sign in"
-        formText="Welcome back! Please enter your credentials to access your account."
+        formText="Welcome back! "
         helpText="Don't have an account?"
         helpLink="/register"
         helpTextLink="Register"
@@ -42,7 +42,7 @@ export const LoginContainer = (): ReactElement => {
         />
 
         <Button
-          textButton="Sign in"
+          textButton="Enter"
           style={ElementStyles.Primary}
           onClick={() => void 0}
         />
