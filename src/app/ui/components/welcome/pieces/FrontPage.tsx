@@ -7,6 +7,7 @@ import { fade } from '../../../../ui/styles/keyframes';
 
 export const FrontPage = ({
   frontPageContent,
+  $visible,
 }: {
   frontPageContent: {
     pretitle: string;
@@ -16,6 +17,7 @@ export const FrontPage = ({
       paragraphs: string[];
     }[];
   };
+  $visible: boolean;
 }): ReactElement => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -23,7 +25,7 @@ export const FrontPage = ({
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
   return (
-    <StyledFrontPage>
+    <StyledFrontPage $visible={$visible}>
       <P2FrontPage>{frontPageContent.pretitle}</P2FrontPage>
       <H1FrontPage>{frontPageContent.title}</H1FrontPage>
       {frontPageContent.elements.map((element, index) => (
@@ -39,13 +41,14 @@ export const FrontPage = ({
   );
 };
 
-const StyledFrontPage = styled(GenericContainer)`
+const StyledFrontPage = styled(GenericContainer)<{ $visible: boolean }>`
   align-items: flex-start;
   width: fit-content;
   height: fit-content;
 
   transition: all 1s ease-in-out;
-  animation: ${fade.fadeIn} 0.5s both;
+  animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)}
+    ${({ theme }) => theme.animation.general_fade_duration}s ease both;
 `;
 
 const H1FrontPage = styled(H1)`

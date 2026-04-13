@@ -50,7 +50,7 @@ export const fade = {
   up: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, ${animationConfig.general_fade_rem_traslation}rem, 0);
+      transform: translate3d(0, ${animationConfig.general_fade_duration}rem, 0);
     }
     to {
       opacity: 1;
@@ -60,7 +60,7 @@ export const fade = {
   down: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, -${animationConfig.general_fade_rem_traslation}rem, 0);
+      transform: translate3d(0, -${animationConfig.general_fade_duration}rem, 0);
     }
     to {
       opacity: 1;
@@ -70,7 +70,7 @@ export const fade = {
   left: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(${animationConfig.general_fade_rem_traslation}rem, 0, 0);
+      transform: translate3d(${animationConfig.general_fade_duration}rem, 0, 0);
     }
     to {
       opacity: 1;
@@ -80,7 +80,7 @@ export const fade = {
   right: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(-${animationConfig.general_fade_rem_traslation}rem, 0, 0);
+      transform: translate3d(-${animationConfig.general_fade_duration}rem, 0, 0);
     }
     to {
       opacity: 1;

@@ -7,5 +7,6 @@ export enum Actions {
   AddChat,
   AddMessage,
   SetMessageAsRead,
+  SetError,
   Logout,
 }

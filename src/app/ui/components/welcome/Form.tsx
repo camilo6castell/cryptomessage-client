@@ -1,40 +1,42 @@
 import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
-
 import { Link } from 'react-router-dom';
-
 import { H1, P2 } from '../../elements/font';
-import { GenericContainer } from '../../layouts/GenericContainer';
-import { ResultMessageForm } from './pieces/ResultMessageForm';
-import { IGatewayFormProps } from '../../../core/models/ui/IGatewayForm.model';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 
 import { fade } from '../../../../../src/app/ui/styles/keyframes';
 import { AppContext } from '../../../core/state/AppContext';
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
+import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 
 export const Form = ({
   children,
   handleSubmit,
-  messageForm,
   formTitle,
   formText,
   helpText,
   helpLink,
   helpTextLink,
-}: IGatewayFormProps): ReactElement => {
+  $visible,
+}: {
+  children: React.ReactNode;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  messageForm: IMessageForm;
+  formTitle: string;
+  formText: string;
+  helpText: string;
+  helpLink: string;
+  helpTextLink: string;
+  $visible: boolean;
+}): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
   return (
-    <StyledLoginForm onSubmit={handleSubmit}>
+    <StyledLoginForm onSubmit={handleSubmit} $visible={$visible}>
       <P2Form>{formText}</P2Form>
       <H1Form>{formTitle}</H1Form>
 
       {children}
-
-      <GenericContainer>
-        <ResultMessageForm messageForm={messageForm} />
-      </GenericContainer>
 
       <div className="aux-link-container">
         <span>{helpText}</span>{' '}
@@ -59,7 +61,7 @@ export const Form = ({
   );
 };
 
-const StyledLoginForm = styled.form`
+const StyledLoginForm = styled.form<{ $visible: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -72,11 +74,9 @@ const StyledLoginForm = styled.form`
 
   ${darkGlassEffect}
 
-  animation: ${fade.fadeIn} .5s ease both;
-
-  .fade-out {
-    animation: ${fade.fadeOut} 0.5s both;
-  }
+  animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)} ${({
+    theme,
+  }) => theme.animation.general_fade_duration}s ease both;
 
   z-index: 1;
   .aux-link-container {

@@ -1,5 +1,7 @@
 // @ts-nocheck
 
+import { error } from 'console';
+
 const fontConfig = {
   mainFontFamily: 'Montserrat, sans-serif',
   mainFontWeight: 450,
@@ -7,7 +9,7 @@ const fontConfig = {
 
 export const animationConfig = {
   general_duration: 0.7,
-  general_fade_rem_traslation: 3,
+  general_fade_duration: 0.8,
 };
 
 export const colorConfig = {
@@ -19,9 +21,13 @@ export const colorConfig = {
   warning: 'rgb(255, 255, 0)',
 };
 
-const general = {
+const generalConfig = {
   borderRadius: '20px',
   mainBackgroundFilter: 'blur(10px)',
+};
+
+const errorConfig = {
+  color: 'rgb(255, 0, 0)',
 };
 
 export const themes = {
@@ -42,10 +48,11 @@ export const themes = {
       filter: 'brightness(1) invert(0) grayscale(0) hue-rotate(0deg)',
     },
 
-    general: general,
+    general: generalConfig,
     color: colorConfig,
     font: fontConfig,
     animation: animationConfig,
+    error: errorConfig,
   },
 
   light: {
@@ -70,5 +77,6 @@ export const themes = {
     color: colorConfig,
     font: fontConfig,
     animation: animationConfig,
+    error: errorConfig,
   },
 };

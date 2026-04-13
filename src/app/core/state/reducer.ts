@@ -104,6 +104,13 @@ const useCases: {
       ),
     },
   }),
+  [Actions.SetError]: (state: IAppState, payload: string): IAppState => ({
+    ...state,
+    app: {
+      ...state.app,
+      error: payload,
+    },
+  }),
   [Actions.Logout]: (): IAppState => initialAppState,
 };
 

@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { Form } from '../ui/components/welcome/Form.tsx';
 import { FormInput } from '../ui/components/welcome/pieces/FormInput.tsx';
 import { Button } from '../ui/elements/Button.tsx';
@@ -7,6 +7,9 @@ import { FrontPage } from '../ui/components/welcome/pieces/FrontPage.tsx';
 import { AppContext } from '../core/state/AppContext.tsx';
 import { useRegister } from '../core/hooks/useRegister.ts';
 import { MainComponentsEnum } from '../core/models/enums/MainComponents.enum.ts';
+import { animationConfig } from '../ui/styles/config/Themes.tsx';
+import { frontPageContent } from '../ui//static/frontPageContent.ts';
+import { Actions } from '../core/models/enums/Actions.enum.ts';
 
 export const StartContainer = (): ReactElement => {
   const { loginForm, handleLoginInput, handleLoginSubmit, loginMessage } =
@@ -17,14 +20,44 @@ export const StartContainer = (): ReactElement => {
     handleRegisterSubmit,
     registerMessage,
   } = useRegister();
-  const { state } = useContext(AppContext);
 
-  const isLogin = state.app.mainState === MainComponentsEnum.Login;
+  const { state, dispatch } = useContext(AppContext);
+
+  const [visible, setVisible] = useState(true);
+  const [activeState, setActiveState] = useState(state.app.mainState);
+
+  useEffect(() => {
+    if (state.app.mainState === activeState) return;
+    // 1. Disparar fadeOut
+    setVisible(false);
+    // 2. Después de la animación, cambiar contenido y hacer fadeIn
+    const timer = setTimeout(() => {
+      setActiveState(state.app.mainState);
+      setVisible(true);
+    }, animationConfig.general_fade_duration * 1000); // debe coincidir con la duración del fadeOut
+    return () => clearTimeout(timer);
+  }, [state.app.mainState]);
+
+  useEffect(() => {
+    dispatch({
+      type: Actions.SetError,
+      payload: loginMessage.message
+        ? loginMessage.message
+        : registerMessage.message,
+    });
+    const timer = setTimeout(() => {
+      dispatch({ type: Actions.SetError, payload: null });
+    }, 5000); // 5 segundos
+    return () => clearTimeout(timer);
+  }, [loginMessage, registerMessage]);
+
+  const isLogin = activeState === MainComponentsEnum.Login;
 
   return (
     <>
       <Form
-        handleInput={isLogin ? handleLoginInput : handleRegisterInput}
+        key={activeState} // fuerza re-mount para resetear animación
+        $visible={visible}
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
         messageForm={isLogin ? loginMessage : registerMessage}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
@@ -57,10 +90,9 @@ export const StartContainer = (): ReactElement => {
 
       <FrontPage
         frontPageContent={
-          isLogin
-            ? state.app.frontPageContent.login
-            : state.app.frontPageContent.register
+          isLogin ? frontPageContent.login : frontPageContent.register
         }
+        $visible={visible}
       />
     </>
   );
