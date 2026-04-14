@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { toastConfig } from '../../ui/styles/config/Themes';
 
 export const useToast = () => {
   const [toast, setToastMessage] = useState<{
@@ -9,8 +8,11 @@ export const useToast = () => {
 
   const showToast = (message: string, isDanger: boolean) => {
     setToastMessage({ message, isDanger });
-    setTimeout(() => setToastMessage(null), toastConfig.duration);
   };
 
-  return { toast, showToast };
+  const hideToast = () => {
+    setToastMessage(null);
+  };
+
+  return { toast, showToast, hideToast };
 };

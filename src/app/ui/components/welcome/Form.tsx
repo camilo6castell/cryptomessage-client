@@ -41,7 +41,7 @@ export const Form = ({
         <Link
           to={helpLink}
           onClick={() =>
-            state.app.mainState == MainComponentsEnum.Login
+            state.app.mainState === MainComponentsEnum.Login
               ? dispatch({
                   type: Actions.SetMainState,
                   payload: MainComponentsEnum.Register,

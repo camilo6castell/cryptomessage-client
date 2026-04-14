@@ -13,7 +13,7 @@ import { useToast } from '../core/hooks/useToast.tsx';
 import { Toast } from '../ui/components/general/Toast.tsx';
 
 export const StartContainer = (): ReactElement => {
-  const { toast, showToast } = useToast();
+  const { toast, showToast, hideToast } = useToast();
 
   const { loginForm, handleLoginInput, handleLoginSubmit } =
     useLogin(showToast);
@@ -39,9 +39,17 @@ export const StartContainer = (): ReactElement => {
 
   const isLogin = activeState === MainComponentsEnum.Login;
 
+  console.log(state);
+
   return (
     <>
-      {toast && <Toast message={toast.message} isDanger={toast.isDanger} />}
+      {toast && (
+        <Toast
+          message={toast.message}
+          isDanger={toast.isDanger}
+          onClose={hideToast}
+        />
+      )}
       <Form
         key={activeState} // fuerza re-mount para resetear animación
         $visible={visible}
