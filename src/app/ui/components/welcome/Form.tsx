@@ -8,7 +8,6 @@ import { fade } from '../../../../../src/app/ui/styles/keyframes';
 import { AppContext } from '../../../core/state/AppContext';
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
-import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 
 export const Form = ({
   children,
@@ -22,7 +21,6 @@ export const Form = ({
 }: {
   children: React.ReactNode;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  messageForm: IMessageForm;
   formTitle: string;
   formText: string;
   helpText: string;

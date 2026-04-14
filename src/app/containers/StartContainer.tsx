@@ -9,19 +9,18 @@ import { useRegister } from '../core/hooks/useRegister.ts';
 import { MainComponentsEnum } from '../core/models/enums/MainComponents.enum.ts';
 import { animationConfig } from '../ui/styles/config/Themes.tsx';
 import { frontPageContent } from '../ui//static/frontPageContent.ts';
-import { Actions } from '../core/models/enums/Actions.enum.ts';
+import { useToast } from '../core/hooks/useToast.tsx';
+import { Toast } from '../ui/components/general/Toast.tsx';
 
 export const StartContainer = (): ReactElement => {
-  const { loginForm, handleLoginInput, handleLoginSubmit, loginMessage } =
-    useLogin();
-  const {
-    registerForm,
-    handleRegisterInput,
-    handleRegisterSubmit,
-    registerMessage,
-  } = useRegister();
+  const { toast, showToast } = useToast();
 
-  const { state, dispatch } = useContext(AppContext);
+  const { loginForm, handleLoginInput, handleLoginSubmit } =
+    useLogin(showToast);
+  const { registerForm, handleRegisterInput, handleRegisterSubmit } =
+    useRegister(showToast);
+
+  const { state } = useContext(AppContext);
 
   const [visible, setVisible] = useState(true);
   const [activeState, setActiveState] = useState(state.app.mainState);
@@ -38,28 +37,15 @@ export const StartContainer = (): ReactElement => {
     return () => clearTimeout(timer);
   }, [state.app.mainState]);
 
-  useEffect(() => {
-    dispatch({
-      type: Actions.SetError,
-      payload: loginMessage.message
-        ? loginMessage.message
-        : registerMessage.message,
-    });
-    const timer = setTimeout(() => {
-      dispatch({ type: Actions.SetError, payload: null });
-    }, 5000); // 5 segundos
-    return () => clearTimeout(timer);
-  }, [loginMessage, registerMessage]);
-
   const isLogin = activeState === MainComponentsEnum.Login;
 
   return (
     <>
+      {toast && <Toast message={toast.message} isDanger={toast.isDanger} />}
       <Form
         key={activeState} // fuerza re-mount para resetear animación
         $visible={visible}
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
-        messageForm={isLogin ? loginMessage : registerMessage}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
         formText={isLogin ? 'Welcome back!' : 'Join us!'}
         helpText={isLogin ? "Don't have an account?" : 'Already registered?'}

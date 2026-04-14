@@ -103,4 +103,14 @@ export const fade = {
       opacity: 0;
     }
   `,
+  upOut: keyframes`
+    from {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(0, ${animationConfig.general_fade_duration}rem, 0);
+    }
+  `,
 };

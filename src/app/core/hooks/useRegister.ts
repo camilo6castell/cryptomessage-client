@@ -1,20 +1,12 @@
-// src/app/core/hooks/useRegister.ts
-import { useState } from 'react';
-
 import { useHandleInput } from './useHandleInput';
 import { authApi } from '../api/auth.api';
 import { ConflictError } from '../errors/ConflictError';
 import { ApiError } from '../errors/ApiError';
-import { ElementStyles } from '../models/enums/ElementStyles.enum';
-
-import type { IMessageForm } from '../models/ui/IMessageForm.model';
-import { initialMessageForm } from '../models/ui/IMessageForm.model';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
 
-export const useRegister = () => {
-  const [registerMessage, setRegisterMessage] =
-    useState<IMessageForm>(initialMessageForm);
-
+export const useRegister = (
+  showToast: (message: string, isDanger: boolean) => void
+) => {
   const {
     form: registerForm,
     handleInput: handleRegisterInput,
@@ -30,27 +22,18 @@ export const useRegister = () => {
         username: registerForm.username,
         passphrase: registerForm.passphrase,
       });
-      setRegisterMessage({
-        style: ElementStyles.Success,
-        message: 'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
-      });
+      showToast(
+        'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
+        false
+      );
       resetRegisterForm();
     } catch (err) {
       if (err instanceof ConflictError) {
-        setRegisterMessage({
-          style: ElementStyles.Warning,
-          message: 'Ese nombre de usuario ya existe. Intenta con otro.',
-        });
+        showToast('Ese nombre de usuario ya existe. Intenta con otro.', true);
       } else if (err instanceof ApiError) {
-        setRegisterMessage({
-          style: ElementStyles.Warning,
-          message: `Error del servidor (${err.status})`,
-        });
+        showToast(`Error del servidor (${err.status})`, true);
       } else {
-        setRegisterMessage({
-          style: ElementStyles.Danger,
-          message: 'Error de conexión',
-        });
+        showToast('Error de conexión', true);
       }
     }
   };
@@ -59,6 +42,5 @@ export const useRegister = () => {
     registerForm,
     handleRegisterInput,
     handleRegisterSubmit,
-    registerMessage,
   };
 };

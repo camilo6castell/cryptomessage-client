@@ -1,10 +1,7 @@
-// src/app/core/hooks/useLogin.ts
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { AppContext } from '../state/AppContext';
 import { Actions } from '../models/enums/Actions.enum';
-import { ElementStyles } from '../models/enums/ElementStyles.enum';
 import { useHandleInput } from './useHandleInput';
 import { authApi } from '../api/auth.api';
 import { contactsApi } from '../api/contacts.api';
@@ -13,19 +10,15 @@ import { StorageService } from '../services/storage.service';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { ApiError } from '../errors/ApiError';
 import { mapLoginToUser, mapContact, mapChat } from '../mappers/loadUser.map';
-
-import type { IMessageForm } from '../models/ui/IMessageForm.model';
-import { initialMessageForm } from '../models/ui/IMessageForm.model';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
 
 const storage = new StorageService();
 
-export const useLogin = () => {
+export const useLogin = (
+  showToast: (message: string, isDanger: boolean) => void
+) => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
-
-  const [loginMessage, setLoginMessage] =
-    useState<IMessageForm>(initialMessageForm);
 
   const {
     form: loginForm,
@@ -55,31 +48,19 @@ export const useLogin = () => {
       chats.forEach((c) =>
         dispatch({ type: Actions.AddChat, payload: mapChat(c) })
       );
-      setLoginMessage({
-        style: ElementStyles.Success,
-        message: 'Inicio de sesión exitoso',
-      });
+      showToast('Inicio de sesión exitoso', false);
       resetLoginForm();
       navigate('/');
     } catch (err) {
       if (err instanceof UnauthorizedError) {
-        setLoginMessage({
-          style: ElementStyles.Danger,
-          message: 'Usuario o passphrase incorrectos',
-        });
+        showToast('Usuario o passphrase incorrectos', true);
       } else if (err instanceof ApiError) {
-        setLoginMessage({
-          style: ElementStyles.Warning,
-          message: `Error del servidor (${err.status})`,
-        });
+        showToast(`Error del servidor (${err.status})`, true);
       } else {
-        setLoginMessage({
-          style: ElementStyles.Danger,
-          message: 'Error de conexión',
-        });
+        showToast('Error de conexión', true);
       }
     }
   };
 
-  return { loginForm, handleLoginInput, handleLoginSubmit, loginMessage };
+  return { loginForm, handleLoginInput, handleLoginSubmit };
 };
