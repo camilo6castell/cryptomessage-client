@@ -38,7 +38,7 @@ export interface ILoginFormDataResponse {
   userId: number;
   username: string;
   publicKey: string;
-  privateKey: string;
+  encryptedPrivateKey: string;
   createdAt: string;
   contacts: IContact[];
   chats: IChat[];

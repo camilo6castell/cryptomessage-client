@@ -4,8 +4,9 @@ import { IChat } from './IChat.model';
 export interface IUser {
   userId: number | null;
   username: string | null;
+  token: string | null;
   publicKey: string | null;
-  privateKey: string | null;
+  encryptedPrivateKey: string | null;
   contacts: IContact[];
   chats: IChat[];
 }
@@ -13,8 +14,9 @@ export interface IUser {
 export const InitialUser: IUser = {
   userId: null,
   username: null,
+  token: null,
   publicKey: null,
-  privateKey: null,
+  encryptedPrivateKey: null,
   contacts: [],
   chats: [],
 };

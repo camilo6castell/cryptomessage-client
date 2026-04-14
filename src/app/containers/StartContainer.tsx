@@ -39,8 +39,6 @@ export const StartContainer = (): ReactElement => {
 
   const isLogin = activeState === MainComponentsEnum.Login;
 
-  console.log(state);
-
   return (
     <>
       {toast && (

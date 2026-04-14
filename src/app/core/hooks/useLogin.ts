@@ -6,13 +6,10 @@ import { useHandleInput } from './useHandleInput';
 import { authApi } from '../api/auth.api';
 import { contactsApi } from '../api/contacts.api';
 import { chatsApi } from '../api/chats.api';
-import { StorageService } from '../services/storage.service';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { ApiError } from '../errors/ApiError';
 import { mapLoginToUser, mapContact, mapChat } from '../mappers/loadUser.map';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
-
-const storage = new StorageService();
 
 export const useLogin = (
   showToast: (message: string, isDanger: boolean) => void
@@ -35,8 +32,6 @@ export const useLogin = (
         username: loginForm.username,
         passphrase: loginForm.passphrase,
       });
-      storage.set('TOKEN', loginData.token);
-      storage.set('ENCRYPTED_PRIVATE_KEY', loginData.encryptedPrivateKey);
       dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
       const [contacts, chats] = await Promise.all([
         contactsApi.list(),
