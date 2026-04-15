@@ -33,9 +33,9 @@ const StyledContactList = styled.div`
   /* justify-content: center; */
   align-items: center;
 
-  width: 100%;
-  height: var(--section-under-mainbar);
+  width: ${({ theme }) => theme.general.mainSectionWidth};
+  height: 100%;
 
-  border-radius: 1rem 0 0 0;
+  border-radius: 0 0 0 ${({ theme }) => theme.general.borderRadius};
   border: 1px solid #ffffff;
 `;

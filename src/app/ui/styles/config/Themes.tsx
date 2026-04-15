@@ -24,7 +24,10 @@ export const colorConfig = {
 
 const generalConfig = {
   borderRadius: '20px',
-  mainBackgroundFilter: 'blur(10px)',
+  mainBackdropdFilter: 'blur(10px)',
+  navBarheight: '10%',
+  mainSectionWidth: '30%',
+  auxSectionWidth: '70%',
 };
 
 const errorConfig = {
@@ -46,7 +49,8 @@ export const toastConfig = {
 
 export const themes = {
   dark: {
-    mainBackgroundColor: '#02071d39',
+    mainBackgroundColor: 'transparent',
+
     mainFontColor: '#d9faff',
     darkGlassEffect: {
       background:
@@ -59,7 +63,9 @@ export const themes = {
       primaryBoxShadow: '-1px -1px 0px #ffffff3a, 1px 1px 2px #69686879',
     },
     waves: {
-      filter: 'brightness(1) invert(0) grayscale(0) hue-rotate(0deg)',
+      filterPrimary: 'brightness(1) invert(0) grayscale(0) hue-rotate(0deg)',
+      filterSecondary:
+        'brightness(0.2) invert(0) grayscale(0) hue-rotate(0deg)',
     },
     toast: toastConfig,
     general: generalConfig,
@@ -84,7 +90,9 @@ export const themes = {
       primaryBoxShadow: '-1px -1px 0px #0000003a, 1px 1px 2px #69686879',
     },
     waves: {
-      filter: 'brightness(1) invert(1) grayscale(0) hue-rotate(120deg)',
+      filterPrimary: 'brightness(1) invert(1) grayscale(0) hue-rotate(120deg)',
+      filterSecondary:
+        'brightness(0.5) invert(1) grayscale(0) hue-rotate(120deg)',
     },
     toast: toastConfig,
     general: generalConfig,

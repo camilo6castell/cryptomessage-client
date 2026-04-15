@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { H1 } from '../../elements/font';
 import { UserCard } from './pieces/UserCard';
 import { Button } from '../../elements/Button';
-
-import { ElementStyles } from '../../../core/models/enums/ElementStyles.enum';
 import { useLogout } from '../../../core/hooks/useLogout';
 
 export const UserInfo = ({ username }: { username: string }): ReactElement => {
@@ -15,11 +13,7 @@ export const UserInfo = ({ username }: { username: string }): ReactElement => {
       <H1>User Information</H1>
       <UserCard username={username} heightUserCard={60} />
       <div className="button-container">
-        <Button
-          textButton="Logout"
-          style={ElementStyles.Danger}
-          onClick={logout}
-        />
+        <Button textButton="Logout" onClick={logout} />
       </div>
     </StyledUserInfo>
   );
@@ -31,11 +25,11 @@ const StyledUserInfo = styled.div`
   justify-content: center;
   align-items: center;
 
-  border-radius: 1rem 0 0 0;
+  border-radius: 0 0 0 ${({ theme }) => theme.general.borderRadius};
   border: 1px solid #ffffff;
 
-  width: 100%;
-  height: var(--section-under-mainbar);
+  width: ${({ theme }) => theme.general.mainSectionWidth};
+  height: 100%;
 
   .button-container {
     display: flex;

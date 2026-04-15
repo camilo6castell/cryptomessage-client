@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { IChat } from '../../../core/models/main/IChat.model';
 import { ChatWindow } from './pieces/ChatWindow';
 import { ChatWindowInput } from './pieces/ChatWindowInput';
+import { GenericContainer } from '../../layouts/GenericContainer';
 
 export const ChatListAux = ({
   chatList,
@@ -26,17 +27,12 @@ export const ChatListAux = ({
   );
 };
 
-const StyledUserInfoAux = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: var(--section-under-mainbar);
+const StyledUserInfoAux = styled(GenericContainer)`
+  width: ${({ theme }) => theme.general.auxSectionWidth};
+  height: 100%;
 
   overflow-y: hidden;
 
-  background-color: var(--aux-background-color);
-
   border: 1px solid #ffff;
-  border-radius: 0 1rem 0 0;
+  border-radius: 0 0 ${({ theme }) => theme.general.borderRadius} 0;
 `;

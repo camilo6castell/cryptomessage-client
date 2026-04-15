@@ -23,8 +23,8 @@ export const GlobalStyle = createGlobalStyle`
 
     /* COLORS */
 
-    --element-background-color: #000000;
-    --component-background-color: #000000;
+    --element-background-color: #ff0000;
+    --component-background-color: #ff0000;
     /* --primary-gradient: linear-gradient(to right, var(--button-primary-background-color), var(--primary-color)); */
 
     /* BREAKPOINTS ----- NO FUNCIONA */

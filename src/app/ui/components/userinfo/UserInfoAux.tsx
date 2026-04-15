@@ -11,7 +11,7 @@ export const UserInfoAux = (): ReactElement => {
       <h2>PublicKey:</h2>
       <p>{state.user.publicKey}</p>
       <h2>PrivateKey:</h2>
-      <p>{state.user.privateKey}</p>
+      <p>{state.user.encryptedPrivateKey}</p>
     </StyledUserInfoAux>
   );
 };
@@ -21,8 +21,8 @@ const StyledUserInfoAux = styled.div`
   flex-direction: column;
   flex: 1;
 
-  width: 100%;
-  height: var(--section-under-mainbar);
+  width: ${({ theme }) => theme.general.auxSectionWidth};
+  height: 100%;
 
   padding: 2rem;
 
@@ -31,7 +31,7 @@ const StyledUserInfoAux = styled.div`
   background-color: var(--aux-background-color);
 
   border: 1px solid #ffff;
-  border-radius: 0 1rem 0 0;
+  border-radius: 0 0 ${({ theme }) => theme.general.borderRadius} 0;
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -49,9 +49,6 @@ const StyledUserInfoAux = styled.div`
     line-height: 1.5;
     word-break: break-all;
   }
-
-  width: 100%;
-  height: var(--section-under-mainbar);
 
   overflow: scroll;
 

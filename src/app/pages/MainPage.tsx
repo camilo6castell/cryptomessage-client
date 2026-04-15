@@ -13,40 +13,28 @@ import { ChatListContainerAux } from '../containers/ChatListContainerAux';
 import { MainComponentsEnum } from '../core/models/enums/MainComponents.enum';
 
 export const MainPage = (): ReactElement => {
-  // CONTEXT
   const { state } = useContext(AppContext);
-  // END CONTEXT
-
-  const mainRenderContainer = (): ReactElement => {
-    switch (state.app.mainState) {
-      case MainComponentsEnum.UserInfo:
-        return <UserInfoContainer />;
-      case MainComponentsEnum.ChatList:
-        return <ChatListContainer />;
-      case MainComponentsEnum.ContactList:
-        return <ContactListContainer />;
-      default:
-        return <div> Error </div>;
-    }
-  };
-
-  const auxRenderContainer = (): ReactElement => {
-    switch (state.app.mainState) {
-      case MainComponentsEnum.UserInfo:
-        return <UserInfoContainerAux />;
-      case MainComponentsEnum.ChatList:
-        return <ChatListContainerAux />;
-      case MainComponentsEnum.ContactList:
-        return <ContactListContainerAux />;
-      default:
-        return <div>Error</div>;
-    }
-  };
-
   return (
     <>
-      <MainSection>{mainRenderContainer()}</MainSection>
-      <AuxSection> {auxRenderContainer()}</AuxSection>
+      {state.app.mainState === MainComponentsEnum.ChatList && (
+        <ChatListContainer />
+      )}
+      {state.app.mainState === MainComponentsEnum.ContactList && (
+        <ContactListContainer />
+      )}
+      {state.app.mainState === MainComponentsEnum.UserInfo && (
+        <UserInfoContainer />
+      )}
+
+      {state.app.mainState === MainComponentsEnum.ChatList && (
+        <ChatListContainerAux />
+      )}
+      {state.app.mainState === MainComponentsEnum.ContactList && (
+        <ContactListContainerAux />
+      )}
+      {state.app.mainState === MainComponentsEnum.UserInfo && (
+        <UserInfoContainerAux />
+      )}
     </>
   );
 };

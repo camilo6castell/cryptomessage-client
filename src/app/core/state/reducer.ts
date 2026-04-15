@@ -51,6 +51,13 @@ const useCases: {
       ),
     },
   }),
+  [Actions.SetContacts]: (state, payload: IContact[]) => ({
+    ...state,
+    user: {
+      ...state.user,
+      contacts: payload,
+    },
+  }),
   [Actions.AddChat]: (state: IAppState, payload: IChat): IAppState => ({
     ...state,
     user: {

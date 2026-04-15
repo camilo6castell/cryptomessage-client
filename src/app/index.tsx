@@ -29,8 +29,8 @@ export const StyledApp = styled.div`
   font-weight: ${({ theme }) => theme.font.mainFontWeight};
   color: ${({ theme }) => theme.mainFontColor};
 
-  /* background-color: ${({ theme }) => theme.mainBackgroundColor};
-  backdrop-filter: ${({ theme }) => theme.mainBackgroundFilter}; */
+  background-color: ${({ theme }) => theme.mainBackgroundColor};
+  backdrop-filter: ${({ theme }) => theme.general.mainBackdropdFilter};
 
   transition: all ${({ theme }) => theme.animation.general_duration}s
     ease-in-out;

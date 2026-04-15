@@ -9,8 +9,9 @@ import { IContact } from '../models/main/IContact.model';
 export const mapLoginToUser = (data: LoginApiResponse): IUser => ({
   userId: data.user.userId,
   username: data.user.username,
+  token: data.token,
   publicKey: data.user.publicKey,
-  privateKey: data.encryptedPrivateKey,
+  encryptedPrivateKey: data.encryptedPrivateKey,
   contacts: [],
   chats: [],
 });

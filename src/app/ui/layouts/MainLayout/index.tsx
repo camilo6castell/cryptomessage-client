@@ -1,18 +1,25 @@
 import { ReactElement } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import { NavBarContainer } from '../../../containers/NavBarContainer';
+import { GenericContainer } from '../GenericContainer';
 
 export const MainLayout = (): ReactElement => {
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <StyledMainLayout>
+      <NavBarContainer />
+      <StyledOulet>
+        <Outlet />
+      </StyledOulet>
+    </StyledMainLayout>
   );
 };
 
-export const Layout = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
+export const StyledMainLayout = styled(GenericContainer)`
   z-index: 1;
+  padding: 3rem;
+`;
+
+const StyledOulet = styled(GenericContainer)`
+  flex-direction: row;
 `;

@@ -4,12 +4,11 @@ import { AppContext } from '../state/AppContext';
 import { Actions } from '../models/enums/Actions.enum';
 import { useHandleInput } from './useHandleInput';
 import { authApi } from '../api/auth.api';
-import { contactsApi } from '../api/contacts.api';
-import { chatsApi } from '../api/chats.api';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { ApiError } from '../errors/ApiError';
-import { mapLoginToUser, mapContact, mapChat } from '../mappers/loadUser.map';
+import { mapLoginToUser } from '../mappers/loadUser.map';
 import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
+import { MainComponentsEnum } from '../models/enums/MainComponents.enum';
 
 export const useLogin = (
   showToast: (message: string, isDanger: boolean) => void
@@ -32,19 +31,13 @@ export const useLogin = (
         username: loginForm.username,
         passphrase: loginForm.passphrase,
       });
-      dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
-      const [contacts, chats] = await Promise.all([
-        contactsApi.list(),
-        chatsApi.list(),
-      ]);
-      contacts.forEach((c) =>
-        dispatch({ type: Actions.AddContact, payload: mapContact(c) })
-      );
-      chats.forEach((c) =>
-        dispatch({ type: Actions.AddChat, payload: mapChat(c) })
-      );
       showToast('Inicio de sesión exitoso', false);
       resetLoginForm();
+      dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
+      dispatch({
+        type: Actions.SetMainState,
+        payload: MainComponentsEnum.ChatList,
+      });
       navigate('/');
     } catch (err) {
       if (err instanceof UnauthorizedError) {

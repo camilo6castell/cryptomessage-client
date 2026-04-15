@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ChatCard } from './pieces/ChatCard';
 import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { IChat } from '../../../core/models/main/IChat.model';
+import { GenericContainer } from '../../layouts/GenericContainer';
 
 export const ChatList = ({ chatList }: { chatList: IChat[] }): ReactElement => {
   return (
@@ -20,17 +21,12 @@ export const ChatList = ({ chatList }: { chatList: IChat[] }): ReactElement => {
   );
 };
 
-const StyledChatList = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+const StyledChatList = styled(GenericContainer)`
   position: relative;
-  width: 100%;
-  height: var(--section-under-mainbar);
+  width: ${({ theme }) => theme.general.mainSectionWidth};
+  height: 100%;
 
-  border-radius: 1rem 0 0 0;
+  border-radius: 0 0 0 ${({ theme }) => theme.general.borderRadius};
   border: 1px solid #ffffff;
 
   overflow-y: scroll;
