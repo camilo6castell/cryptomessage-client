@@ -6,7 +6,6 @@ import { AppContext } from '../../../../core/state/AppContext';
 import { useCreateChat } from '../../../../core/hooks/useCreateChat';
 import { Avatar } from '../../../elements/Avatar';
 import { Button } from '../../../elements/Button';
-import { ElementStyles } from '../../../../core/models/enums/ElementStyles.enum';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 
@@ -34,7 +33,6 @@ export const ContactItem = ({
           {existingChat ? (
             <Button
               textButton="Ir al chat"
-              style={ElementStyles.Primary}
               onClick={() => {
                 dispatch({
                   type: Actions.SetMainAuxChat,
@@ -49,7 +47,6 @@ export const ContactItem = ({
           ) : (
             <Button
               textButton="Crear chat"
-              style={ElementStyles.Success}
               onClick={() => {
                 createChat(contact).catch(console.error);
               }}
@@ -57,7 +54,6 @@ export const ContactItem = ({
           )}
           <Button
             textButton="Eliminar"
-            style={ElementStyles.Danger}
             onClick={() => {
               deleteContact(contact).catch(console.error);
             }}

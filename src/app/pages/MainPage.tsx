@@ -1,9 +1,5 @@
 import { ReactElement, useContext } from 'react';
-
-import { MainSection } from '../ui/elements/sections/MainSection';
-import { AuxSection } from '../ui/elements/sections/AuxSection';
 import { AppContext } from '../core/state/AppContext';
-
 import { UserInfoContainer } from '../containers/UserInfoContainer';
 import { ChatListContainer } from '../containers/ChatListContainer';
 import { UserInfoContainerAux } from '../containers/UserInfoContainerAux';

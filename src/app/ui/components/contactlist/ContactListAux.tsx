@@ -2,60 +2,76 @@ import { ReactElement } from 'react';
 import styled from 'styled-components';
 
 import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
-
-import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
-import { ElementStyles } from '../../../core/models/enums/ElementStyles.enum';
-import { ContactFoundCard } from './pieces/ContactFoundCard';
 import { IContact } from '../../../core/models/main/IContact.model';
 
+import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
+import { ContactFoundCard } from './pieces/ContactFoundCard';
+import { SearchBox } from './pieces/SearchBox';
+
 export const ContactListAux = ({
+  form,
+  handleInput,
+  handleSearch,
   isContact,
   messageForm,
   handleAddContactSubmit,
 }: {
+  form: Record<string, string>;
+  handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
   isContact: IContact;
   messageForm: IMessageForm;
   handleAddContactSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }): ReactElement => {
-  const contentRenderer = (): ReactElement => {
-    switch (messageForm.style) {
-      case null:
-        return (
-          <>
-            <h1>¡Busca un contacto!</h1>
-            <p>
-              ¡Ingresa el nombre de usuario de la persona que deseas buscar!
-            </p>
-          </>
-        );
-      case ElementStyles.Success: {
-        if (!isContact.username) {
-          return <h1>Error en el sistema, debería haber Contact</h1>;
-        }
-        return (
-          <>
-            <h1>¡Se encontró el siguiente resultado!</h1>
-            <ContactFoundCard
-              isContact={isContact}
-              handleAddContactSubmit={handleAddContactSubmit}
-            />
-          </>
-        );
-      }
-      case ElementStyles.Danger: {
-        return (
-          <>
-            <h1>No se encontraron resultados.</h1>
-            <p>¡Intenta con otro nombre de usuario!</p>
-          </>
-        );
+  const isIdle = messageForm.message === null;
+  const isError = messageForm.message !== null && messageForm.isDanger;
+  const isSuccess = messageForm.message !== null && !messageForm.isDanger;
+
+  const renderContent = () => {
+    if (isIdle) {
+      return (
+        <>
+          <h1>¡Busca un contacto!</h1>
+          <p>¡Ingresa el nombre de usuario de la persona que deseas buscar!</p>
+          <SearchBox
+            handleSearchContactSubmit={handleSearch}
+            handleInput={handleInput}
+            value={form.username}
+          />
+        </>
+      );
+    }
+
+    if (isError) {
+      return (
+        <>
+          <h1>{messageForm.message}</h1>
+          <p>¡Intenta con otro nombre de usuario!</p>
+        </>
+      );
+    }
+
+    if (isSuccess) {
+      // ⚠️ Protección extra
+      if (!isContact.username) {
+        return <h1>Error: contacto no definido</h1>;
       }
 
-      default:
-        return <h1>Error en el sistema</h1>;
+      return (
+        <>
+          <h1>{messageForm.message}</h1>
+          <ContactFoundCard
+            isContact={isContact}
+            handleAddContactSubmit={handleAddContactSubmit}
+          />
+        </>
+      );
     }
+
+    return <h1>Error inesperado</h1>;
   };
-  return <StyledUserInfoAux>{contentRenderer()}</StyledUserInfoAux>;
+
+  return <StyledUserInfoAux>{renderContent()}</StyledUserInfoAux>;
 };
 
 const StyledUserInfoAux = styled.div`

@@ -17,6 +17,8 @@ export const ContactListContainer = (): ReactElement => {
       try {
         const contacts = await contactsApi.list();
 
+        console.log('Contactos cargados:', contacts); // 👈 log para verificar la respuesta
+
         dispatch({
           type: Actions.SetContacts, // 👈 mejor que múltiples dispatch
           payload: contacts.map(mapContact),

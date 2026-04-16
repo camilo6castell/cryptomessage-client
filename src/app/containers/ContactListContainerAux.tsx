@@ -7,14 +7,20 @@ export const ContactListContainerAux = (): ReactElement => {
   const {
     contact,
     message,
-
     handleAddContact,
+    form,
+    handleInput,
+    handleSearch,
   } = useContactSearch();
+
   return (
     <ContactListAux
       isContact={contact}
       messageForm={message}
       handleAddContactSubmit={handleAddContact}
+      form={form}
+      handleInput={handleInput}
+      handleSearch={handleSearch}
     />
   );
 };

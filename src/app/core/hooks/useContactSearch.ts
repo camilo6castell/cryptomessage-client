@@ -13,14 +13,14 @@ import {
 } from '../models/ui/IMessageForm.model';
 
 import { initialContactSearchForm } from '../models/ui/IContactSearchForm.model';
-import { ElementStyles } from '../models/enums/ElementStyles.enum';
 import { Actions } from '../models/enums/Actions.enum';
 
 export const useContactSearch = () => {
   const { state, dispatch } = useContext(AppContext);
 
-  const [contact, setContact] = useState<IContact>(initialContact);
+  const [contact, setNewContact] = useState<IContact>(initialContact);
   const [message, setMessage] = useState<IMessageForm>(initialMessageForm);
+  const [loading, setLoading] = useState(false);
 
   const { form, handleInput, resetForm } = useHandleInput(
     initialContactSearchForm as unknown as Record<string, string>
@@ -30,16 +30,26 @@ export const useContactSearch = () => {
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setContact(initialContact);
-    setMessage(initialMessageForm);
+    // Validación básica
+    if (!form.username.trim()) {
+      setMessage({
+        isDanger: true,
+        message: 'Ingresa un nombre de usuario',
+      });
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const data = await contactsApi.search(form.username);
+      const data = await contactsApi.search(form.username.trim());
+      console.log('Contacto encontrado:', data);
 
-      if (data.username === state.user.username) {
+      // Evitar agregarse a sí mismo
+      if (data.contactId === state.user.userId) {
         setMessage({
-          style: ElementStyles.Danger,
-          message: 'No se encontraron resultados',
+          isDanger: true,
+          message: 'No puedes agregarte a ti mismo',
         });
         return;
       }
@@ -51,26 +61,28 @@ export const useContactSearch = () => {
         addedAt: null,
       };
 
-      setContact(newContact);
+      setNewContact(newContact);
 
       setMessage({
-        style: ElementStyles.Success,
+        isDanger: false,
         message: 'Se encontró el siguiente resultado',
       });
+
+      resetForm();
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {
         setMessage({
-          style: ElementStyles.Danger,
+          isDanger: true,
           message: 'No se encontraron resultados',
         });
       } else {
         setMessage({
-          style: ElementStyles.Danger,
+          isDanger: true,
           message: 'Error al buscar contacto',
         });
       }
     } finally {
-      resetForm();
+      setLoading(false);
     }
   };
 
@@ -78,28 +90,54 @@ export const useContactSearch = () => {
   const handleAddContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!contact.contactId) {
+      setMessage({
+        isDanger: true,
+        message: 'No hay contacto para agregar',
+      });
+      return;
+    }
+
     try {
-      if (!contact.contactId) return;
       await contactsApi.add(contact.contactId);
 
       dispatch({
         type: Actions.AddContact,
         payload: contact,
       });
+
+      setMessage({
+        isDanger: false,
+        message: 'Contacto agregado correctamente',
+      });
+
+      setNewContact(initialContact);
     } catch (err) {
       if (err instanceof ApiError) {
+        setMessage({
+          isDanger: true,
+          message: `Error: ${err.status}`,
+        });
         console.error(`Error agregando contacto: HTTP ${err.status}`, err.data);
       } else {
+        setMessage({
+          isDanger: true,
+          message: 'Error al agregar contacto',
+        });
         console.error('Error agregando contacto:', err);
       }
     }
   };
+
+  console.log('useContactSearch - contact:', contact);
+  console.log('useContactSearch - message:', message);
 
   return {
     form,
     handleInput,
     contact,
     message,
+    loading,
     handleSearch,
     handleAddContact,
   };

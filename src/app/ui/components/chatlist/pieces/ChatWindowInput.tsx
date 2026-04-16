@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useHandleInput } from '../../../../core/hooks/useHandleInput';
 import { useSendMessage } from '../../../../core/hooks/useSendMessage';
 import { Button } from '../../../elements/Button';
-import { ElementStyles } from '../../../../core/models/enums/ElementStyles.enum';
 
 export const ChatWindowInput = ({
   chatId,
@@ -38,15 +37,7 @@ export const ChatWindowInput = ({
         value={form.messageContent}
         onChange={handleInput}
       />
-      <Button
-        textButton="Send"
-        style={
-          form.messageContent === ''
-            ? ElementStyles.Disabled
-            : ElementStyles.Primary
-        }
-        onClick={() => {}}
-      />
+      <Button textButton="Send" onClick={() => {}} />
     </StyledChatWindowInput>
   );
 };

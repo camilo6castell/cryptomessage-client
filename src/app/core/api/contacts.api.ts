@@ -1,4 +1,3 @@
-// src/app/core/api/contacts.api.ts
 import { httpClient } from './http.client';
 import { API_BASE_URL } from '../config/api.config';
 

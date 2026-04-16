@@ -3,6 +3,7 @@ import { ApiError } from '../errors/ApiError';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { ForbiddenError } from '../errors/ForbiddenError';
 import { ConflictError } from '../errors/ConflictError';
+import { IAppState } from '../models/context/IAppState.model';
 
 const storage = new StorageService();
 
@@ -13,7 +14,7 @@ async function request<T>(
   url: string,
   body?: unknown
 ): Promise<T> {
-  const token = storage.get<string>('TOKEN');
+  const token = storage.get<IAppState>('APP_STATE')?.user.token;
 
   const response = await fetch(url, {
     method,

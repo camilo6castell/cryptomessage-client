@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
-import { colorMap } from '../../../styles/maps/ColorMap.map';
 import { colorTextAnimation } from '../../../styles/keyframes';
 import { IMessageForm } from '../../../../core/models/ui/IMessageForm.model';
 
@@ -9,10 +8,10 @@ export const ResultMessageForm = ({
 }: {
   messageForm: IMessageForm;
 }): ReactElement => {
-  if (!messageForm.style) {
+  if (!messageForm.isDanger) {
     return <></>;
   } else {
-    const color = colorMap[messageForm.style];
+    const color = 'rgb(255, 0, 0)';
     return <StyledSpan color={color}>{messageForm.message}</StyledSpan>;
   }
 };
