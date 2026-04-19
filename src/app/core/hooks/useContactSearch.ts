@@ -14,6 +14,7 @@ import {
 
 import { initialContactSearchForm } from '../models/ui/IContactSearchForm.model';
 import { Actions } from '../models/enums/Actions.enum';
+import { MessageStatus } from '../models/enums/MessageStatus.enum';
 
 export const useContactSearch = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -33,6 +34,7 @@ export const useContactSearch = () => {
     // Validación básica
     if (!form.username.trim()) {
       setMessage({
+        result: MessageStatus.Error,
         isDanger: true,
         message: 'Ingresa un nombre de usuario',
       });
@@ -43,11 +45,11 @@ export const useContactSearch = () => {
 
     try {
       const data = await contactsApi.search(form.username.trim());
-      console.log('Contacto encontrado:', data);
 
       // Evitar agregarse a sí mismo
       if (data.contactId === state.user.userId) {
         setMessage({
+          result: MessageStatus.Error,
           isDanger: true,
           message: 'No puedes agregarte a ti mismo',
         });
@@ -58,12 +60,12 @@ export const useContactSearch = () => {
         contactId: data.contactId,
         username: data.username,
         publicKey: data.publicKey,
-        addedAt: null,
       };
 
       setNewContact(newContact);
 
       setMessage({
+        result: MessageStatus.Success,
         isDanger: false,
         message: 'Se encontró el siguiente resultado',
       });
@@ -72,11 +74,13 @@ export const useContactSearch = () => {
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {
         setMessage({
+          result: MessageStatus.Error,
           isDanger: true,
           message: 'No se encontraron resultados',
         });
       } else {
         setMessage({
+          result: MessageStatus.Error,
           isDanger: true,
           message: 'Error al buscar contacto',
         });
@@ -87,11 +91,10 @@ export const useContactSearch = () => {
   };
 
   // ➕ Agregar contacto
-  const handleAddContact = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleAddContact = async () => {
     if (!contact.contactId) {
       setMessage({
+        result: MessageStatus.Error,
         isDanger: true,
         message: 'No hay contacto para agregar',
       });
@@ -107,6 +110,7 @@ export const useContactSearch = () => {
       });
 
       setMessage({
+        result: MessageStatus.Success,
         isDanger: false,
         message: 'Contacto agregado correctamente',
       });
@@ -115,12 +119,14 @@ export const useContactSearch = () => {
     } catch (err) {
       if (err instanceof ApiError) {
         setMessage({
+          result: MessageStatus.Error,
           isDanger: true,
           message: `Error: ${err.status}`,
         });
         console.error(`Error agregando contacto: HTTP ${err.status}`, err.data);
       } else {
         setMessage({
+          result: MessageStatus.Error,
           isDanger: true,
           message: 'Error al agregar contacto',
         });
@@ -128,9 +134,6 @@ export const useContactSearch = () => {
       }
     }
   };
-
-  console.log('useContactSearch - contact:', contact);
-  console.log('useContactSearch - message:', message);
 
   return {
     form,

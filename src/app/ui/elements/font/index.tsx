@@ -31,6 +31,11 @@ export const P2 = styled(baseFont)`
   letter-spacing: 0.3px;
 `;
 
+export const H3 = styled(baseFont)`
+  font-size: 1rem;
+  font-weight: 700;
+`;
+
 export const Link1 = styled.a`
   color: red;
 `;

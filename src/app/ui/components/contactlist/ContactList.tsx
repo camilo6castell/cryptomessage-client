@@ -2,6 +2,7 @@ import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { IContact } from '../../../core/models/main/IContact.model';
 import { ContactItem } from './pieces/ContactItem';
+import { GenericContainer } from '../../layouts/GenericContainer';
 
 export const ContactList = ({
   contacts,
@@ -27,14 +28,9 @@ export const ContactList = ({
   );
 };
 
-const StyledContactList = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  align-items: center;
-
+const StyledContactList = styled(GenericContainer)`
+  justify-content: flex-start;
   width: ${({ theme }) => theme.general.mainSectionWidth};
-  height: 100%;
 
   border-radius: 0 0 0 ${({ theme }) => theme.general.borderRadius};
   border: 1px solid #ffffff;

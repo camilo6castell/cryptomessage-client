@@ -3,6 +3,7 @@ export interface UserResponse {
   username: string;
   createdAt: string;
   publicKey: string;
+  encryptedPrivateKey: string;
 }
 
 export interface LoginApiResponse {

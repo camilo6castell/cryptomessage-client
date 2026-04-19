@@ -13,7 +13,7 @@ export interface IAppState {
 export const initialAppState: IAppState = {
   user: InitialUser,
   app: {
-    mainState: null,
+    mainState: MainComponentsEnum.Login,
     mainAuxChat: null,
     error: null,
   },

@@ -34,12 +34,20 @@ async function request<T>(
 
   if (!response.ok) {
     switch (response.status) {
-      case 401:
+      case 401: {
+        // 🔥 Manejo global de sesión expirada
+        storage.remove('APP_STATE');
+        window.location.href = '/login';
+
         throw new UnauthorizedError(data);
+      }
+
       case 403:
         throw new ForbiddenError(data);
+
       case 409:
         throw new ConflictError(data);
+
       default:
         throw new ApiError(response.status, 'Unexpected error', data);
     }

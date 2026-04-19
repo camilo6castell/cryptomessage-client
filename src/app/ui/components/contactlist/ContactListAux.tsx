@@ -1,86 +1,69 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 
-import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 import { IContact } from '../../../core/models/main/IContact.model';
 
 import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { ContactFoundCard } from './pieces/ContactFoundCard';
 import { SearchBox } from './pieces/SearchBox';
+import { GenericContainer } from '../../layouts/GenericContainer';
+import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
+import { MessageStatus } from '../../../core/models/enums/MessageStatus.enum';
+import { H1, P1 } from '../../elements/font';
 
 export const ContactListAux = ({
   form,
   handleInput,
   handleSearch,
-  isContact,
-  messageForm,
-  handleAddContactSubmit,
+  contact,
+  message,
+  handleAddContact,
+  isAlreadyAdded,
 }: {
   form: Record<string, string>;
   handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
-  isContact: IContact;
-  messageForm: IMessageForm;
-  handleAddContactSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  contact: IContact;
+  message: IMessageForm;
+  handleAddContact: () => void;
+  isAlreadyAdded: boolean;
 }): ReactElement => {
-  const isIdle = messageForm.message === null;
-  const isError = messageForm.message !== null && messageForm.isDanger;
-  const isSuccess = messageForm.message !== null && !messageForm.isDanger;
-
-  const renderContent = () => {
-    if (isIdle) {
-      return (
+  return (
+    <StyledUserInfoAux>
+      {message.result === MessageStatus.Idle && (
         <>
-          <h1>¡Busca un contacto!</h1>
-          <p>¡Ingresa el nombre de usuario de la persona que deseas buscar!</p>
+          <H1>Search an user</H1>
+          <P1>Here you can search for a user to add as a contact:</P1>
           <SearchBox
             handleSearchContactSubmit={handleSearch}
             handleInput={handleInput}
             value={form.username}
           />
         </>
-      );
-    }
-
-    if (isError) {
-      return (
+      )}
+      {message.result === MessageStatus.Error && (
         <>
-          <h1>{messageForm.message}</h1>
-          <p>¡Intenta con otro nombre de usuario!</p>
+          <H1>Error</H1>
+          <P1>{message.message}</P1>
         </>
-      );
-    }
-
-    if (isSuccess) {
-      // ⚠️ Protección extra
-      if (!isContact.username) {
-        return <h1>Error: contacto no definido</h1>;
-      }
-
-      return (
+      )}
+      {message.result === MessageStatus.Success && (
         <>
-          <h1>{messageForm.message}</h1>
+          <H1>Success</H1>
+          <P1>{message.message}</P1>
           <ContactFoundCard
-            isContact={isContact}
-            handleAddContactSubmit={handleAddContactSubmit}
+            contact={contact}
+            handleAddContact={handleAddContact}
+            isAlreadyAdded={isAlreadyAdded}
           />
         </>
-      );
-    }
-
-    return <h1>Error inesperado</h1>;
-  };
-
-  return <StyledUserInfoAux>{renderContent()}</StyledUserInfoAux>;
+      )}
+    </StyledUserInfoAux>
+  );
 };
 
-const StyledUserInfoAux = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-
+const StyledUserInfoAux = styled(GenericContainer)`
   width: ${({ theme }) => theme.general.auxSectionWidth};
-  height: 100%;
 
   padding: 2rem;
 
@@ -90,23 +73,6 @@ const StyledUserInfoAux = styled.div`
 
   border: 1px solid #ffff;
   border-radius: 0 0 ${({ theme }) => theme.general.borderRadius} 0;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 2.5rem;
-  }
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  p {
-    font-size: 1rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
 
   overflow: scroll;
 

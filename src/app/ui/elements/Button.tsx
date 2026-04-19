@@ -1,16 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
 export const Button = ({
   textButton,
   onClick,
+  disabled = false,
+  className,
 }: {
   textButton: string;
   onClick: () => void;
+  disabled?: boolean;
+  className?: string;
 }): React.ReactElement => {
   return (
-    <StyledButton onClick={onClick} type="submit">
+    <StyledButton
+      className={className}
+      onClick={onClick}
+      type="submit"
+      disabled={disabled}
+    >
       {textButton}
     </StyledButton>
   );
@@ -36,5 +44,16 @@ const StyledButton = styled.button`
 
   &:hover {
     background-color: ${({ theme }): string => theme.color.highlight};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }): string => theme.color.disabled};
+    cursor: not-allowed;
+    color: #6c6c6c;
+    text-shadow: none;
+  }
+
+  &:disabled:hover {
+    background-color: ${({ theme }): string => theme.color.idle};
   }
 `;

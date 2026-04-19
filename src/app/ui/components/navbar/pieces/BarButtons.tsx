@@ -11,7 +11,7 @@ import { StorageService } from '../../../../core/services/storage.service';
 import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { GenericContainer } from '../../../layouts/GenericContainer';
-
+// import { H3 } from '../../../elements/font';
 export const BarButtons = (): ReactElement => {
   // CONTEXT
   const { dispatch } = useContext(AppContext);
@@ -33,6 +33,7 @@ export const BarButtons = (): ReactElement => {
           );
         }}
       >
+        {/* <H3> Contacts </H3> */}
         <RiContactsBook2Fill />
       </BarButton>
 

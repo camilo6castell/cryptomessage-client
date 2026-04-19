@@ -28,8 +28,10 @@ const StyledAvatar = styled.div<{
 }>`
   display: inline;
   padding: auto;
-  width: ${({ $size }): number => $size}px;
-  height: ${({ $size }): number => $size}px;
+  /* width: ${({ $size }): number => $size}px; */
+  /* height: ${({ $size }): number => $size}px; */
+  width: 100%;
+  height: auto;
 
   aspect-ratio: 1/1;
 
@@ -40,7 +42,7 @@ const StyledAvatar = styled.div<{
   background-size: cover;
   background-position: center;
 
-  background-color: white;
+  background-color: #ffffff;
 
   /* -webkit-box-shadow: 0px 0px 24px 7px rgba(255, 255, 255, 1);
   -moz-box-shadow: 0px 0px 24px 7px rgba(255, 255, 255, 1); */
