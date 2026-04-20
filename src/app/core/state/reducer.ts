@@ -28,11 +28,24 @@ const useCases: {
       mainState: payload,
     },
   }),
-  [Actions.SetMainAuxChat]: (state: IAppState, payload: number): IAppState => ({
+  [Actions.SetSelectedContact]: (
+    state: IAppState,
+    payload: IContact | null
+  ): IAppState => ({
     ...state,
     app: {
       ...state.app,
-      mainAuxChat: payload,
+      selectedContact: payload,
+    },
+  }),
+  [Actions.SetSelectedChat]: (
+    state: IAppState,
+    payload: IChat | null
+  ): IAppState => ({
+    ...state,
+    app: {
+      ...state.app,
+      selectedChat: payload,
     },
   }),
   [Actions.AddContact]: (state: IAppState, payload: IContact): IAppState => ({

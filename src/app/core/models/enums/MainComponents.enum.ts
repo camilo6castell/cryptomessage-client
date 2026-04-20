@@ -1,5 +1,4 @@
 export enum MainComponentsEnum {
-  Start,
   Login,
   Register,
   UserInfo,

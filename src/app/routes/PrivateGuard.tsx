@@ -30,6 +30,7 @@ export const PrivateGuard = ({
     const verifyToken = async () => {
       try {
         const data: VerifyApiResponse = await authApi.verify();
+        console.log('Token verificado:', data);
 
         dispatch({
           type: Actions.LoadUser,

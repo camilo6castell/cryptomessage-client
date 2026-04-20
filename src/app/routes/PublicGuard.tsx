@@ -8,6 +8,8 @@ export const PublicGuard = ({
 }: IReactElementChildrenProps): ReactNode => {
   const { state } = useContext(AppContext);
 
+  console.log('PublicGuard - app state:', state);
+
   const isAuthenticated = !!state.user?.token;
 
   if (isAuthenticated) {

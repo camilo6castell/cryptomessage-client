@@ -1,43 +1,55 @@
-import { ReactElement, useContext, useEffect, useState } from 'react';
-import { Form } from '../ui/components/welcome/Form.tsx';
-import { FormInput } from '../ui/components/welcome/pieces/FormInput.tsx';
-import { Button } from '../ui/elements/Button.tsx';
-import { useLogin } from '../core/hooks/useLogin.ts';
-import { FrontPage } from '../ui/components/welcome/pieces/FrontPage.tsx';
-import { AppContext } from '../core/state/AppContext.tsx';
-import { useRegister } from '../core/hooks/useRegister.ts';
-import { MainComponentsEnum } from '../core/models/enums/MainComponents.enum.ts';
-import { animationConfig } from '../ui/styles/config/Themes.tsx';
-import { frontPageContent } from '../ui//static/frontPageContent.ts';
-import { useToast } from '../core/hooks/useToast.tsx';
-import { Toast } from '../ui/components/general/Toast.tsx';
+import { ReactElement, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
+import { Form } from '../ui/components/welcome/Form';
+import { FormInput } from '../ui/components/welcome/pieces/FormInput';
+import { Button } from '../ui/elements/Button';
+import { FrontPage } from '../ui/components/welcome/pieces/FrontPage';
+
+import { useLogin } from '../core/hooks/useLogin';
+import { useRegister } from '../core/hooks/useRegister';
+import { useToast } from '../core/hooks/useToast';
+
+import { Toast } from '../ui/components/general/Toast';
+import { animationConfig } from '../ui/styles/config/Themes';
+import { frontPageContent } from '../ui/static/frontPageContent';
 
 export const StartContainer = (): ReactElement => {
+  const location = useLocation();
+
   const { toast, showToast, hideToast } = useToast();
 
   const { loginForm, handleLoginInput, handleLoginSubmit } =
     useLogin(showToast);
+
   const { registerForm, handleRegisterInput, handleRegisterSubmit } =
     useRegister(showToast);
 
-  const { state } = useContext(AppContext);
+  // 🔥 estado REAL (ruta)
+  const isLoginRoute = location.pathname === '/login';
 
+  // 🔥 estado VISUAL (controla animación)
+  const [activeView, setActiveView] = useState(isLoginRoute);
   const [visible, setVisible] = useState(true);
-  const [activeState, setActiveState] = useState(state.app.mainState);
 
   useEffect(() => {
-    if (state.app.mainState === activeState) return;
-    // 1. Disparar fadeOut
-    setVisible(false);
-    // 2. Después de la animación, cambiar contenido y hacer fadeIn
-    const timer = setTimeout(() => {
-      setActiveState(state.app.mainState);
-      setVisible(true);
-    }, animationConfig.general_fade_duration * 1000); // debe coincidir con la duración del fadeOut
-    return () => clearTimeout(timer);
-  }, [state.app.mainState]);
+    if (isLoginRoute === activeView) return;
 
-  const isLogin = activeState === MainComponentsEnum.Login;
+    // 1️⃣ fade out
+    setVisible(false);
+
+    const timer = setTimeout(() => {
+      // 2️⃣ cambiar contenido
+      setActiveView(isLoginRoute);
+
+      // 3️⃣ fade in
+      setVisible(true);
+    }, animationConfig.general_fade_duration * 1000);
+
+    return () => clearTimeout(timer);
+  }, [isLoginRoute, activeView]);
+
+  const isLogin = activeView;
 
   return (
     <>
@@ -48,8 +60,9 @@ export const StartContainer = (): ReactElement => {
           onClose={hideToast}
         />
       )}
+
       <Form
-        key={activeState} // fuerza re-mount para resetear animación
+        key={isLogin ? 'login' : 'register'} // 🔥 importante
         $visible={visible}
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
@@ -66,6 +79,7 @@ export const StartContainer = (): ReactElement => {
           required={true}
           handleInput={isLogin ? handleLoginInput : handleRegisterInput}
         />
+
         <FormInput
           value={isLogin ? loginForm.passphrase : registerForm.passphrase}
           nameShown={isLogin ? 'Your passphrase' : 'Your new passphrase'}
@@ -74,6 +88,7 @@ export const StartContainer = (): ReactElement => {
           required={true}
           handleInput={isLogin ? handleLoginInput : handleRegisterInput}
         />
+
         <Button
           textButton={isLogin ? 'Enter' : 'Create account'}
           onClick={() => void 0}

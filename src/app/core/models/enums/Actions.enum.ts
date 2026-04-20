@@ -2,7 +2,8 @@ export enum Actions {
   LoadUser,
 
   SetMainState,
-  SetMainAuxChat,
+  SetSelectedContact,
+  SetSelectedChat,
 
   AddContact,
   DeleteContact,
