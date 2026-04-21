@@ -1,5 +1,4 @@
 import { MainComponentsEnum } from '../enums/MainComponents.enum';
-import { IChat } from '../main/IChat.model';
 import { IContact } from '../main/IContact.model';
 import { InitialUser, IUser } from '../main/IUser.model';
 
@@ -8,7 +7,7 @@ export interface IAppState {
   app: {
     mainState: MainComponentsEnum | null;
     selectedContact: IContact | null;
-    selectedChat: IChat | null;
+    selectedChatId: number | null;
     error: string | null;
   };
 }
@@ -18,7 +17,7 @@ export const initialAppState: IAppState = {
   app: {
     mainState: MainComponentsEnum.Login,
     selectedContact: null,
-    selectedChat: null,
+    selectedChatId: null,
     error: null,
   },
 };

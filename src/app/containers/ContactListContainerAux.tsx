@@ -6,23 +6,17 @@ import { AppContext } from '../core/state/AppContext';
 export const ContactListContainerAux = (): ReactElement => {
   const { state } = useContext(AppContext);
 
-  const {
-    contact,
-    message,
-    handleAddContact,
-    form,
-    handleInput,
-    handleSearch,
-  } = useContactSearch();
+  const { message, handleAddContact, form, handleInput, handleSearch } =
+    useContactSearch();
 
   const isAlreadyAdded = state.user.contacts.some(
-    (c) => c.contactId === contact.contactId
+    (c) => c.contactId === state.app.selectedContact?.contactId
   );
 
   return (
     <ContactListAux
       message={message}
-      contact={contact}
+      contact={state.app.selectedContact}
       form={form}
       handleInput={handleInput}
       handleSearch={handleSearch}

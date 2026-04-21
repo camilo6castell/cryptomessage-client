@@ -10,10 +10,19 @@ export interface IParticipant {
 }
 
 export interface IChat {
-  chatId: number;
-  status: ChatStatus;
-  participant: IParticipant; // el OTRO usuario, no tú
+  chatId: number | null;
+  status: ChatStatus | null;
+  participant: IParticipant | null; // el OTRO usuario, no tú
   messages: IMessage[]; // se carga por separado, empieza vacío
   lastMessage: IMessage | null;
-  createdAt: string;
+  createdAt: string | null;
 }
+
+export const InitialChat: IChat = {
+  chatId: null,
+  status: null,
+  participant: null,
+  messages: [],
+  lastMessage: null,
+  createdAt: null,
+};

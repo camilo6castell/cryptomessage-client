@@ -1,7 +1,7 @@
 // src/app/core/api/chats.api.ts
 import { httpClient } from './http.client';
 import { API_BASE_URL } from '../config/api.config';
-import { IChat, ChatStatus } from '../models/main/IChat.model';
+import { ChatStatus } from '../models/main/IChat.model';
 import { IMessage } from '../models/main/IMessage.model';
 
 const base = `${API_BASE_URL}/api/v1`;

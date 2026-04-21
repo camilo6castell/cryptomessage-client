@@ -20,7 +20,6 @@ export const mapContact = (c: ContactApiResponse): IContact => ({
   contactId: c.contactId,
   username: c.username,
   publicKey: c.publicKey,
-  addedAt: null,
 });
 
 export const mapChat = (c: ChatApiResponse): IChat => ({
@@ -31,7 +30,7 @@ export const mapChat = (c: ChatApiResponse): IChat => ({
     username: c.participant.username,
     publicKey: c.participant.publicKey,
   },
-  messages: [],
+  messages: null,
   lastMessage: null,
   createdAt: c.createdAt,
 });

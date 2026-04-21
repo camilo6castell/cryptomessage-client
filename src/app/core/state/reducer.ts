@@ -4,7 +4,7 @@ import { MainComponentsEnum } from '../models/enums/MainComponents.enum';
 import { Actions } from '../models/enums/Actions.enum';
 
 import { IChat } from '../models/main/IChat.model';
-import { IContact } from '../models/main/IContact.model';
+import { IContact, initialContact } from '../models/main/IContact.model';
 import { IMessage } from '../models/main/IMessage.model';
 import { ILoginFormDataResponse } from '../models/ui/IGatewayForm.model';
 
@@ -38,14 +38,18 @@ const useCases: {
       selectedContact: payload,
     },
   }),
-  [Actions.SetSelectedChat]: (
-    state: IAppState,
-    payload: IChat | null
-  ): IAppState => ({
+  [Actions.SetSelectedChatId]: (state, payload: number | null) => ({
     ...state,
     app: {
       ...state.app,
-      selectedChat: payload,
+      selectedChatId: payload,
+    },
+  }),
+  [Actions.SetInitialSelectedContact]: (state: IAppState): IAppState => ({
+    ...state,
+    app: {
+      ...state.app,
+      selectedContact: initialContact,
     },
   }),
   [Actions.AddContact]: (state: IAppState, payload: IContact): IAppState => ({
@@ -71,11 +75,37 @@ const useCases: {
       contacts: payload,
     },
   }),
+  [Actions.SetChats]: (state, payload: IChat[]) => ({
+    ...state,
+    user: {
+      ...state.user,
+      chats: payload,
+    },
+  }),
   [Actions.AddChat]: (state: IAppState, payload: IChat): IAppState => ({
     ...state,
     user: {
       ...state.user,
       chats: [...state.user.chats, payload],
+    },
+  }),
+  [Actions.SetMessages]: (
+    state: IAppState,
+    payload: { chatId: number; messages: IMessage[] }
+  ): IAppState => ({
+    ...state,
+    user: {
+      ...state.user,
+      chats: state.user.chats.map((chat) =>
+        chat.chatId === payload.chatId
+          ? {
+              ...chat,
+              messages: payload.messages,
+              lastMessage:
+                payload.messages[payload.messages.length - 1] ?? null,
+            }
+          : chat
+      ),
     },
   }),
   [Actions.AddMessage]: (state: IAppState, payload: IMessage): IAppState => ({
@@ -84,9 +114,14 @@ const useCases: {
       ...state.user,
       chats: state.user.chats.map((chat) => {
         if (chat.chatId === payload.chatId) {
-          const updatedMessages = [...chat.messages, payload].sort(
-            (a, b) => a.messageId - b.messageId
-          );
+          const currentMessages = chat.messages ?? []; // 👈 clave
+
+          const updatedMessages = [...currentMessages, payload]
+            .filter(
+              (msg, index, self) =>
+                index === self.findIndex((m) => m.messageId === msg.messageId)
+            )
+            .sort((a, b) => a.messageId - b.messageId);
           return {
             ...chat,
             messages: updatedMessages,
@@ -104,24 +139,29 @@ const useCases: {
     ...state,
     user: {
       ...state.user,
-      chats: state.user.chats.map((chat) =>
-        chat.chatId === payload.chatId
-          ? {
-              ...chat,
-              messages: chat.messages
-                .map((message) =>
-                  message.messageId === payload.messageId
-                    ? { ...message, isRead: true }
-                    : message
-                )
-                .sort((a, b) => a.messageId - b.messageId),
-              lastMessage:
-                chat.lastMessage?.messageId === payload.messageId
-                  ? { ...chat.lastMessage, isRead: true }
-                  : chat.lastMessage,
-            }
-          : chat
-      ),
+      chats: state.user.chats.map((chat) => {
+        if (chat.chatId !== payload.chatId) return chat;
+
+        // 🔒 mensajes no cargados → no hacer nada
+        if (!chat.messages) return chat;
+
+        const updatedMessages = chat.messages
+          .map((message) =>
+            message.messageId === payload.messageId
+              ? { ...message, isRead: true }
+              : message
+          )
+          .sort((a, b) => a.messageId - b.messageId);
+
+        return {
+          ...chat,
+          messages: updatedMessages,
+          lastMessage:
+            chat.lastMessage?.messageId === payload.messageId
+              ? { ...chat.lastMessage, isRead: true }
+              : chat.lastMessage,
+        };
+      }),
     },
   }),
   [Actions.SetError]: (state: IAppState, payload: string): IAppState => ({

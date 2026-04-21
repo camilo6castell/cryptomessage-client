@@ -5,13 +5,13 @@ import { Avatar } from '../../../elements/Avatar';
 import { IChat } from '../../../../core/models/main/IChat.model';
 import { AppContext } from '../../../../core/state/AppContext';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
-import { useFirendlyDateFormat } from '../../../../core/hooks/useFirendlyDateFormat';
+import { GenericContainer } from '../../../layouts/GenericContainer';
+import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 
 export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
 
-  // Con el nuevo modelo, participant ES el otro usuario — no hay ambigüedad
-  const otherUsername = chat.participant.username;
+  const otherUsername = chat.participant?.username ?? 'Unknown';
 
   const isUnread =
     chat.lastMessage !== null &&
@@ -22,33 +22,39 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
     ? '🔒 Mensaje cifrado'
     : 'Sin mensajes aún';
 
-  const lastMessageTime = chat.lastMessage
-    ? useFirendlyDateFormat(chat.lastMessage.sentAt) // lo usaremos como valor, no como hook
+  const lastMessageTime = chat.lastMessage?.sentAt
+    ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : '';
 
+  const handleSelectChat = () => {
+    dispatch({
+      type: Actions.SetSelectedChatId,
+      payload: chat.chatId,
+    });
+
+    dispatch({
+      type: Actions.SetMainState,
+      payload: MainComponentsEnum.ChatList,
+    });
+  };
+
   return (
-    <StyledChatCard
-      $isUnread={isUnread}
-      onClick={() =>
-        dispatch({ type: Actions.SetMainAuxChat, payload: chat.chatId })
-      }
-    >
+    <StyledChatCard $isUnread={isUnread} onClick={handleSelectChat}>
       <Avatar username={otherUsername} size={50} cssSide="3rem" />
+
       <div className="card__details">
         <div className="card__header">
           <span className="card__name">{otherUsername}</span>
-          {chat.lastMessage && (
-            <span className="card__time">
-              {chat.lastMessage.sentAt
-                ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })
-                : ''}
-            </span>
+          {lastMessageTime && (
+            <span className="card__time">{lastMessageTime}</span>
           )}
         </div>
+
         <div className="card__preview">{lastMessagePreview}</div>
+
         {chat.status === 'PENDING' && (
           <span className="card__status-badge">Pendiente</span>
         )}
@@ -57,9 +63,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
   );
 };
 
-const StyledChatCard = styled.div<{ $isUnread: boolean }>`
-  display: flex;
-  align-items: center;
+const StyledChatCard = styled(GenericContainer)<{ $isUnread: boolean }>`
   gap: 0.75rem;
   padding: 0.75rem;
   margin-bottom: 0.4rem;

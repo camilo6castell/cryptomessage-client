@@ -17,7 +17,6 @@ export default {
       contactId: contact.id,
       username: contact.username,
       publicKey: contact.publicKey,
-      addedAt: contact.addedAt,
     };
   },
 };

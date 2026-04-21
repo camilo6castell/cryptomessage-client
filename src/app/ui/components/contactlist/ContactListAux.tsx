@@ -23,7 +23,7 @@ export const ContactListAux = ({
   form: Record<string, string>;
   handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
-  contact: IContact;
+  contact: IContact | null;
   message: IMessageForm;
   handleAddContact: () => void;
   isAlreadyAdded: boolean;
@@ -47,7 +47,7 @@ export const ContactListAux = ({
           <P1>{message.message}</P1>
         </>
       )}
-      {message.result === MessageStatus.Success && (
+      {message.result === MessageStatus.Success && contact && (
         <>
           <H1>Success</H1>
           <P1>{message.message}</P1>

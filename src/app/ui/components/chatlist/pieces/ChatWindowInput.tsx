@@ -16,27 +16,25 @@ export const ChatWindowInput = ({
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    if (form.messageContent.trim()) {
-      await sendMessage(chatId, form.messageContent);
-      resetForm();
-    }
+
+    if (!form.messageContent.trim()) return;
+
+    await sendMessage(chatId, form.messageContent);
+    resetForm();
   };
+
   return (
-    <StyledChatWindowInput
-      onSubmit={(event) => {
-        handleSubmit(event)
-          .then(() => {})
-          .catch(() => {});
-      }}
-    >
+    <StyledChatWindowInput onSubmit={handleSubmit}>
       <input
         type="text"
-        name="messageContent" // Debe coincidir con la clave en el hook
+        name="messageContent"
         className="chat-input"
         placeholder="Escribe tu mensaje"
         value={form.messageContent}
         onChange={handleInput}
       />
+
+      {/* 🔥 importante */}
       <Button textButton="Send" onClick={() => {}} />
     </StyledChatWindowInput>
   );

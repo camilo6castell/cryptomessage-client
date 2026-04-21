@@ -4,7 +4,7 @@ import { contactsApi } from '../api/contacts.api';
 import { mapContact } from '../mappers/loadUser.map';
 import { Actions } from '../models/enums/Actions.enum';
 
-export const useContacts = () => {
+export const useLoadContacts = () => {
   const { state, dispatch } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export const useContacts = () => {
 
   return {
     contacts: state.user.contacts,
-    loading,
+    loadingContacts: loading,
     error,
     reload: loadContacts,
   };

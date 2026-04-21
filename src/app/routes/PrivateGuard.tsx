@@ -47,16 +47,20 @@ export const PrivateGuard = ({
         });
 
         setIsAuthenticated(true);
-      } catch {
-        // 🔥 limpiar sesión
-        storageService.remove('APP_STATE');
+      } catch (err: any) {
+        if (err.status === 401) {
+          storageService.remove('APP_STATE');
 
-        dispatch({
-          type: Actions.Logout,
-          payload: null,
-        });
+          dispatch({
+            type: Actions.Logout,
+            payload: null,
+          });
 
-        setIsAuthenticated(false);
+          setIsAuthenticated(false);
+        } else {
+          console.error('Error verificando token:', err);
+          setIsAuthenticated(true); // 👈 NO cerrar sesión
+        }
       }
     };
 

@@ -2,15 +2,20 @@ export enum Actions {
   LoadUser,
 
   SetMainState,
+
   SetSelectedContact,
-  SetSelectedChat,
+  SetInitialSelectedContact,
+
+  SetSelectedChatId,
 
   AddContact,
   DeleteContact,
   SetContacts,
 
+  SetChats,
   AddChat,
 
+  SetMessages,
   AddMessage,
   SetMessageAsRead,
 

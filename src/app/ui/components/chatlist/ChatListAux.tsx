@@ -6,23 +6,22 @@ import { ChatWindowInput } from './pieces/ChatWindowInput';
 import { GenericContainer } from '../../layouts/GenericContainer';
 
 export const ChatListAux = ({
-  chatList,
-  chatChosen,
+  selectedChat,
 }: {
-  chatList: IChat[];
-  chatChosen: number | null;
+  selectedChat: IChat | null;
 }): ReactElement => {
-  const selectedChat = chatList.find((chat) => chat.chatId === chatChosen);
+  if (!selectedChat || selectedChat.chatId === null) {
+    return (
+      <StyledUserInfoAux>
+        <h1>No hay chats</h1>
+      </StyledUserInfoAux>
+    );
+  }
+
   return (
     <StyledUserInfoAux>
-      {selectedChat ? (
-        <>
-          <ChatWindow chat={selectedChat} />
-          <ChatWindowInput chatId={selectedChat.chatId} />
-        </>
-      ) : (
-        <h1>No hay chats</h1>
-      )}
+      <ChatWindow chat={selectedChat} />
+      <ChatWindowInput chatId={selectedChat.chatId} />
     </StyledUserInfoAux>
   );
 };

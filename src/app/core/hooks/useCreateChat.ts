@@ -1,4 +1,3 @@
-// src/app/core/hooks/useCreateChat.ts
 import { useContext } from 'react';
 import { AppContext } from '../../core/state/AppContext';
 import { chatsApi } from '../../core/api/chats.api';
@@ -17,24 +16,35 @@ export const useCreateChat = (): {
     try {
       const newChat = await chatsApi.create(contact.username!);
 
-      dispatch({ type: Actions.AddChat, payload: mapChat(newChat) });
-      dispatch({ type: Actions.SetMainAuxChat, payload: newChat.chatId });
+      const mappedChat = mapChat(newChat);
+
+      // ✅ guardar en estado
+      dispatch({ type: Actions.AddChat, payload: mappedChat });
+
+      // ✅ seleccionar chat
+      dispatch({
+        type: Actions.SetSelectedChatId,
+        payload: mappedChat.chatId,
+      });
+
+      // ✅ navegar
       dispatch({
         type: Actions.SetMainState,
         payload: MainComponentsEnum.ChatList,
       });
     } catch (err) {
       if (err instanceof ConflictError) {
-        // Chat ya existe — buscarlo por participant.userId
+        // 🔍 buscar chat existente de forma segura
         const existingChat = state.user.chats.find(
-          (chat) => chat.participant.userId === contact.contactId
+          (chat) => chat.participant?.userId === contact.contactId
         );
 
         if (existingChat) {
           dispatch({
-            type: Actions.SetMainAuxChat,
+            type: Actions.SetSelectedChatId,
             payload: existingChat.chatId,
           });
+
           dispatch({
             type: Actions.SetMainState,
             payload: MainComponentsEnum.ChatList,

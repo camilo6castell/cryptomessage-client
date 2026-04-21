@@ -1,8 +1,14 @@
-import { ReactElement, useContext } from 'react';
+import { ReactElement } from 'react';
 import { ChatList } from '../ui/components/chatlist/ChatList';
-import { AppContext } from '../core/state/AppContext';
+import { useLoadChats } from '../core/hooks/useLoadChats';
 
 export const ChatListContainer = (): ReactElement => {
-  const { state } = useContext(AppContext);
-  return <ChatList chatList={state.user.chats} />;
+  const { chatList, loadingChats, errorLoadingChats } = useLoadChats();
+  return (
+    <ChatList
+      chatList={chatList}
+      loadingChats={loadingChats}
+      errorLoadingChats={errorLoadingChats}
+    />
+  );
 };

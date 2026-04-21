@@ -5,11 +5,23 @@ import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { IChat } from '../../../core/models/main/IChat.model';
 import { GenericContainer } from '../../layouts/GenericContainer';
 
-export const ChatList = ({ chatList }: { chatList: IChat[] }): ReactElement => {
+export const ChatList = ({
+  chatList,
+  loadingChats,
+  errorLoadingChats,
+}: {
+  chatList: IChat[];
+  loadingChats: boolean;
+  errorLoadingChats: string | null;
+}): ReactElement => {
   return (
     <StyledChatList>
-      {chatList.length === 0 ? (
-        <p>No hay chats</p>
+      {loadingChats ? (
+        <p>Loading chats...</p>
+      ) : errorLoadingChats ? (
+        <p>Error: {errorLoadingChats}</p>
+      ) : chatList.length === 0 ? (
+        <p>No chats available</p>
       ) : (
         <div className="list">
           {chatList.map((chat) => (

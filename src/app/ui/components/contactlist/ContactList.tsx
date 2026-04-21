@@ -6,14 +6,24 @@ import { GenericContainer } from '../../layouts/GenericContainer';
 
 export const ContactList = ({
   contacts,
+  loadingContacts,
+  error,
   deleteContact,
 }: {
   contacts: IContact[];
+  loadingContacts: boolean;
+  error: string | null;
   deleteContact: (contact: IContact) => Promise<void>;
 }): ReactElement => {
   return (
     <StyledContactList>
-      {contacts.length > 0 ? (
+      {loadingContacts ? (
+        <p>Loading contacts...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
+      ) : contacts.length === 0 ? (
+        <p>No contacts available</p>
+      ) : (
         contacts.map((contact) => (
           <ContactItem
             key={contact.contactId}
@@ -21,8 +31,6 @@ export const ContactList = ({
             deleteContact={deleteContact}
           />
         ))
-      ) : (
-        <div>No hay contactos</div>
       )}
     </StyledContactList>
   );

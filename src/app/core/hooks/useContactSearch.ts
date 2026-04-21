@@ -5,8 +5,6 @@ import { useHandleInput } from './useHandleInput';
 import { contactsApi } from '../api/contacts.api';
 import { ApiError } from '../errors/ApiError';
 
-import { IContact, initialContact } from '../models/main/IContact.model';
-
 import {
   IMessageForm,
   initialMessageForm,
@@ -19,7 +17,7 @@ import { MessageStatus } from '../models/enums/MessageStatus.enum';
 export const useContactSearch = () => {
   const { state, dispatch } = useContext(AppContext);
 
-  const [contact, setNewContact] = useState<IContact>(initialContact);
+  // const [contact, setNewContact] = useState<IContact>(initialContact);
   const [message, setMessage] = useState<IMessageForm>(initialMessageForm);
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +34,7 @@ export const useContactSearch = () => {
       setMessage({
         result: MessageStatus.Error,
         isDanger: true,
-        message: 'Ingresa un nombre de usuario',
+        message: 'Please enter a username to search',
       });
       return;
     }
@@ -51,23 +49,24 @@ export const useContactSearch = () => {
         setMessage({
           result: MessageStatus.Error,
           isDanger: true,
-          message: 'No puedes agregarte a ti mismo',
+          message: 'You cannot add yourself',
         });
         return;
       }
 
-      const newContact: IContact = {
-        contactId: data.contactId,
-        username: data.username,
-        publicKey: data.publicKey,
-      };
-
-      setNewContact(newContact);
+      dispatch({
+        type: Actions.SetSelectedContact,
+        payload: {
+          contactId: data.contactId,
+          username: data.username,
+          publicKey: data.publicKey,
+        },
+      });
 
       setMessage({
         result: MessageStatus.Success,
         isDanger: false,
-        message: 'Se encontró el siguiente resultado',
+        message: 'The following result was found',
       });
 
       resetForm();
@@ -76,13 +75,13 @@ export const useContactSearch = () => {
         setMessage({
           result: MessageStatus.Error,
           isDanger: true,
-          message: 'No se encontraron resultados',
+          message: 'No results found',
         });
       } else {
         setMessage({
           result: MessageStatus.Error,
           isDanger: true,
-          message: 'Error al buscar contacto',
+          message: 'Error searching for contact',
         });
       }
     } finally {
@@ -92,30 +91,28 @@ export const useContactSearch = () => {
 
   // ➕ Agregar contacto
   const handleAddContact = async () => {
-    if (!contact.contactId) {
+    if (!state.app.selectedContact?.contactId) {
       setMessage({
         result: MessageStatus.Error,
         isDanger: true,
-        message: 'No hay contacto para agregar',
+        message: 'No contact to add',
       });
       return;
     }
 
     try {
-      await contactsApi.add(contact.contactId);
+      await contactsApi.add(state.app.selectedContact.contactId);
 
       dispatch({
         type: Actions.AddContact,
-        payload: contact,
+        payload: state.app.selectedContact,
       });
 
       setMessage({
         result: MessageStatus.Success,
         isDanger: false,
-        message: 'Contacto agregado correctamente',
+        message: 'Contact added successfully',
       });
-
-      setNewContact(initialContact);
     } catch (err) {
       if (err instanceof ApiError) {
         setMessage({
@@ -123,14 +120,14 @@ export const useContactSearch = () => {
           isDanger: true,
           message: `Error: ${err.status}`,
         });
-        console.error(`Error agregando contacto: HTTP ${err.status}`, err.data);
+        console.error(`Error adding contact: HTTP ${err.status}`, err.data);
       } else {
         setMessage({
           result: MessageStatus.Error,
           isDanger: true,
-          message: 'Error al agregar contacto',
+          message: 'Error adding contact',
         });
-        console.error('Error agregando contacto:', err);
+        console.error('Error adding contact:', err);
       }
     }
   };
@@ -138,7 +135,6 @@ export const useContactSearch = () => {
   return {
     form,
     handleInput,
-    contact,
     message,
     loading,
     handleSearch,
