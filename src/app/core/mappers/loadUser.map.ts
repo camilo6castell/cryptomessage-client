@@ -25,12 +25,13 @@ export const mapContact = (c: ContactApiResponse): IContact => ({
 export const mapChat = (c: ChatApiResponse): IChat => ({
   chatId: c.chatId,
   status: c.status,
+  initiatedBy: c.initiatedBy,
   participant: {
     userId: c.participant.userId,
     username: c.participant.username,
     publicKey: c.participant.publicKey,
   },
-  messages: null,
+  messages: [],
   lastMessage: null,
   createdAt: c.createdAt,
 });

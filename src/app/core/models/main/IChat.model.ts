@@ -1,7 +1,5 @@
-// src/app/core/models/main/IChat.model.ts
 import { IMessage } from './IMessage.model';
-
-export type ChatStatus = 'PENDING' | 'ACCEPTED' | 'BLOCKED';
+import { ChatStatus } from '../enums/ChatStatus.enum';
 
 export interface IParticipant {
   userId: number;
@@ -10,19 +8,11 @@ export interface IParticipant {
 }
 
 export interface IChat {
-  chatId: number | null;
-  status: ChatStatus | null;
-  participant: IParticipant | null; // el OTRO usuario, no tú
-  messages: IMessage[]; // se carga por separado, empieza vacío
-  lastMessage: IMessage | null;
-  createdAt: string | null;
+  chatId: number;
+  status: ChatStatus;
+  initiatedBy: number; // 👈 CLAVE
+  participant: IParticipant; // el OTRO usuario, no tú
+  messages?: IMessage[]; // se carga por separado, empieza vacío
+  lastMessage: IMessage | null; // se carga por separado, empieza null
+  createdAt: string;
 }
-
-export const InitialChat: IChat = {
-  chatId: null,
-  status: null,
-  participant: null,
-  messages: [],
-  lastMessage: null,
-  createdAt: null,
-};

@@ -3,11 +3,11 @@ import { httpClient } from './http.client';
 import { API_BASE_URL } from '../config/api.config';
 import { IMessage } from '../models/main/IMessage.model';
 
-const base = `${API_BASE_URL}/api/v1`;
+const base = `${API_BASE_URL}/api/v1/messages`;
 
 export const messagesApi = {
   send: (chatId: number, encryptedContentByUser: Record<string, string>) =>
-    httpClient.post(`${base}/messages`, {
+    httpClient.post(`${base}`, {
       chatId,
       encryptedContentByUser,
     }),

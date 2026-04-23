@@ -12,6 +12,7 @@ export enum Actions {
   DeleteContact,
   SetContacts,
 
+  UpdateChatStatus,
   SetChats,
   AddChat,
 

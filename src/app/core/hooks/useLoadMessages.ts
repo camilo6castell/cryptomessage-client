@@ -35,11 +35,11 @@ export const useLoadMessages = (chatId: number | null) => {
 
     const chat = state.user.chats.find((c) => c.chatId === chatId);
 
-    // ✅ evita recargar si ya están
-    if (chat?.messages !== null) return;
+    // ✅ ahora sí correcto
+    if (chat?.messages !== undefined) return;
 
     void loadMessages();
-  }, [chatId]);
+  }, [chatId]); //
 
   return { loading, error, reload: loadMessages };
 };

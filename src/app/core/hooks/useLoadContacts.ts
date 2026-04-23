@@ -39,6 +39,6 @@ export const useLoadContacts = () => {
     contacts: state.user.contacts,
     loadingContacts: loading,
     error,
-    reload: loadContacts,
+    loadContacts,
   };
 };

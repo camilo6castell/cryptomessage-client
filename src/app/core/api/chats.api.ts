@@ -1,7 +1,7 @@
 // src/app/core/api/chats.api.ts
 import { httpClient } from './http.client';
 import { API_BASE_URL } from '../config/api.config';
-import { ChatStatus } from '../models/main/IChat.model';
+import { ChatStatus } from '../models/enums/ChatStatus.enum';
 import { IMessage } from '../models/main/IMessage.model';
 
 const base = `${API_BASE_URL}/api/v1`;
@@ -10,6 +10,7 @@ const base = `${API_BASE_URL}/api/v1`;
 export interface ChatApiResponse {
   chatId: number;
   status: ChatStatus;
+  initiatedBy: number;
   participant: {
     userId: number;
     username: string;

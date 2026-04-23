@@ -6,17 +6,19 @@ export const Button = ({
   onClick,
   disabled = false,
   className,
+  isSubmit = true,
 }: {
   textButton: string;
   onClick: () => void;
   disabled?: boolean;
   className?: string;
+  isSubmit?: boolean;
 }): React.ReactElement => {
   return (
     <StyledButton
       className={className}
       onClick={onClick}
-      type="submit"
+      type={isSubmit ? 'submit' : 'button'}
       disabled={disabled}
     >
       {textButton}

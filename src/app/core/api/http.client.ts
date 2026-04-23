@@ -26,19 +26,28 @@ async function request<T>(
   });
 
   let data: unknown = null;
+
   try {
     data = await response.json();
   } catch {
-    /* no body */
+    try {
+      data = await response.text(); // 👈 fallback clave
+    } catch {
+      data = null;
+    }
   }
 
   if (!response.ok) {
+    console.error('HTTP ERROR:', {
+      url,
+      status: response.status,
+      data,
+    });
+
     switch (response.status) {
       case 401: {
-        // 🔥 Manejo global de sesión expirada
         storage.remove('APP_STATE');
         window.location.href = '/login';
-
         throw new UnauthorizedError(data);
       }
 
@@ -49,7 +58,11 @@ async function request<T>(
         throw new ConflictError(data);
 
       default:
-        throw new ApiError(response.status, 'Unexpected error', data);
+        throw new ApiError(
+          response.status,
+          typeof data === 'string' ? data : 'Unexpected error',
+          data
+        );
     }
   }
 
@@ -58,7 +71,10 @@ async function request<T>(
 
 export const httpClient = {
   get: <T>(url: string) => request<T>('GET', url),
+
   post: <T>(url: string, body?: unknown) => request<T>('POST', url, body),
+
   put: <T>(url: string, body?: unknown) => request<T>('PUT', url, body),
+
   delete: <T>(url: string) => request<T>('DELETE', url),
 };

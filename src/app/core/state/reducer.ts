@@ -7,6 +7,7 @@ import { IChat } from '../models/main/IChat.model';
 import { IContact, initialContact } from '../models/main/IContact.model';
 import { IMessage } from '../models/main/IMessage.model';
 import { ILoginFormDataResponse } from '../models/ui/IGatewayForm.model';
+import { ChatStatus } from '../models/enums/ChatStatus.enum';
 
 const useCases: {
   [key in Actions]: (state: IAppState, payload: any) => IAppState;
@@ -87,6 +88,20 @@ const useCases: {
     user: {
       ...state.user,
       chats: [...state.user.chats, payload],
+    },
+  }),
+  [Actions.UpdateChatStatus]: (
+    state,
+    payload: { chatId: number; status: ChatStatus }
+  ) => ({
+    ...state,
+    user: {
+      ...state.user,
+      chats: state.user.chats.map((chat) =>
+        chat.chatId === payload.chatId
+          ? { ...chat, status: payload.status }
+          : chat
+      ),
     },
   }),
   [Actions.SetMessages]: (

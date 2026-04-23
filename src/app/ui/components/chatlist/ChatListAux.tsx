@@ -21,7 +21,7 @@ export const ChatListAux = ({
   return (
     <StyledUserInfoAux>
       <ChatWindow chat={selectedChat} />
-      <ChatWindowInput chatId={selectedChat.chatId} />
+      <ChatWindowInput chat={selectedChat} />
     </StyledUserInfoAux>
   );
 };
