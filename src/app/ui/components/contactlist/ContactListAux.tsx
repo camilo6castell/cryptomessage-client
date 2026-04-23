@@ -17,7 +17,7 @@ export const ContactListAux = ({
   handleSearch,
   contact,
   message,
-  handleAddContact,
+  createChat,
   isAlreadyAdded,
 }: {
   form: Record<string, string>;
@@ -25,7 +25,7 @@ export const ContactListAux = ({
   handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
   contact: IContact | null;
   message: IMessageForm;
-  handleAddContact: () => void;
+  createChat: (contact: IContact) => Promise<void>;
   isAlreadyAdded: boolean;
 }): ReactElement => {
   return (
@@ -53,7 +53,7 @@ export const ContactListAux = ({
           <P1>{message.message}</P1>
           <ContactFoundCard
             contact={contact}
-            handleAddContact={handleAddContact}
+            createChat={createChat}
             isAlreadyAdded={isAlreadyAdded}
           />
         </>

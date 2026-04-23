@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import { Avatar } from '../../../elements/Avatar';
 import { IContact } from '../../../../core/models/main/IContact.model';
 import { GenericContainer } from '../../../layouts/GenericContainer';
-import { H2, P1 } from '../../../elements/font';
+import { H2 } from '../../../elements/font';
 import { Button } from '../../../elements/Button';
-import { mainScrollBar } from '../../../styles/scrollbar/mainScrollBar';
+// import { mainScrollBar } from '../../../styles/scrollbar/mainScrollBar';
 import { CopyToClipboardButton } from '../../../elements/CopyToClipboardButton';
 
 export const ContactFoundCard = ({
   contact,
-  handleAddContact,
+  createChat,
   isAlreadyAdded,
 }: {
   contact: IContact;
-  handleAddContact: () => void;
+  createChat: (contact: IContact) => Promise<void>;
   isAlreadyAdded: boolean;
 }): ReactElement => {
   return (
@@ -33,8 +33,10 @@ export const ContactFoundCard = ({
             />
 
             <ButtonForContactFoundCard
-              textButton={isAlreadyAdded ? 'Already a contact' : 'Add contact'}
-              onClick={handleAddContact}
+              textButton={
+                isAlreadyAdded ? 'Already a contact' : 'Invite to chat'
+              }
+              onClick={() => createChat(contact)}
               disabled={isAlreadyAdded}
             />
           </div>
@@ -64,12 +66,12 @@ const StyledContactFoundCard = styled(GenericContainer)`
   }
 `;
 
-const StyledP1 = styled(P1)`
-  width: 100%;
-  height: 4rem;
-  overflow: scroll;
-  ${mainScrollBar};
-`;
+// const StyledP1 = styled(P1)`
+//   width: 100%;
+//   height: 4rem;
+//   overflow: scroll;
+//   ${mainScrollBar};
+// `;
 
 const CopyToClipboardButtonForContactFoundCard = styled(CopyToClipboardButton)`
   margin: 0;

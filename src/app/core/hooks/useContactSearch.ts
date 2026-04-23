@@ -89,55 +89,11 @@ export const useContactSearch = () => {
     }
   };
 
-  // ➕ Agregar contacto
-  const handleAddContact = async () => {
-    if (!state.app.selectedContact?.contactId) {
-      setMessage({
-        result: MessageStatus.Error,
-        isDanger: true,
-        message: 'No contact to add',
-      });
-      return;
-    }
-
-    try {
-      await contactsApi.add(state.app.selectedContact.contactId);
-
-      dispatch({
-        type: Actions.AddContact,
-        payload: state.app.selectedContact,
-      });
-
-      setMessage({
-        result: MessageStatus.Success,
-        isDanger: false,
-        message: 'Contact added successfully',
-      });
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setMessage({
-          result: MessageStatus.Error,
-          isDanger: true,
-          message: `Error: ${err.status}`,
-        });
-        console.error(`Error adding contact: HTTP ${err.status}`, err.data);
-      } else {
-        setMessage({
-          result: MessageStatus.Error,
-          isDanger: true,
-          message: 'Error adding contact',
-        });
-        console.error('Error adding contact:', err);
-      }
-    }
-  };
-
   return {
     form,
     handleInput,
     message,
     loading,
     handleSearch,
-    handleAddContact,
   };
 };

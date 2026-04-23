@@ -33,7 +33,7 @@ const Wrap = styled.div<{ $state: IAppState }>`
     object-fit: cover; // CRUCIAL: Esto hace que el video llene el espacio sin estirarse}
 
     filter: ${({ theme, $state }) => {
-      return $state.app.mainState !== MainComponentsEnum.Start
+      return $state.app.mainState !== MainComponentsEnum.Login
         ? theme.waves.filterSecondary
         : theme.waves.filterPrimary;
     }};

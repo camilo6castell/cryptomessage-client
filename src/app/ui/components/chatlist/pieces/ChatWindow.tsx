@@ -9,13 +9,18 @@ import { useLoadMessages } from '../../../../core/hooks/useLoadMessages';
 export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
   const chatWindowRef = useRef<HTMLDivElement | null>(null);
 
-  // 👇 NO uses fallback aquí
+  const { loading, error, loadMessages } = useLoadMessages();
+
   const messages = chat.messages;
 
-  // 🔥 dispara carga (pero no controla render)
-  const { loading, error } = useLoadMessages(chat.chatId);
+  // 🔥 CLAVE: recargar cuando cambia el chat
+  useEffect(() => {
+    if (!chat.chatId) return;
 
-  // 🔥 auto scroll SOLO cuando ya hay mensajes
+    loadMessages();
+  }, [chat.chatId]);
+
+  // 🔥 auto scroll
   useEffect(() => {
     if (!chatWindowRef.current) return;
     if (!messages) return;
@@ -23,26 +28,21 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
     chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
   }, [messages]);
 
-  /**
-   * 🔥 ESTADOS CORRECTOS
-   */
-
-  // ⏳ aún no cargados
-  if (messages === undefined) {
+  // ⏳
+  if (messages === undefined || loading) {
     return <StyledChatWindow>Cargando mensajes...</StyledChatWindow>;
   }
 
-  // ❌ error (opcional mostrarlo encima de mensajes)
+  // ❌
   if (error) {
     return <StyledChatWindow>Error cargando mensajes</StyledChatWindow>;
   }
 
-  // 📭 cargado pero vacío
+  // 📭
   if (messages.length === 0) {
     return <StyledChatWindow>No hay mensajes</StyledChatWindow>;
   }
 
-  // 💬 render normal
   return (
     <StyledChatWindow ref={chatWindowRef}>
       {messages.map((message) => (

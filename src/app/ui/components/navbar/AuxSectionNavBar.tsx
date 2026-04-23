@@ -1,11 +1,8 @@
-import { ReactElement, useContext } from 'react';
+import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { GenericContainer } from '../../layouts/GenericContainer';
-import { AppContext } from '../../../core/state/AppContext';
 
 export const AuxSectionNavBar = (): ReactElement => {
-  const { state } = useContext(AppContext);
-
   return <StyledAuxSectionNavBar></StyledAuxSectionNavBar>;
 };
 

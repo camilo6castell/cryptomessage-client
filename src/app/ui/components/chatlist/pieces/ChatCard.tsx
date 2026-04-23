@@ -6,7 +6,6 @@ import { IChat } from '../../../../core/models/main/IChat.model';
 import { AppContext } from '../../../../core/state/AppContext';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { GenericContainer } from '../../../layouts/GenericContainer';
-import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 
 export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
@@ -33,11 +32,6 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
     dispatch({
       type: Actions.SetSelectedChatId,
       payload: chat.chatId,
-    });
-
-    dispatch({
-      type: Actions.SetMainState,
-      payload: MainComponentsEnum.ChatList,
     });
   };
 
