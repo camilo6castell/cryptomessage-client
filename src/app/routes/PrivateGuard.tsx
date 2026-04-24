@@ -10,6 +10,9 @@ import { Actions } from '../core/models/enums/Actions.enum';
 import { IAppState } from '../core/models/context/IAppState.model';
 import { VerifyApiResponse } from '../core/models/auth.model';
 
+// 🔥 IMPORTANTE
+import { hasPrivateKey, loadKeys } from '../core/services/crypto.manager';
+
 const storageService = new StorageService();
 
 export const PrivateGuard = ({
@@ -21,7 +24,6 @@ export const PrivateGuard = ({
   useEffect(() => {
     const user = storageService.get<IAppState>('APP_STATE')?.user;
 
-    // 🔴 no token
     if (!user?.token) {
       setIsAuthenticated(false);
       return;
@@ -30,20 +32,37 @@ export const PrivateGuard = ({
     const verifyToken = async () => {
       try {
         const data: VerifyApiResponse = await authApi.verify();
-        console.log('Token verificado:', data);
+
+        const restoredUser = {
+          token: data.token,
+          userId: data.user.userId,
+          username: data.user.username,
+          createdAt: data.user.createdAt,
+          publicKey: data.user.publicKey,
+          encryptedPrivateKey: data.user.encryptedPrivateKey,
+          contacts: [],
+          chats: [],
+        };
+
+        // 🔥 SOLO cargar keys si NO existen
+        if (!hasPrivateKey()) {
+          const passphrase = prompt('Ingresa tu passphrase');
+
+          if (!passphrase) {
+            setIsAuthenticated(false);
+            return;
+          }
+
+          await loadKeys(
+            restoredUser.publicKey!,
+            restoredUser.encryptedPrivateKey!,
+            passphrase
+          );
+        }
 
         dispatch({
           type: Actions.LoadUser,
-          payload: {
-            token: data.token,
-            userId: data.user.userId,
-            username: data.user.username,
-            createdAt: data.user.createdAt,
-            publicKey: data.user.publicKey,
-            encryptedPrivateKey: data.user.encryptedPrivateKey,
-            contacts: [],
-            chats: [],
-          },
+          payload: restoredUser,
         });
 
         setIsAuthenticated(true);
@@ -58,8 +77,8 @@ export const PrivateGuard = ({
 
           setIsAuthenticated(false);
         } else {
-          console.error('Error verificando token:', err);
-          setIsAuthenticated(true); // 👈 NO cerrar sesión
+          console.error(err);
+          setIsAuthenticated(true);
         }
       }
     };
@@ -67,16 +86,13 @@ export const PrivateGuard = ({
     void verifyToken();
   }, [dispatch]);
 
-  // ⏳ loading
   if (isAuthenticated === null) {
     return <div>Cargando...</div>;
   }
 
-  // 🔴 redirect
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // 🟢 ok
   return children;
 };

@@ -2,7 +2,7 @@ export interface IMessage {
   chatId: number;
   messageId: number;
   senderId: number;
-  content: string;
+  encryptedContent: string;
   sentAt: string;
   isRead: boolean;
 }

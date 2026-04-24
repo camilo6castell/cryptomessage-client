@@ -19,6 +19,7 @@ export enum Actions {
   SetMessages,
   AddMessage,
   SetMessageAsRead,
+  SetMessagesAsReadByChat,
 
   SetError,
 

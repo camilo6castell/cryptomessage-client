@@ -39,7 +39,10 @@ const useCases: {
       selectedContact: payload,
     },
   }),
-  [Actions.SetSelectedChatId]: (state, payload: number | null) => ({
+  [Actions.SetSelectedChatId]: (
+    state: IAppState,
+    payload: number | null
+  ): IAppState => ({
     ...state,
     app: {
       ...state.app,
@@ -175,6 +178,32 @@ const useCases: {
             chat.lastMessage?.messageId === payload.messageId
               ? { ...chat.lastMessage, isRead: true }
               : chat.lastMessage,
+        };
+      }),
+    },
+  }),
+  [Actions.SetMessagesAsReadByChat]: (
+    state: IAppState,
+    payload: number // chatId
+  ): IAppState => ({
+    ...state,
+    user: {
+      ...state.user,
+      chats: state.user.chats.map((chat) => {
+        if (chat.chatId !== payload) return chat;
+
+        if (!chat.messages) return chat;
+
+        const updatedMessages = chat.messages.map((msg) =>
+          msg.isRead ? msg : { ...msg, isRead: true }
+        );
+
+        return {
+          ...chat,
+          messages: updatedMessages,
+          lastMessage: chat.lastMessage
+            ? { ...chat.lastMessage, isRead: true }
+            : null,
         };
       }),
     },

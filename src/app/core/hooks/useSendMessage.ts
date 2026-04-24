@@ -1,8 +1,8 @@
-// src/app/core/hooks/useSendMessage.ts
 import { useContext } from 'react';
 import { AppContext } from '../state/AppContext';
 import { messagesApi } from '../api/messages.api';
 import { Actions } from '../models/enums/Actions.enum';
+import { encryptMessage } from '../services/crypto.manager';
 
 export const useSendMessage = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -13,17 +13,31 @@ export const useSendMessage = () => {
   ): Promise<void> => {
     try {
       const chat = state.user.chats.find((c) => c.chatId === chatId);
-
       if (!chat) return;
 
       const myId = state.user.userId;
       const otherId = chat.participant?.userId;
+      const myPublicKey = state.user.publicKey;
+      const otherPublicKey = chat.participant?.publicKey;
 
-      if (!myId || !otherId) return;
+      if (!myId || !otherId || !myPublicKey || !otherPublicKey) {
+        console.error('Missing required data for encryption');
+        return;
+      }
 
-      const encryptedContentByUser: Record<string, string> = {
-        [String(myId)]: messageContent,
-        [String(otherId)]: messageContent,
+      const encryptedForMe = await encryptMessage(
+        myPublicKey,
+        messageContent
+      );
+
+      const encryptedForOther = await encryptMessage(
+        otherPublicKey,
+        messageContent
+      );
+
+      const encryptedContentByUser = {
+        [String(myId)]: encryptedForMe,
+        [String(otherId)]: encryptedForOther,
       };
 
       const response = await messagesApi.send(chatId, encryptedContentByUser);

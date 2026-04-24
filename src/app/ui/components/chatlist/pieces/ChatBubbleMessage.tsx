@@ -2,49 +2,77 @@ import { ReactElement, useContext, useState } from 'react';
 import styled, { css, RuleSet } from 'styled-components';
 import { IMessage } from '../../../../core/models/main/IMessage.model';
 import { AppContext } from '../../../../core/state/AppContext';
-
-import { useDecryptMessage } from '../../../../core/hooks/useDecryptMessage';
+import { decryptMessage } from '../../../../core/services/crypto.manager';
 import { mainScrollBar } from '../../../styles/scrollbar/mainScrollBar';
 import { useFirendlyDateFormat } from '../../../../core/hooks/useFirendlyDateFormat';
+import { Actions } from '../../../../core/models/enums/Actions.enum';
 
 export const ChatBubbleMessage = ({
   message,
 }: {
   message: IMessage;
 }): ReactElement => {
-  const { state } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
+
   const [isShown, setIsShown] = useState(false);
+  const [decryptedMessage, setDecryptedMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const sentAt = useFirendlyDateFormat(message.sentAt);
-  const [messageWidth, setMessageWidth] = useState(0);
 
-  const { decryptedMessage, isLoading, error } = useDecryptMessage(
-    message.chatId,
-    message.messageId,
-    message.senderId,
-    isShown,
-    setMessageWidth
-  );
+  const handleDecrypt = async () => {
+    if (isShown) {
+      setIsShown(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const decrypted = await decryptMessage(message.encryptedContent);
+
+      setDecryptedMessage(decrypted);
+      setIsShown(true);
+
+      // marcar como leído si no soy yo
+      if (state.user.userId !== message.senderId) {
+        dispatch({
+          type: Actions.SetMessageAsRead,
+          payload: { chatId: message.chatId, messageId: message.messageId },
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Error al desencriptar');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <StyledChatBubbleMessage
       $isSent={message.senderId === state.user.userId}
       $isShown={isShown}
-      $messageWidth={messageWidth}
+      $messageWidth={decryptedMessage.length}
     >
       <span className="bubble-message_buttons-container">
-        <span className="decrypt-button" onClick={() => setIsShown(!isShown)}>
-          Revelar
+        <span className="decrypt-button" onClick={handleDecrypt}>
+          {isShown ? 'Ocultar' : 'Revelar'}
         </span>
       </span>
-      <p className={`message-text ${isShown ? 'is-shown' : ''}`}>
+
+      <p className="message-text">
         {isShown
           ? isLoading
-            ? 'Loading...' // Indicador de carga
+            ? 'Loading...'
             : error
-              ? 'Error al desencriptar'
+              ? error
               : decryptedMessage
-          : message.content}
+          : message.encryptedContent}
       </p>
+
       <span className="message-time">{sentAt}</span>
     </StyledChatBubbleMessage>
   );

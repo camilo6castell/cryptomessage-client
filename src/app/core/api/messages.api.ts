@@ -14,4 +14,7 @@ export const messagesApi = {
 
   getByChat: (chatId: number) =>
     httpClient.get<IMessage[]>(`${base}/chat/${chatId}`),
+
+  markAsRead: (chatId: number) =>
+    httpClient.patch(`${base}/chat/${chatId}/read`),
 };

@@ -5,6 +5,7 @@ import { ContactApiResponse } from '../api/contacts.api';
 import { ChatApiResponse } from '../api/chats.api';
 import { IChat } from '../models/main/IChat.model';
 import { IContact } from '../models/main/IContact.model';
+import { IMessage } from '../models/main/IMessage.model';
 
 export const mapLoginToUser = (data: LoginApiResponse): IUser => ({
   userId: data.user.userId,
@@ -34,4 +35,13 @@ export const mapChat = (c: ChatApiResponse): IChat => ({
   messages: [],
   lastMessage: null,
   createdAt: c.createdAt,
+});
+
+const mapMessage = (msg: any): IMessage => ({
+  messageId: msg.messageId,
+  chatId: msg.chatId,
+  senderId: msg.senderId,
+  encryptedContent: msg.encryptedContent, // 🔥 aquí está la clave
+  sentAt: msg.sentAt,
+  isRead: msg.isRead,
 });

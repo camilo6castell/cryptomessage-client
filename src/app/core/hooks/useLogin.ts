@@ -7,8 +7,10 @@ import { authApi } from '../api/auth.api';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { ApiError } from '../errors/ApiError';
 import { mapLoginToUser } from '../mappers/loadUser.map';
-import { initialGatewayForm } from '../models/ui/IGatewayForm.model';
 import { MainComponentsEnum } from '../models/enums/MainComponents.enum';
+
+// 🔥 NUEVO
+import { loadKeys } from '../services/crypto.manager';
 
 export const useLogin = (
   showToast: (message: string, isDanger: boolean) => void
@@ -16,28 +18,50 @@ export const useLogin = (
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
 
+  const initialForm = {
+    username: '',
+    passphrase: '',
+  };
+
   const {
     form: loginForm,
     handleInput: handleLoginInput,
     resetForm: resetLoginForm,
-  } = useHandleInput(initialGatewayForm as unknown as Record<string, string>);
+  } = useHandleInput(initialForm);
 
   const handleLoginSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+
     try {
       const loginData = await authApi.login({
         username: loginForm.username,
         passphrase: loginForm.passphrase,
       });
-      showToast('Inicio de sesión exitoso', false);
-      resetLoginForm();
-      dispatch({ type: Actions.LoadUser, payload: mapLoginToUser(loginData) });
+
+      const user = mapLoginToUser(loginData);
+
+      // 🔐 Cargar claves ANTES de entrar a la app
+      await loadKeys(
+        user.publicKey!,
+        user.encryptedPrivateKey!,
+        loginForm.passphrase
+      );
+
+      // 🧠 Guardar usuario en estado
+      dispatch({
+        type: Actions.LoadUser,
+        payload: user,
+      });
+
       dispatch({
         type: Actions.SetMainState,
         payload: MainComponentsEnum.ChatList,
       });
+
+      showToast('Inicio de sesión exitoso', false);
+      resetLoginForm();
       navigate('/');
     } catch (err) {
       if (err instanceof UnauthorizedError) {
@@ -45,6 +69,7 @@ export const useLogin = (
       } else if (err instanceof ApiError) {
         showToast(`Error del servidor (${err.status})`, true);
       } else {
+        console.error(err);
         showToast('Error de conexión', true);
       }
     }

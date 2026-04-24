@@ -7,7 +7,7 @@ import { IAppState } from '../models/context/IAppState.model';
 
 const storage = new StorageService();
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 async function request<T>(
   method: HttpMethod,
@@ -16,12 +16,18 @@ async function request<T>(
 ): Promise<T> {
   const token = storage.get<IAppState>('APP_STATE')?.user.token;
 
+  const headers: Record<string, string> = {
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  // 👉 solo agregar content-type si hay body
+  if (body) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(url, {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
+    headers,
     body: body ? JSON.stringify(body) : undefined,
   });
 
@@ -31,7 +37,7 @@ async function request<T>(
     data = await response.json();
   } catch {
     try {
-      data = await response.text(); // 👈 fallback clave
+      data = await response.text();
     } catch {
       data = null;
     }
@@ -75,6 +81,8 @@ export const httpClient = {
   post: <T>(url: string, body?: unknown) => request<T>('POST', url, body),
 
   put: <T>(url: string, body?: unknown) => request<T>('PUT', url, body),
+
+  patch: <T>(url: string, body?: unknown) => request<T>('PATCH', url, body),
 
   delete: <T>(url: string) => request<T>('DELETE', url),
 };
