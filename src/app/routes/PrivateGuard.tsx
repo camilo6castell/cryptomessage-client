@@ -55,8 +55,8 @@ export const PrivateGuard = ({
 
           await loadKeys(
             restoredUser.publicKey!,
-            restoredUser.encryptedPrivateKey!,
-            passphrase
+            restoredUser.encryptedPrivateKey!
+            // passphrase
           );
         }
 

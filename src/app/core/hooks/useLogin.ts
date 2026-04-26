@@ -45,8 +45,8 @@ export const useLogin = (
       // 🔐 Cargar claves ANTES de entrar a la app
       await loadKeys(
         user.publicKey!,
-        user.encryptedPrivateKey!,
-        loginForm.passphrase
+        user.encryptedPrivateKey!
+        // loginForm.passphrase
       );
 
       // 🧠 Guardar usuario en estado

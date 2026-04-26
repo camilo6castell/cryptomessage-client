@@ -17,7 +17,7 @@ export const hasPrivateKey = () => privateKey !== null;
 /* ================= LOAD KEYS ================= */
 
 export const loadKeys = async (
-  publicKeyStr: string,
+  // publicKeyStr: string,
   encryptedPrivateKeyStr: string,
   passphrase: string
 ) => {
