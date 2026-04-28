@@ -8,10 +8,13 @@ import { authApi } from '../core/api/auth.api';
 import { StorageService } from '../core/services/storage.service';
 import { Actions } from '../core/models/enums/Actions.enum';
 import { IAppState } from '../core/models/context/IAppState.model';
-import { VerifyApiResponse } from '../core/models/auth.model';
+import { UserResponse } from '../core/models/auth.model';
 
-// 🔥 IMPORTANTE
-import { hasPrivateKey, loadKeys } from '../core/services/crypto.manager';
+import {
+  hasPrivateKey,
+  loadKeys,
+  clearCrypto,
+} from '../core/services/crypto.manager';
 
 const storageService = new StorageService();
 
@@ -29,35 +32,63 @@ export const PrivateGuard = ({
       return;
     }
 
+    const forceLogout = () => {
+      clearCrypto();
+
+      storageService.remove('APP_STATE');
+
+      dispatch({
+        type: Actions.Logout,
+        payload: null,
+      });
+
+      setIsAuthenticated(false);
+    };
+
     const verifyToken = async () => {
       try {
-        const data: VerifyApiResponse = await authApi.verify();
+        const data: UserResponse = await authApi.verify();
 
         const restoredUser = {
           token: data.token,
-          userId: data.user.userId,
-          username: data.user.username,
-          createdAt: data.user.createdAt,
-          publicKey: data.user.publicKey,
-          encryptedPrivateKey: data.user.encryptedPrivateKey,
+          userId: data.userId,
+          username: data.username,
+          createdAt: data.createdAt,
+          publicKey: data.publicKey,
+          encryptedPrivateKey: data.encryptedPrivateKey,
           contacts: [],
           chats: [],
         };
 
-        // 🔥 SOLO cargar keys si NO existen
+        // 🔐 Cargar claves si no están
         if (!hasPrivateKey()) {
           const passphrase = prompt('Ingresa tu passphrase');
 
+          // ❌ canceló → logout
           if (!passphrase) {
-            setIsAuthenticated(false);
+            forceLogout();
             return;
           }
 
-          await loadKeys(
-            restoredUser.publicKey!,
-            restoredUser.encryptedPrivateKey!
-            // passphrase
+          console.log('PUBLIC KEY:', restoredUser.publicKey);
+          console.log(
+            'ENCRYPTED PRIVATE KEY:',
+            restoredUser.encryptedPrivateKey
           );
+
+          try {
+            await loadKeys(
+              restoredUser.publicKey!,
+              restoredUser.encryptedPrivateKey!,
+              passphrase
+            );
+          } catch (err) {
+            console.error('❌ Error desencriptando clave privada', err);
+
+            alert('Passphrase incorrecta');
+            forceLogout();
+            return;
+          }
         }
 
         dispatch({
@@ -68,17 +99,10 @@ export const PrivateGuard = ({
         setIsAuthenticated(true);
       } catch (err: any) {
         if (err.status === 401) {
-          storageService.remove('APP_STATE');
-
-          dispatch({
-            type: Actions.Logout,
-            payload: null,
-          });
-
-          setIsAuthenticated(false);
+          forceLogout();
         } else {
           console.error(err);
-          setIsAuthenticated(true);
+          setIsAuthenticated(true); // fallback (opcional)
         }
       }
     };

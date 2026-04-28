@@ -1,18 +1,8 @@
 export interface UserResponse {
   userId: number;
   username: string;
-  createdAt: string;
+  token: string;
   publicKey: string;
   encryptedPrivateKey: string;
-}
-
-export interface LoginApiResponse {
-  token: string;
-  encryptedPrivateKey: string;
-  user: UserResponse;
-}
-
-export interface VerifyApiResponse {
-  token: string;
-  user: UserResponse;
+  createdAt: string;
 }

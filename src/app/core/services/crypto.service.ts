@@ -82,3 +82,13 @@ export const importPrivateKey = async (base64Key: string) => {
     ['decrypt']
   );
 };
+
+export const exportPublicKey = async (key: CryptoKey): Promise<string> => {
+  const buffer = await crypto.subtle.exportKey('spki', key);
+  return arrayBufferToBase64(buffer);
+};
+
+export const exportPrivateKey = async (key: CryptoKey): Promise<string> => {
+  const buffer = await crypto.subtle.exportKey('pkcs8', key);
+  return arrayBufferToBase64(buffer);
+};

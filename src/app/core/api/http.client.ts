@@ -15,12 +15,11 @@ async function request<T>(
   body?: unknown
 ): Promise<T> {
   const token = storage.get<IAppState>('APP_STATE')?.user.token;
-
   const headers: Record<string, string> = {
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 
-  // 👉 solo agregar content-type si hay body
+  // solo agregar content-type si hay body
   if (body) {
     headers['Content-Type'] = 'application/json';
   }

@@ -1,17 +1,17 @@
 // src/app/core/mappers/loadUser.map.ts
 import { IUser } from '../models/main/IUser.model';
-import { LoginApiResponse } from '../models/auth.model';
+import { UserResponse } from '../models/auth.model';
 import { ContactApiResponse } from '../api/contacts.api';
 import { ChatApiResponse } from '../api/chats.api';
 import { IChat } from '../models/main/IChat.model';
 import { IContact } from '../models/main/IContact.model';
 // import { IMessage } from '../models/main/IMessage.model';
 
-export const mapLoginToUser = (data: LoginApiResponse): IUser => ({
-  userId: data.user.userId,
-  username: data.user.username,
+export const mapLoginToUser = (data: UserResponse): IUser => ({
+  userId: data.userId,
+  username: data.username,
   token: data.token,
-  publicKey: data.user.publicKey,
+  publicKey: data.publicKey,
   encryptedPrivateKey: data.encryptedPrivateKey,
   contacts: [],
   chats: [],

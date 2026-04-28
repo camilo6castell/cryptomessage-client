@@ -1,15 +1,25 @@
 import { httpClient } from './http.client';
 import { API_BASE_URL } from '../config/api.config';
-import { VerifyApiResponse, LoginApiResponse } from '../models/auth.model';
+import { UserResponse } from '../models/auth.model';
 
 const base = `${API_BASE_URL}/api/v1/auth`;
 
+export interface RegisterPayload {
+  username: string;
+  passphrase: string;
+  publicKey: string;
+  encryptedPrivateKey: string;
+}
+
 export const authApi = {
-  register: (payload: { username: string; passphrase: string }) =>
+  /* ================= REGISTER ================= */
+  register: (payload: RegisterPayload) =>
     httpClient.post<void>(`${base}/register`, payload),
 
+  /* ================= LOGIN ================= */
   login: (payload: { username: string; passphrase: string }) =>
-    httpClient.post<LoginApiResponse>(`${base}/login`, payload),
+    httpClient.post<UserResponse>(`${base}/login`, payload),
 
-  verify: () => httpClient.get<VerifyApiResponse>(`${base}/verify`),
+  /* ================= VERIFY ================= */
+  verify: () => httpClient.get<UserResponse>(`${base}/verify`),
 };

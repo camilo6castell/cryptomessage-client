@@ -17,24 +17,26 @@ export const hasPrivateKey = () => privateKey !== null;
 /* ================= LOAD KEYS ================= */
 
 export const loadKeys = async (
-  // publicKeyStr: string,
+  publicKeyStr: string,
   encryptedPrivateKeyStr: string,
   passphrase: string
 ) => {
-  console.log('🔥 LOADING KEYS...');
+  if (!publicKeyStr || !encryptedPrivateKeyStr) {
+    throw new Error('Missing key data');
+  }
 
   const decryptedPrivateKeyBase64 = await decryptPrivateKeyAES(
     encryptedPrivateKeyStr,
     passphrase
   );
 
-  console.log('🔓 PRIVATE KEY BASE64 OK');
-
   privateKey = await importPrivateKey(decryptedPrivateKeyBase64);
 
-  console.log('✅ PRIVATE KEY IMPORTED', privateKey);
+  if (!publicKeyCache.has(publicKeyStr)) {
+    const importedPublicKey = await importPublicKey(publicKeyStr);
+    publicKeyCache.set(publicKeyStr, importedPublicKey);
+  }
 };
-
 /* ================= GET PUBLIC KEY ================= */
 
 const getPublicKey = async (publicKeyStr: string): Promise<CryptoKey> => {

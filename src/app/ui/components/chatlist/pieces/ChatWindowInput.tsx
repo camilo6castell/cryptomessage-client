@@ -50,14 +50,6 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
   const isInputDisabled = isBlockedByPendingRule || isReceiverBlocked;
 
-  console.log('DEBUG CHAT INPUT:', {
-    myId,
-    initiatedBy: chat.initiatedBy,
-    isPending,
-    iAmInitiator,
-    isReceiverBlocked,
-  });
-
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
