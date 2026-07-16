@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../state/AppContext';
 import { Actions } from '../models/enums/Actions.enum';
@@ -17,6 +17,7 @@ export const useLogin = (
 ) => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialForm = {
     username: '',
@@ -33,6 +34,8 @@ export const useLogin = (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
       const loginData = await authApi.login({
@@ -72,8 +75,10 @@ export const useLogin = (
         console.error(err);
         showToast('Error de conexión', true);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return { loginForm, handleLoginInput, handleLoginSubmit };
+  return { loginForm, handleLoginInput, handleLoginSubmit, isSubmitting };
 };

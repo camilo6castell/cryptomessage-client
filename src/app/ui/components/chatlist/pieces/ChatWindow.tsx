@@ -45,15 +45,31 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
   /* ================= STATES ================= */
 
   if (messages === undefined || loading) {
-    return <StyledChatWindow>Cargando mensajes...</StyledChatWindow>;
+    return (
+      <StyledChatWindow>
+        <StateMessage>Cargando mensajes...</StateMessage>
+      </StyledChatWindow>
+    );
   }
 
   if (error) {
-    return <StyledChatWindow>Error cargando mensajes</StyledChatWindow>;
+    return (
+      <StyledChatWindow>
+        <StateMessage className="is-error">
+          Error cargando mensajes
+        </StateMessage>
+      </StyledChatWindow>
+    );
   }
 
   if (messages.length === 0) {
-    return <StyledChatWindow>No hay mensajes</StyledChatWindow>;
+    return (
+      <StyledChatWindow>
+        <StateMessage>
+          No hay mensajes todavía. Envía el primero.
+        </StateMessage>
+      </StyledChatWindow>
+    );
   }
 
   return (
@@ -66,9 +82,20 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
 };
 
 const StyledChatWindow = styled(GenericContainer)`
-  background-color: #1e1e1e;
-  padding: 1rem;
+  justify-content: flex-start;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 1.25rem;
   overflow-y: auto;
 
   ${mainScrollBar}
+`;
+
+const StateMessage = styled.p`
+  margin: auto;
+  color: #8f8f8f;
+  font-size: 0.9rem;
+
+  &.is-error {
+    color: ${({ theme }) => theme.error.color};
+  }
 `;

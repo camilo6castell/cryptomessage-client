@@ -93,6 +93,25 @@ const useCases: {
       chats: [...state.user.chats, payload],
     },
   }),
+  [Actions.UpsertChat]: (state: IAppState, payload: IChat): IAppState => {
+    const exists = state.user.chats.some(
+      (chat) => chat.chatId === payload.chatId
+    );
+
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        chats: exists
+          ? state.user.chats.map((chat) =>
+              chat.chatId === payload.chatId
+                ? { ...chat, status: payload.status }
+                : chat
+            )
+          : [...state.user.chats, payload],
+      },
+    };
+  },
   [Actions.UpdateChatStatus]: (
     state,
     payload: { chatId: number; status: ChatStatus }

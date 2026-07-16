@@ -6,6 +6,7 @@ import { decryptMessage } from '../../../../core/services/crypto.manager';
 import { mainScrollBar } from '../../../styles/scrollbar/mainScrollBar';
 import { useFirendlyDateFormat } from '../../../../core/hooks/useFirendlyDateFormat';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
+import { RiLockLine, RiLockUnlockLine } from 'react-icons/ri';
 
 export const ChatBubbleMessage = ({
   message,
@@ -20,10 +21,16 @@ export const ChatBubbleMessage = ({
   const [error, setError] = useState<string | null>(null);
 
   const sentAt = useFirendlyDateFormat(message.sentAt);
+  const isSent = message.senderId === state.user.userId;
 
   const handleDecrypt = async () => {
     if (isShown) {
       setIsShown(false);
+      return;
+    }
+
+    if (decryptedMessage) {
+      setIsShown(true);
       return;
     }
 
@@ -36,8 +43,7 @@ export const ChatBubbleMessage = ({
       setDecryptedMessage(decrypted);
       setIsShown(true);
 
-      // marcar como leído si no soy yo
-      if (state.user.userId !== message.senderId) {
+      if (!isSent) {
         dispatch({
           type: Actions.SetMessageAsRead,
           payload: { chatId: message.chatId, messageId: message.messageId },
@@ -52,24 +58,22 @@ export const ChatBubbleMessage = ({
   };
 
   return (
-    <StyledChatBubbleMessage
-      $isSent={message.senderId === state.user.userId}
-      $isShown={isShown}
-      $messageWidth={decryptedMessage.length}
-    >
-      <span className="bubble-message_buttons-container">
-        <span className="decrypt-button" onClick={handleDecrypt}>
-          {isShown ? 'Ocultar' : 'Revelar'}
-        </span>
-      </span>
+    <StyledChatBubbleMessage $isSent={isSent}>
+      <button
+        type="button"
+        className="bubble-message__reveal"
+        onClick={handleDecrypt}
+        aria-label={isShown ? 'Ocultar mensaje' : 'Revelar mensaje'}
+      >
+        {isShown ? <RiLockUnlockLine /> : <RiLockLine />}
+        <span>{isShown ? 'Ocultar' : 'Revelar'}</span>
+      </button>
 
-      <p className="message-text">
+      <p className={`message-text ${isShown ? '' : 'is-ciphertext'}`}>
         {isShown
           ? isLoading
-            ? 'Loading...'
-            : error
-              ? error
-              : decryptedMessage
+            ? 'Desencriptando...'
+            : (error ?? decryptedMessage)
           : message.encryptedContent}
       </p>
 
@@ -79,106 +83,94 @@ export const ChatBubbleMessage = ({
 };
 
 const ChatBubbleMessageSent = css`
-  background-color: #056162;
+  background: linear-gradient(
+    135deg,
+    rgba(244, 190, 243, 0.18) 0%,
+    rgba(5, 97, 98, 0.55) 100%
+  );
   align-self: flex-end;
-  border-radius: 10px;
-  border-bottom-right-radius: 0;
+  border-radius: 1rem;
+  border-bottom-right-radius: 0.2rem;
 `;
 const ChatBubbleMessageReceived = css`
-  background-color: #262d31;
+  background-color: rgba(255, 255, 255, 0.06);
   align-self: flex-start;
-  border-radius: 10px;
-  border-bottom-left-radius: 0;
+  border-radius: 1rem;
+  border-bottom-left-radius: 0.2rem;
 `;
 
-const StyledChatBubbleMessage = styled.div<{
-  $isSent: boolean;
-  $isShown: boolean;
-  $messageWidth: number;
-}>`
+const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
   ${({ $isSent }): RuleSet<object> =>
     $isSent ? ChatBubbleMessageSent : ChatBubbleMessageReceived}
 
   display: flex;
   flex-direction: column;
 
-  max-width: 75%;
-  min-width: 25%;
+  max-width: 70%;
+  min-width: 8rem;
+  width: fit-content;
 
-  height: ${({ $isShown }): string => ($isShown ? '7rem' : '11rem')};
-  width: ${({ $isShown, $messageWidth }): string =>
-    $isShown ? $messageWidth.toString() + 'ch' : '75%'};
-
-  margin-bottom: 10px;
-  padding: 10px;
+  margin-bottom: 0.7rem;
+  padding: 0.6rem 0.75rem;
 
   color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  transition: all 1s ease;
+  .bubble-message__reveal {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    align-self: ${({ $isSent }) => ($isSent ? 'flex-end' : 'flex-start')};
 
-  .bubble-message_buttons-container {
-    .decrypt-button {
-      display: block;
-      margin: 0.5rem 0.5rem 1rem;
+    margin-bottom: 0.35rem;
+    padding: 0;
+    border: none;
+    background: none;
 
-      text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
-      font-weight: 750;
-      color: #b3b3b3;
-      cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.color.highlight};
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 1;
     }
   }
 
   .message-text {
     display: block;
-    flex-wrap: wrap;
 
-    width: 100%;
-    height: 100%;
-
-    padding: 0 0.5rem;
+    max-height: 12rem;
     margin: 0;
+    padding: 0;
 
-    overflow: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
 
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.4;
     text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .message-text.is-ciphertext {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: #8f8f8f;
     word-break: break-all;
-
-    transition: all 1s ease;
-  }
-
-  .message-text::-webkit-scrollbar {
-    width: var(--scroll-bar-size);
-  }
-
-  .message-text::-webkit-scrollbar-track {
-    background: var(--scroll-bar-track-color);
-    border-radius: var(--scroll-bar-radius);
-  }
-
-  .message-text::-webkit-scrollbar-thumb {
-    background: var(--scroll-bar-color);
-    border-radius: var(--scroll-bar-radius);
+    opacity: 0.75;
   }
 
   .message-time {
     display: block;
-    font-size: 10px;
+    font-size: 0.65rem;
     color: #b3b3b3;
     text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
-    margin-top: 5px;
+    margin-top: 0.4rem;
   }
 
   ${mainScrollBar}
 `;
-
-// ${({ $isHover }): false | RuleSet<object> =>
-//   $isHover &&
-//   css`
-//     background-color: #7a0000; /* Cambiar el color en hover */
-//     cursor: pointer;
-
-//     height: fit-content;
-//   `}

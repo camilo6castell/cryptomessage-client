@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useHandleInput } from './useHandleInput';
 import { authApi } from '../api/auth.api';
 import { ConflictError } from '../errors/ConflictError';
@@ -16,6 +17,8 @@ import { encryptPrivateKeyAES } from '../services/crypto-aes.service';
 export const useRegister = (
   showToast: (message: string, isDanger: boolean) => void
 ) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     form: registerForm,
     handleInput: handleRegisterInput,
@@ -26,26 +29,22 @@ export const useRegister = (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
-      console.log('🔐 Generating key pair...');
-
-      // 1️⃣ Generar claves
+      // 1️⃣ Generar claves (RSA — puede tomar un momento en equipos lentos)
       const keyPair = await generateKeyPair();
 
       // 2️⃣ Exportarlas a base64
       const publicKeyStr = await exportPublicKey(keyPair.publicKey);
       const privateKeyStr = await exportPrivateKey(keyPair.privateKey);
 
-      console.log('🔑 Keys generated');
-
       // 3️⃣ Cifrar private key con passphrase
       const encryptedPrivateKey = await encryptPrivateKeyAES(
         privateKeyStr,
         registerForm.passphrase
       );
-
-      console.log('🔒 Private key encrypted');
 
       // 4️⃣ Enviar al backend
       await authApi.register({
@@ -62,15 +61,16 @@ export const useRegister = (
 
       resetRegisterForm();
     } catch (err) {
-      console.error(err);
-
       if (err instanceof ConflictError) {
         showToast('Ese nombre de usuario ya existe. Intenta con otro.', true);
       } else if (err instanceof ApiError) {
         showToast(`Error del servidor (${err.status})`, true);
       } else {
+        console.error(err);
         showToast('Error de conexión', true);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -78,5 +78,6 @@ export const useRegister = (
     registerForm,
     handleRegisterInput,
     handleRegisterSubmit,
+    isSubmitting,
   };
 };

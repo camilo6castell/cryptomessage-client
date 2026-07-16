@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { useHandleInput } from '../../../../core/hooks/useHandleInput';
 import { useSendMessage } from '../../../../core/hooks/useSendMessage';
 import { useAcceptChat } from '../../../../core/hooks/useAcceptChat';
-import { Button } from '../../../elements/Button';
 import { AppContext } from '../../../../core/state/AppContext';
 import { IChat } from '../../../../core/models/main/IChat.model';
 import { ChatStatus } from '../../../../core/models/enums/ChatStatus.enum';
 import { useLoadContacts } from '../../../../core/hooks/useLoadContacts';
+import { IoSend } from 'react-icons/io5';
 
 export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
   const { state } = useContext(AppContext);
@@ -26,36 +26,25 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
   const isPending = chat.status === ChatStatus.PENDING;
 
   /**
-   * 🔥 IMPORTANTE:
-   * Como tu modelo no tiene initiatedBy explícito en frontend,
-   * inferimos:
-   *
-   * - si yo envié el primer mensaje → soy initiator
+   * Como el modelo del frontend no expone initiatedBy explícito antes de
+   * cargar el chat completo, inferimos el rol:
+   * - si yo envié el primer mensaje → soy iniciador
    * - si no → soy receptor
    */
-
   const iAmInitiator = chat.initiatedBy === myId;
-
   const iAlreadySent = messages.some((m) => m.senderId === myId);
 
-  /**
-   * 🔒 REGLAS DE NEGOCIO
-   */
-
-  // initiator ya envió su único mensaje
   const isBlockedByPendingRule = isPending && iAmInitiator && iAlreadySent;
-
-  // receptor aún no acepta
   const isReceiverBlocked = isPending && !iAmInitiator;
-
   const isInputDisabled = isBlockedByPendingRule || isReceiverBlocked;
+
+  const canSend = form.messageContent.trim().length > 0 && !isInputDisabled;
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
     if (!chat.chatId) return;
-    if (isInputDisabled) return;
-    if (!form.messageContent.trim()) return;
+    if (!canSend) return;
 
     await sendMessage(chat.chatId, form.messageContent);
     resetForm();
@@ -69,8 +58,6 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
   return (
     <StyledChatWindowInput onSubmit={handleSubmit}>
-      {/* 🔥 UX MENSAJES */}
-
       {isPending && iAmInitiator && (
         <div className="chat-warning">
           Solo puedes enviar un mensaje hasta que el contacto acepte la
@@ -84,36 +71,39 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
         </div>
       )}
 
-      {/* 🔥 INPUT */}
-      <input
-        type="text"
-        name="messageContent"
-        className="chat-input"
-        placeholder={
-          isReceiverBlocked
-            ? 'Acepta el chat para responder...'
-            : 'Escribe tu mensaje'
-        }
-        value={form.messageContent}
-        onChange={handleInput}
-        disabled={isInputDisabled}
-      />
-
-      {/* 🔥 ACCIONES */}
-      <div className="actions">
-        {isReceiverBlocked && (
-          <Button
-            textButton="Aceptar chat"
-            isSubmit={false}
-            onClick={handleAccept}
-          />
-        )}
-
-        <Button
-          textButton="Enviar"
+      <div className="input-row">
+        <input
+          type="text"
+          name="messageContent"
+          className="chat-input"
+          placeholder={
+            isReceiverBlocked
+              ? 'Acepta el chat para responder...'
+              : 'Escribe tu mensaje'
+          }
+          value={form.messageContent}
+          onChange={handleInput}
           disabled={isInputDisabled}
-          onClick={() => {}}
         />
+
+        {isReceiverBlocked ? (
+          <button
+            type="button"
+            className="accept-button"
+            onClick={handleAccept}
+          >
+            Aceptar chat
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="send-button"
+            disabled={!canSend}
+            aria-label="Enviar mensaje"
+          >
+            <IoSend size={16} />
+          </button>
+        )}
       </div>
     </StyledChatWindowInput>
   );
@@ -123,24 +113,36 @@ const StyledChatWindowInput = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: var(--element-background-color);
-  padding: 10px;
-  border-top: 1px solid #3b3b3b;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.85rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 
   .chat-warning {
     font-size: 0.75rem;
     color: #ffb347;
-    margin-bottom: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
   .chat-input {
-    background-color: #1e1e1e;
-    border: none;
-    padding: 10px;
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.65rem 0.9rem;
     color: #e0e0e0;
-    border-radius: 0.5rem;
+    border-radius: 1.25rem;
     outline: none;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      border-color: ${({ theme }) => theme.color.highlight};
+    }
   }
 
   .chat-input:disabled {
@@ -148,8 +150,49 @@ const StyledChatWindowInput = styled.form`
     cursor: not-allowed;
   }
 
-  .actions {
+  .send-button,
+  .accept-button {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    border: none;
+    cursor: pointer;
+    transition:
+      opacity 0.2s ease,
+      transform 0.1s ease;
+  }
+
+  .send-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    color: #12121c;
+    background-color: ${({ theme }) => theme.color.highlight};
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      transform: scale(1.06);
+    }
+  }
+
+  .accept-button {
+    padding: 0 1rem;
+    height: 2.5rem;
+    border-radius: 1.25rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #12121c;
+    background-color: ${({ theme }) => theme.color.highlight};
+    white-space: nowrap;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 `;

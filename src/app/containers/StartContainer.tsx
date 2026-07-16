@@ -19,11 +19,15 @@ export const StartContainer = (): ReactElement => {
 
   const { toast, showToast, hideToast } = useToast();
 
-  const { loginForm, handleLoginInput, handleLoginSubmit } =
+  const { loginForm, handleLoginInput, handleLoginSubmit, isSubmitting: isLoggingIn } =
     useLogin(showToast);
 
-  const { registerForm, handleRegisterInput, handleRegisterSubmit } =
-    useRegister(showToast);
+  const {
+    registerForm,
+    handleRegisterInput,
+    handleRegisterSubmit,
+    isSubmitting: isRegistering,
+  } = useRegister(showToast);
 
   // 🔥 estado REAL (ruta)
   const isLoginRoute = location.pathname === '/login';
@@ -50,6 +54,7 @@ export const StartContainer = (): ReactElement => {
   }, [isLoginRoute, activeView]);
 
   const isLogin = activeView;
+  const isBusy = isLogin ? isLoggingIn : isRegistering;
 
   return (
     <>
@@ -90,7 +95,16 @@ export const StartContainer = (): ReactElement => {
         />
 
         <Button
-          textButton={isLogin ? 'Enter' : 'Create account'}
+          textButton={
+            isBusy
+              ? isLogin
+                ? 'Entrando...'
+                : 'Creando cuenta...'
+              : isLogin
+                ? 'Enter'
+                : 'Create account'
+          }
+          disabled={isBusy}
           onClick={() => void 0}
         />
       </Form>

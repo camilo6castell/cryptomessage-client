@@ -70,12 +70,6 @@ export const PrivateGuard = ({
             return;
           }
 
-          console.log('PUBLIC KEY:', restoredUser.publicKey);
-          console.log(
-            'ENCRYPTED PRIVATE KEY:',
-            restoredUser.encryptedPrivateKey
-          );
-
           try {
             await loadKeys(
               restoredUser.publicKey!,

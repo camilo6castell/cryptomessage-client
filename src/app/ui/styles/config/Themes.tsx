@@ -1,19 +1,36 @@
-// @ts-nocheck
+// import { error } from 'console';
+// import { darkGlassEffect } from '../effects/DarkGlassEffect';
 
-import { error } from 'console';
-import { darkGlassEffect } from '../effects/DarkGlassEffect';
+interface FontConfig {
+  mainFontFamily: string;
+  mainFontWeight: number;
+}
 
-const fontConfig = {
+export const fontConfig: FontConfig = {
   mainFontFamily: 'Montserrat, sans-serif',
   mainFontWeight: 450,
 };
 
-export const animationConfig = {
+interface AnimationConfig {
+  general_duration: number;
+  general_fade_duration: number;
+}
+
+export const animationConfig: AnimationConfig = {
   general_duration: 0.7,
   general_fade_duration: 0.8,
 };
 
-export const colorConfig = {
+interface ColorConfig {
+  highlight: string;
+  idle: string;
+  disable: string;
+  success: string;
+  danger: string;
+  warning: string;
+}
+
+export const colorConfig: ColorConfig = {
   highlight: '#f4bef3',
   idle: 'rgb(59, 51, 59)',
   disable: '#9b9b9b',
@@ -22,7 +39,15 @@ export const colorConfig = {
   warning: 'rgb(255, 255, 0)',
 };
 
-const generalConfig = {
+interface GeneralConfig {
+  borderRadius: string;
+  mainBackdropdFilter: string;
+  navBarheight: string;
+  mainSectionWidth: string;
+  auxSectionWidth: string;
+}
+
+const generalConfig: GeneralConfig = {
   borderRadius: '20px',
   mainBackdropdFilter: 'blur(10px)',
   navBarheight: '10%',
@@ -30,11 +55,26 @@ const generalConfig = {
   auxSectionWidth: '70%',
 };
 
-const errorConfig = {
+interface ErrorConfig {
+  color: string;
+}
+
+const errorConfig: ErrorConfig = {
   color: 'rgb(255, 0, 0)',
 };
 
-export const toastConfig = {
+interface DarkGlassEffect {
+  background: string;
+}
+
+interface ToastConfig {
+  WholeAnimationDurationMS: number;
+  TransitionAnimationDurationMS: number;
+  darkGlassEffectDanger: DarkGlassEffect;
+  darkGlassEffectSuccess: DarkGlassEffect;
+}
+
+export const toastConfig: ToastConfig = {
   WholeAnimationDurationMS: 2000,
   TransitionAnimationDurationMS: 200,
   darkGlassEffectDanger: {
@@ -47,10 +87,39 @@ export const toastConfig = {
   },
 };
 
-export const themes = {
+interface ShadowConfig {
+  textHighlighted: string;
+  primaryBoxShadow: string;
+}
+
+interface WavesConfig {
+  filterPrimary: string;
+  filterSecondary: string;
+}
+
+export interface Theme {
+  mainBackgroundColor: string;
+  mainBackgroundFilter: string;
+  mainFontColor: string;
+  darkGlassEffect: {
+    background: string;
+    backdropFilter: string;
+    boxShadow: string;
+  };
+  shadow: ShadowConfig;
+  waves: WavesConfig;
+  toast: ToastConfig;
+  general: GeneralConfig;
+  color: ColorConfig;
+  font: FontConfig;
+  animation: AnimationConfig;
+  error: ErrorConfig;
+}
+
+export const themes: Record<string, Theme> = {
   dark: {
     mainBackgroundColor: 'transparent',
-
+    mainBackgroundFilter: 'blur(10px)',
     mainFontColor: '#d9faff',
     darkGlassEffect: {
       background:

@@ -15,6 +15,7 @@ export enum Actions {
   UpdateChatStatus,
   SetChats,
   AddChat,
+  UpsertChat,
 
   SetMessages,
   AddMessage,
