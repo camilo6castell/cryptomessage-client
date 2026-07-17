@@ -49,7 +49,7 @@ const StyledButton = styled.button`
   }
 
   &:disabled {
-    background-color: ${({ theme }): string => theme.color.disabled};
+    background-color: ${({ theme }): string => theme.color.disable};
     cursor: not-allowed;
     color: #6c6c6c;
     text-shadow: none;
