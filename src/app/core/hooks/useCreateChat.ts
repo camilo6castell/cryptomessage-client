@@ -6,11 +6,13 @@ import { IContact } from '../../core/models/main/IContact.model';
 import { MainComponentsEnum } from '../models/enums/MainComponents.enum';
 import { ConflictError } from '../errors/ConflictError';
 import { mapChat } from '../mappers/loadUser.map';
+import { useGlobalToast } from '../state/ToastContext';
 
 export const useCreateChat = (): {
   createChat: (contact: IContact) => Promise<void>;
 } => {
   const { state, dispatch } = useContext(AppContext);
+  const { showToast } = useGlobalToast();
 
   const createChat = async (contact: IContact): Promise<void> => {
     try {
@@ -52,6 +54,7 @@ export const useCreateChat = (): {
         }
       } else {
         console.error('Error al crear el chat:', err);
+        showToast('No se pudo iniciar el chat. Intenta de nuevo.', true);
       }
     }
   };

@@ -51,7 +51,7 @@ const StyledFormInput = styled(GenericContainer)`
     border-radius: 0.5rem;
     outline: 0;
     font-size: 17px;
-    color: #fff;
+    color: ${({ theme }) => theme.surface.textPrimary};
     padding: 0.5rem;
     background: transparent;
     transition: border-color 0.2s;
@@ -103,7 +103,7 @@ const StyledFormInput = styled(GenericContainer)`
     display: block;
     transition: 0.2s;
     font-size: 17px;
-    color: #9b9b9b;
+    color: ${({ theme }) => theme.surface.textMuted};
     pointer-events: none;
   }
 `;

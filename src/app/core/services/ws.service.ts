@@ -56,7 +56,7 @@ export const connectWebSocket = (
 
       client?.subscribe('/user/queue/messages', (frame: StompMessage) => {
         try {
-          onMessage(JSON.parse(frame.body));
+          onMessage(JSON.parse(frame.body) as WsMessagePayload);
         } catch (err) {
           console.error('WS: failed to parse message payload', err);
         }
@@ -64,7 +64,7 @@ export const connectWebSocket = (
 
       client?.subscribe('/user/queue/chats', (frame: StompMessage) => {
         try {
-          onChatUpdate(JSON.parse(frame.body));
+          onChatUpdate(JSON.parse(frame.body) as WsChatPayload);
         } catch (err) {
           console.error('WS: failed to parse chat payload', err);
         }
@@ -82,7 +82,7 @@ export const connectWebSocket = (
 };
 
 export const disconnectWebSocket = (): void => {
-  client?.deactivate();
+  void client?.deactivate();
   client = null;
 };
 

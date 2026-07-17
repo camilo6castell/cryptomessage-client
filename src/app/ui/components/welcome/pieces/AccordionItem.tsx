@@ -49,8 +49,12 @@ const StyledAccordionItem = styled.section<StyledAccordionItemProps>`
   max-width: 30rem;
   grid-template-rows: ${({ $isOpen }): string =>
     $isOpen ? '0fr 1fr' : '0fr 0fr'};
-  background-color: ${({ $isOpen }): string =>
-    $isOpen ? '#3a555522' : '#0a0d1247'};
+  background-color: ${({ $isOpen, theme }): string =>
+    $isOpen
+      ? 'rgba(244, 190, 243, 0.06)'
+      : theme.mode === 'dark'
+        ? 'rgba(10, 13, 18, 0.28)'
+        : 'rgba(255, 255, 255, 0.4)'};
   transition:
     grid-template-rows 400ms ease,
     box-shadow 200ms;

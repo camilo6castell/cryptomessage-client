@@ -1,61 +1,100 @@
-import React from 'react';
-import styled from 'styled-components';
+import { ReactElement } from 'react';
+import styled, { css } from 'styled-components';
+
+interface IButtonProps {
+  textButton: string;
+  onClick: () => void;
+  disabled?: boolean;
+  variant?: 'primary' | 'secondary' | 'danger';
+  className?: string;
+  isSubmit?: boolean;
+}
 
 export const Button = ({
   textButton,
   onClick,
   disabled = false,
+  variant = 'primary',
   className,
   isSubmit = true,
-}: {
-  textButton: string;
-  onClick: () => void;
-  disabled?: boolean;
-  className?: string;
-  isSubmit?: boolean;
-}): React.ReactElement => {
+}: IButtonProps): ReactElement => {
   return (
     <StyledButton
-      className={className}
-      onClick={onClick}
       type={isSubmit ? 'submit' : 'button'}
+      onClick={onClick}
       disabled={disabled}
+      $variant={variant}
+      className={className}
     >
       {textButton}
     </StyledButton>
   );
 };
 
-const StyledButton = styled.button`
-  width: 100%;
-  margin: 2rem 0;
-  padding: 0.5rem 1rem;
+const primaryStyles = css`
+  color: #15121c;
+  background: linear-gradient(
+    135deg,
+    ${({ theme }) => theme.color.highlight} 0%,
+    ${({ theme }) => theme.color.highlightDeep} 100%
+  );
 
-  border: 1px solid #9b9b9b;
-  border-radius: 0.5rem;
+  &:hover:not(:disabled) {
+    filter: brightness(1.05);
+  }
+`;
 
-  color: ${({ theme }): string => theme.mainFontColor};
-  background-color: ${({ theme }): string => theme.color.idle};
+const secondaryStyles = css`
+  color: ${({ theme }) => theme.surface.textPrimary};
+  background-color: ${({ theme }) => theme.surface.surfaceRaised};
+  border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
-  text-shadow: 0px 1px 5px black;
-  font-weight: 900;
+  &:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.surface.borderSubtle};
+  }
+`;
+
+const dangerStyles = css`
+  color: #ffffff;
+  background-color: ${({ theme }) => theme.color.danger};
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+`;
+
+const StyledButton = styled.button<{
+  $variant: 'primary' | 'secondary' | 'danger';
+}>`
+  padding: 0.65rem 1.4rem;
+  border: none;
+  border-radius: 1.5rem;
+
+  font-family: ${({ theme }) => theme.font.mainFontFamily};
+  font-size: 0.85rem;
+  font-weight: 600;
 
   cursor: pointer;
+  transition:
+    filter 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.1s ease;
 
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }): string => theme.color.highlight};
-  }
+  ${({ $variant }) =>
+    $variant === 'primary'
+      ? primaryStyles
+      : $variant === 'danger'
+        ? dangerStyles
+        : secondaryStyles}
 
   &:disabled {
-    background-color: ${({ theme }): string => theme.color.disable};
+    opacity: 0.45;
     cursor: not-allowed;
-    color: #6c6c6c;
-    text-shadow: none;
+    filter: none;
   }
 
-  &:disabled:hover {
-    background-color: ${({ theme }): string => theme.color.idle};
+  &:active:not(:disabled) {
+    transform: scale(0.98);
   }
 `;

@@ -92,3 +92,25 @@ export const exportPrivateKey = async (key: CryptoKey): Promise<string> => {
   const buffer = await crypto.subtle.exportKey('pkcs8', key);
   return arrayBufferToBase64(buffer);
 };
+
+/**
+ * Short, human-shareable fingerprint of a public key (SHA-256, formatted in
+ * 4-char groups). Meant to be glanced at or compared out-of-band — not a
+ * substitute for the full key, just an easier way to eyeball "is this the
+ * same key I had before".
+ */
+export const getKeyFingerprint = async (
+  publicKeyBase64: string
+): Promise<string> => {
+  const buffer = base64ToArrayBuffer(publicKeyBase64);
+  const digest = await crypto.subtle.digest('SHA-256', buffer);
+  const hex = Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+
+  return hex
+    .slice(0, 20)
+    .match(/.{1,4}/g)!
+    .join(' ');
+};

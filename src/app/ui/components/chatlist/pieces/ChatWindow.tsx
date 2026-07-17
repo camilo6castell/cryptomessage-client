@@ -30,7 +30,7 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
 
     if (!hasUnread) return;
 
-    markAsRead(chat.chatId);
+    void markAsRead(chat.chatId);
   }, [chat.chatId, messages, state.user.userId]);
 
   /* ================= AUTO SCROLL ================= */
@@ -65,9 +65,7 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
   if (messages.length === 0) {
     return (
       <StyledChatWindow>
-        <StateMessage>
-          No hay mensajes todavía. Envía el primero.
-        </StateMessage>
+        <StateMessage>No hay mensajes todavía. Envía el primero.</StateMessage>
       </StyledChatWindow>
     );
   }
@@ -83,7 +81,8 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
 
 const StyledChatWindow = styled(GenericContainer)`
   justify-content: flex-start;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: ${({ theme }) =>
+    theme.mode === 'dark' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.02)'};
   padding: 1.25rem;
   overflow-y: auto;
 
@@ -92,7 +91,7 @@ const StyledChatWindow = styled(GenericContainer)`
 
 const StateMessage = styled.p`
   margin: auto;
-  color: #8f8f8f;
+  color: ${({ theme }) => theme.surface.textMuted};
   font-size: 0.9rem;
 
   &.is-error {

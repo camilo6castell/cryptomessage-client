@@ -1,8 +1,8 @@
 import { css } from 'styled-components';
 
 export const Scrollbar = css`
-  --scroll-bar-color: #26454c;
-  --scroll-bar-track-color: #00000000;
-  --scroll-bar-size: 0.2rem;
+  --scroll-bar-color: rgba(244, 190, 243, 0.35);
+  --scroll-bar-track-color: transparent;
+  --scroll-bar-size: 0.3rem;
   --scroll-bar-radius: 3px;
 `;

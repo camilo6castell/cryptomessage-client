@@ -57,7 +57,11 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
   };
 
   return (
-    <StyledChatWindowInput onSubmit={handleSubmit}>
+    <StyledChatWindowInput
+      onSubmit={(event) => {
+        void handleSubmit(event);
+      }}
+    >
       {isPending && iAmInitiator && (
         <div className="chat-warning">
           Solo puedes enviar un mensaje hasta que el contacto acepte la
@@ -90,7 +94,9 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
           <button
             type="button"
             className="accept-button"
-            onClick={handleAccept}
+            onClick={() => {
+              void handleAccept();
+            }}
           >
             Aceptar chat
           </button>
@@ -113,13 +119,13 @@ const StyledChatWindowInput = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 0.85rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: transparent;
+  padding: 0.85rem 1.25rem 1.1rem;
+  border-top: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
   .chat-warning {
     font-size: 0.75rem;
-    color: #ffb347;
+    color: ${({ theme }) => theme.color.warning};
     margin-bottom: 0.5rem;
   }
 
@@ -131,10 +137,10 @@ const StyledChatWindowInput = styled.form`
 
   .chat-input {
     flex: 1;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: ${({ theme }) => theme.surface.surfaceRaised};
+    border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
     padding: 0.65rem 0.9rem;
-    color: #e0e0e0;
+    color: ${({ theme }) => theme.surface.textPrimary};
     border-radius: 1.25rem;
     outline: none;
     font-size: 0.9rem;

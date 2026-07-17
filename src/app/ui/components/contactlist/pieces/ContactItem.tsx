@@ -19,7 +19,6 @@ export const ContactItem = ({
   const { state, dispatch } = useContext(AppContext);
   const { createChat } = useCreateChat();
 
-  // ✅ usar chats del estado global
   const existingChat = state.user.chats.find(
     (c) => c.participant?.userId === contact.contactId
   );
@@ -51,13 +50,25 @@ export const ContactItem = ({
 
         <div className="contact-actions">
           {existingChat ? (
-            <Button textButton="Ir al chat" onClick={handleOpenChat} />
+            <Button
+              textButton="Ir al chat"
+              variant="secondary"
+              isSubmit={false}
+              onClick={handleOpenChat}
+            />
           ) : (
-            <Button textButton="Crear chat" onClick={handleCreateChat} />
+            <Button
+              textButton="Crear chat"
+              variant="secondary"
+              isSubmit={false}
+              onClick={handleCreateChat}
+            />
           )}
 
           <Button
             textButton="Eliminar"
+            variant="danger"
+            isSubmit={false}
             onClick={() => {
               deleteContact(contact).catch(console.error);
             }}
@@ -69,30 +80,45 @@ export const ContactItem = ({
 };
 
 const StyledContactItem = styled(GenericContainer)`
-  padding: 10px;
-  border-bottom: 1px solid #3b3b3b;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.4rem;
+  border-radius: 0.85rem;
+
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #333;
+    background-color: ${({ theme }) => theme.surface.borderSubtle};
   }
 
   .contact-info {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    margin-left: 10px;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
   }
 
   .contact-name {
-    font-size: 16px;
-    color: #e0e0e0;
-    margin-bottom: 5px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.surface.textPrimary};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .contact-actions {
     display: flex;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    button {
+      padding: 0.35rem 0.8rem;
+      font-size: 0.72rem;
+    }
   }
 `;

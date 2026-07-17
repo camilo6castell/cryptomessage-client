@@ -2,9 +2,10 @@ import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { H1, P2 } from '../../elements/font';
+import { Logo } from '../../elements/Logo';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 
-import { fade } from '../../../../../src/app/ui/styles/keyframes';
+import { fade } from '../../styles/keyframes';
 import { AppContext } from '../../../core/state/AppContext';
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
@@ -20,7 +21,9 @@ export const Form = ({
   $visible,
 }: {
   children: React.ReactNode;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (
+    event: React.FormEvent<HTMLFormElement>
+  ) => void | Promise<void>;
   formTitle: string;
   formText: string;
   helpText: string;
@@ -30,7 +33,15 @@ export const Form = ({
 }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
   return (
-    <StyledLoginForm onSubmit={handleSubmit} $visible={$visible}>
+    <StyledLoginForm
+      onSubmit={(event) => {
+        void handleSubmit(event);
+      }}
+      $visible={$visible}
+    >
+      <LogoWrap>
+        <Logo />
+      </LogoWrap>
       <P2Form>{formText}</P2Form>
       <H1Form>{formTitle}</H1Form>
 
@@ -99,6 +110,15 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
 
 const H1Form = styled(H1)`
   margin-bottom: 1rem;
+`;
+
+const LogoWrap = styled.div`
+  margin-bottom: 1.5rem;
+
+  img {
+    height: 1.5rem;
+    opacity: 0.9;
+  }
 `;
 
 const P2Form = styled(P2)`

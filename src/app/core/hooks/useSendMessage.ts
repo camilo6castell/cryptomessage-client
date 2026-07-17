@@ -3,9 +3,11 @@ import { AppContext } from '../state/AppContext';
 import { messagesApi } from '../api/messages.api';
 import { Actions } from '../models/enums/Actions.enum';
 import { encryptMessage } from '../services/crypto.manager';
+import { useGlobalToast } from '../state/ToastContext';
 
 export const useSendMessage = () => {
   const { state, dispatch } = useContext(AppContext);
+  const { showToast } = useGlobalToast();
 
   const sendMessage = async (
     chatId: number,
@@ -22,13 +24,11 @@ export const useSendMessage = () => {
 
       if (!myId || !otherId || !myPublicKey || !otherPublicKey) {
         console.error('Missing required data for encryption');
+        showToast('No se pudo enviar: faltan datos de cifrado.', true);
         return;
       }
 
-      const encryptedForMe = await encryptMessage(
-        myPublicKey,
-        messageContent
-      );
+      const encryptedForMe = await encryptMessage(myPublicKey, messageContent);
 
       const encryptedForOther = await encryptMessage(
         otherPublicKey,
@@ -48,6 +48,7 @@ export const useSendMessage = () => {
       });
     } catch (err) {
       console.error('Error al enviar el mensaje:', err);
+      showToast('No se pudo enviar el mensaje. Intenta de nuevo.', true);
     }
   };
 

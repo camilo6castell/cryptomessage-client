@@ -4,7 +4,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
-import prettier from 'eslint-plugin-prettier'; // 👈 Añadir
+import prettier from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -12,7 +13,7 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
-      'prettier', // 👈 Debe ser el ÚLTIMO
+      prettierConfig, // 👈 objeto de config de flat-config, no el string legacy 'prettier'
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -50,7 +51,10 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs.strictTypeChecked.rules,
-      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-function-return-type': [
+        'error',
+        { allowExpressions: true },
+      ],
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-inferrable-types': 'error',

@@ -21,14 +21,17 @@
 ## Table of Contents
 
 - [Overview](#-overview)
+- [Design System](#-design-system)
 - [Cryptography Architecture](#-cryptography-architecture)
 - [Application Architecture](#-application-architecture)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [State Management](#-state-management)
 - [Routing & Guards](#-routing--guards)
+- [Realtime](#-realtime)
 - [Getting Started](#-getting-started)
 - [Environment Variables](#-environment-variables)
+- [Assets](#-assets)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -39,6 +42,30 @@
 CryptoMessage is a **privacy-first, end-to-end encrypted messaging SPA** built with React and TypeScript. All cryptographic operations — key generation, message encryption, message decryption, and private key protection — run **exclusively in the browser** using the native [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API). The server never sees plaintext, never touches private keys, and never participates in any cryptographic operation.
 
 This repository contains the **client-side** of the CryptoMessage ecosystem. The Spring Boot backend lives in a [separate repository](#).
+
+---
+
+## 🎨 Design System
+
+The UI follows a token-driven design system (`ui/styles/config/Themes.tsx`) rather than one-off hardcoded colors, so the whole app reads as one coherent product instead of a pile of individually-styled screens.
+
+**Direction — "Quiet Vault":** a messenger that feels like a calm, low-glare secure room rather than a flashy chat app. One signature accent (lilac → deep violet) carries all emphasis; everything else is a small set of neutral surfaces at different elevations. The product's actual privacy mechanic — ciphertext that must be deliberately unsealed — gets its own monospace voice everywhere it appears, so it always reads as "encrypted data," not a rendering glitch.
+
+| Token group | Purpose |
+|---|---|
+| `color.highlight` / `color.highlightDeep` | Signature accent (lilac → violet), used for the active nav state, sent-message bubbles, primary buttons, focus rings |
+| `surface.canvas` / `surface.surface` / `surface.surfaceRaised` | Three elevation levels — page background, panels, cards/bubbles |
+| `surface.textPrimary` / `surface.textMuted` | The only two text colors in the app |
+| `font.mainFontFamily` / `displayFontFamily` / `monoFontFamily` | Inter (body/UI), Space Grotesk (headings/brand), JetBrains Mono (ciphertext, fingerprints, raw keys) |
+| `darkGlassEffect` | The single mixin every panel (rail, chat list, chat window, cards, modals) derives from, so elevation reads consistently |
+
+Both a dark theme (default) and a light theme are fully defined — toggle lives in the navigation rail (`SideRail`), backed by `ThemeProvider` / `useThemeContext` with the choice persisted to `localStorage`.
+
+Fonts are self-hosted via `@fontsource` (Latin subset only) instead of pulled from Google Fonts at runtime — no third-party font CDN call on load, which fits an app whose whole premise is not phoning home.
+
+### Layout
+
+The authenticated shell is a Telegram Desktop–style structure: a narrow persistent icon rail on the far left (`SideRail` — Chats / Contacts / Profile, theme toggle, connection status), with each section rendering its own list-pane + detail-pane split to its right (`MainLayout` → `ChatListContainer` + `ChatListContainerAux`, etc.).
 
 ---
 
@@ -55,6 +82,7 @@ This is the core of the application. The entire crypto layer is built on the bro
 | Message decryption | RSA-OAEP | Uses the session-loaded private key |
 | Private key protection | AES-GCM | 256-bit key, derived via PBKDF2 (65,536 iterations, SHA-256) |
 | Key serialization | SPKI / PKCS#8 | Standard formats, exported as base64 |
+| Key fingerprint | SHA-256 | Shown on the Profile screen for out-of-band verification |
 
 ### Registration flow
 
@@ -114,6 +142,8 @@ export const clearCrypto = () => {
 };
 ```
 
+Because the key only lives in memory, a page reload needs the passphrase again to decrypt it. That prompt is a proper in-app modal (`PassphraseModal`) — not a native `window.prompt()` — with inline error feedback and a "cancel and log out" escape hatch.
+
 ### Message encryption (per-recipient)
 
 Every message is encrypted **twice** — once with the sender's public key, once with the recipient's public key — so both parties can decrypt their own copy:
@@ -130,6 +160,8 @@ await messagesApi.send(chatId, {
 // The server stores Map<userId, ciphertext> — it cannot read either copy.
 ```
 
+In the chat window, ciphertext is shown by default (monospace) and only decrypted client-side when the person explicitly taps "Revelar" — the encryption isn't just infrastructure, it's visible in the UI.
+
 ---
 
 ## 🏛️ Application Architecture
@@ -142,14 +174,14 @@ src/app/
 ├── containers/     → Connect state/hooks to UI components
 ├── ui/
 │   ├── components/ → Stateless presentational components
-│   ├── elements/   → Atomic reusable UI primitives (Button, Avatar, Toast...)
+│   ├── elements/   → Atomic reusable UI primitives (Button, Avatar, Logo...)
 │   ├── layouts/    → Page shell wrappers (MainLayout, StartLayout)
 │   └── styles/     → Themes, keyframes, global reset, styled-components config
 ├── core/
 │   ├── api/        → API layer (httpClient, per-domain API modules)
-│   ├── services/   → Crypto services, StorageService
+│   ├── services/   → Crypto services, WebSocket service, StorageService
 │   ├── hooks/      → Feature hooks (useLogin, useSendMessage, useLoadChats...)
-│   ├── state/      → AppContext + Reducer
+│   ├── state/      → AppContext + Reducer + ToastContext (global notifications)
 │   ├── models/     → TypeScript interfaces and enums
 │   ├── mappers/    → API response → domain model transforms
 │   ├── errors/     → Typed HTTP error classes
@@ -168,11 +200,12 @@ src/app/
 | Build tool | Vite (SWC) | 7 |
 | Routing | React Router DOM | 6.26 |
 | Styling | Styled Components | 6.1 |
+| Realtime | STOMP over WebSocket (`@stomp/stompjs`) | 7 |
 | Cryptography | Web Crypto API (`crypto.subtle`) | Native browser |
+| Fonts | Inter, Space Grotesk, JetBrains Mono (self-hosted via `@fontsource`) | 5.2 |
 | Avatars | jdenticon | 3.3 |
 | Icons | react-icons | 5.5 |
-| Node polyfills | vite-plugin-node-polyfills | 0.24 |
-| Linting | ESLint + eslint-plugin-react | 9.10 |
+| Linting | ESLint (flat config) + typescript-eslint + eslint-plugin-react | 9.35 / 8.64 |
 | Formatting | Prettier | 3.8 |
 
 ---
@@ -182,17 +215,15 @@ src/app/
 ```
 src/
 ├── main.tsx                          # React entry point
-├── vite-env.d.ts
-├── environment/
-│   └── environment.ts                # VITE_API_URL + isProduction flag
+├── vite-env.d.ts                     # Typed import.meta.env
 └── app/
-    ├── index.tsx                     # AppContextProvider + RouterProvider
+    ├── index.tsx                     # ThemeProvider + ToastProvider + AppContextProvider + Router
     ├── pages/
     │   ├── MainPage.tsx              # Authenticated main view
     │   └── StartPage.tsx             # Login / Register view
     ├── containers/                   # State-connected wrappers
     │   ├── StartContainer.tsx
-    │   ├── NavBarContainer.tsx
+    │   ├── NavBarContainer.tsx       # Renders SideRail
     │   ├── ChatListContainer.tsx
     │   ├── ChatListContainerAux.tsx
     │   ├── ContactListContainer.tsx
@@ -201,7 +232,7 @@ src/
     │   └── UserInfoContainerAux.tsx
     ├── routes/
     │   ├── router.tsx                # createBrowserRouter — public + private trees
-    │   ├── PrivateGuard.tsx          # Token verify + passphrase prompt → key load
+    │   ├── PrivateGuard.tsx          # Token verify + passphrase modal → key load
     │   └── PublicGuard.tsx           # Redirects authenticated users away from /login
     ├── core/
     │   ├── api/
@@ -211,14 +242,16 @@ src/
     │   │   ├── contacts.api.ts
     │   │   └── messages.api.ts
     │   ├── services/
-    │   │   ├── crypto.service.ts     # RSA-OAEP key ops (generateKeyPair, encrypt, decrypt, import/export)
+    │   │   ├── crypto.service.ts     # RSA-OAEP key ops + key fingerprint helper
     │   │   ├── crypto-aes.service.ts # AES-GCM + PBKDF2 for private key protection
     │   │   ├── crypto.manager.ts     # In-memory key state + encryptMessage / decryptMessage
-    │   │   └── storage.service.ts   # localStorage wrapper (APP_STATE — never stores keys)
+    │   │   ├── ws.service.ts         # STOMP/WebSocket connection manager
+    │   │   └── storage.service.ts    # localStorage wrapper (APP_STATE — never stores keys)
     │   ├── hooks/
     │   │   ├── useLogin.ts           # Auth + key loading on sign-in
     │   │   ├── useRegister.ts        # Key generation + AES encryption + registration
     │   │   ├── useSendMessage.ts     # Per-recipient RSA encryption + API call
+    │   │   ├── useRealtimeSync.ts    # WebSocket lifecycle + live state updates
     │   │   ├── useLoadMessages.ts
     │   │   ├── useLoadChats.ts
     │   │   ├── useCreateChat.ts
@@ -228,13 +261,12 @@ src/
     │   │   ├── useDeleteContact.ts
     │   │   ├── useMarkAsRead.ts
     │   │   ├── useLogout.ts
-    │   │   ├── useToast.tsx
     │   │   ├── useHandleInput.ts
     │   │   ├── useThemeContext.ts
-    │   │   ├── useFirendlyDateFormat.ts
-    │   │   └── useDynamicHeightFontSize.ts
+    │   │   └── useFirendlyDateFormat.ts
     │   ├── state/
-    │   │   ├── AppContext.tsx         # Context + localStorage persistence
+    │   │   ├── AppContext.tsx        # Context + localStorage persistence
+    │   │   ├── ToastContext.tsx      # Global, non-blocking notification stack
     │   │   └── reducer.ts            # Pure reducer — all state transitions
     │   ├── models/                   # TypeScript interfaces + enums
     │   ├── mappers/                  # API response → IUser, IContact, etc.
@@ -244,10 +276,21 @@ src/
     │   └── resources/
     │       └── url.resource.ts
     └── ui/
-        ├── components/               # Feature components (chat, contact, welcome, navbar)
-        ├── elements/                 # Atoms: Button, Avatar, Toast, Logo, CopyToClipboard...
+        ├── components/
+        │   ├── navbar/
+        │   │   └── SideRail.tsx      # Persistent left icon rail (nav + theme + connection)
+        │   ├── chatlist/             # Chat list, chat window, message bubbles, input
+        │   ├── contactlist/          # Contact search, contact list, contact cards
+        │   ├── userinfo/             # Profile + "Security & Keys" panel
+        │   ├── welcome/              # Login/register form, marketing front page
+        │   └── general/
+        │       ├── Toast.tsx         # Stackable snackbar (renders the ToastContext queue)
+        │       ├── LoadingScreen.tsx
+        │       ├── PassphraseModal.tsx
+        │       └── WavesBackground.tsx
+        ├── elements/                 # Atoms: Button, Avatar, Logo, CopyToClipboardButton, font/*
         ├── layouts/                  # MainLayout, StartLayout, GenericContainer
-        └── styles/                   # Themes, keyframes, global reset, effects
+        └── styles/                   # Themes (design tokens), keyframes, global reset, effects
 ```
 
 ---
@@ -257,6 +300,7 @@ src/
 The app uses a **React Context + `useReducer`** pattern. There are no external state libraries.
 
 - `AppContext` provides `{ state, dispatch }` to the entire tree.
+- `ToastContext` provides a separate, global `showToast(message, isDanger)` for non-blocking notifications — used by anything that previously failed silently (sending a message, creating a chat), not just the login form.
 - The state is **persisted to `localStorage`** (`APP_STATE`) on every change.
 - On page load, `AppContext` restores the last known state from storage.
 - **Crypto keys are never included in the persisted state** — they live only in the `crypto.manager` module variables and are cleared on logout.
@@ -267,7 +311,7 @@ AppContextProvider
     └── useEffect → localStorage.setItem('APP_STATE', state)
 ```
 
-On tab refresh, `PrivateGuard` detects that the private key is absent (`hasPrivateKey() === false`), re-verifies the JWT token, and prompts the user for their passphrase to reload the key pair into memory.
+On tab refresh, `PrivateGuard` detects that the private key is absent (`hasPrivateKey() === false`), re-verifies the JWT token, and shows `PassphraseModal` to reload the key pair into memory.
 
 ---
 
@@ -284,8 +328,19 @@ The router is built with `createBrowserRouter` (React Router v6) and enforces tw
 **`PrivateGuard`** on every navigation to a protected route:
 1. Reads `APP_STATE` from localStorage and checks for a JWT token.
 2. Calls `GET /auth/verify` to confirm the token is still valid.
-3. If the in-memory private key is missing (e.g. page refresh), prompts the user for their passphrase and re-derives the key via `loadKeys()`.
-4. On any failure (invalid token, wrong passphrase), clears crypto state and redirects to `/login`.
+3. If the in-memory private key is missing (e.g. page refresh), shows `PassphraseModal` and re-derives the key via `loadKeys()` — with inline retry on a wrong passphrase instead of a forced logout on the first mistake.
+4. On an invalid token, or if the person cancels the passphrase prompt, clears crypto state and redirects to `/login`.
+
+---
+
+## 🔌 Realtime
+
+New messages and chat updates (created / accepted) arrive live over a WebSocket — no polling, no manual reload:
+
+- `ws.service.ts` owns the STOMP connection (raw WebSocket, JWT sent as a native header on the STOMP `CONNECT` frame).
+- `useRealtimeSync` wires the connection lifecycle to `AppContext`, mounted once at the authenticated shell (`MainLayout`).
+- Connection status is shown as a small dot at the bottom of the navigation rail (`SideRail`) — green when connected, amber while reconnecting.
+- See the backend README's "Realtime" section for the wire protocol (`/user/queue/messages`, `/user/queue/chats`).
 
 ---
 
@@ -340,24 +395,10 @@ VITE_API_URL=http://localhost:8080
 
 ---
 
-## 🔌 Realtime
+## 🎨 Assets
 
-New messages and chat updates arrive live over a WebSocket (`ws.service.ts` + `useRealtimeSync`),
-mounted once at the authenticated shell (`MainLayout`). A small status dot in the bottom-right
-corner reflects the connection state. See the backend README's "Realtime" section for the wire
-protocol.
-
----
-
-## 🎨 Placeholder assets
-
-Two binary assets aren't tracked in this bundle and ship as lightweight placeholders so the
-project builds out of the box:
-
-- `public/background.webm` — the animated background video. Not included; if the file is
-  missing, `WavesBackground` degrades gracefully (no broken video, just no animation). Drop
-  your video at that path to restore it.
-- `src/assets/logo-white.svg` — a minimal placeholder logo. Replace with your real brand asset.
+- `src/assets/logo.png`, `logo-big.png`, `logo-white.svg` — brand wordmark, used in the login screen and browser tab.
+- `public/background.webm` — **not included in this repo.** The animated login-screen background video is a separate binary asset; if it's absent, `WavesBackground` degrades gracefully (no broken video, just no animation, falls back to the theme's canvas color). Drop your video at that exact path to restore it.
 
 ---
 

@@ -62,7 +62,9 @@ export const ChatBubbleMessage = ({
       <button
         type="button"
         className="bubble-message__reveal"
-        onClick={handleDecrypt}
+        onClick={() => {
+          void handleDecrypt();
+        }}
         aria-label={isShown ? 'Ocultar mensaje' : 'Revelar mensaje'}
       >
         {isShown ? <RiLockUnlockLine /> : <RiLockLine />}
@@ -85,18 +87,18 @@ export const ChatBubbleMessage = ({
 const ChatBubbleMessageSent = css`
   background: linear-gradient(
     135deg,
-    rgba(244, 190, 243, 0.18) 0%,
-    rgba(5, 97, 98, 0.55) 100%
+    ${({ theme }) => theme.color.highlight} 0%,
+    ${({ theme }) => theme.color.highlightDeep} 100%
   );
   align-self: flex-end;
-  border-radius: 1rem;
-  border-bottom-right-radius: 0.2rem;
+  border-radius: 1.1rem;
+  border-bottom-right-radius: 0.25rem;
 `;
 const ChatBubbleMessageReceived = css`
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: ${({ theme }) => theme.surface.surfaceRaised};
   align-self: flex-start;
-  border-radius: 1rem;
-  border-bottom-left-radius: 0.2rem;
+  border-radius: 1.1rem;
+  border-bottom-left-radius: 0.25rem;
 `;
 
 const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
@@ -113,8 +115,9 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
   margin-bottom: 0.7rem;
   padding: 0.6rem 0.75rem;
 
-  color: #e0e0e0;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: ${({ theme, $isSent }) =>
+    $isSent ? '#15121c' : theme.surface.textPrimary};
+  border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
   .bubble-message__reveal {
     display: flex;
@@ -129,7 +132,8 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
 
     font-size: 0.7rem;
     font-weight: 700;
-    color: ${({ theme }) => theme.color.highlight};
+    color: ${({ theme, $isSent }) =>
+      $isSent ? '#3a2f4d' : theme.color.highlight};
     cursor: pointer;
     opacity: 0.85;
     transition: opacity 0.15s ease;
@@ -156,18 +160,20 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
   }
 
   .message-text.is-ciphertext {
-    font-family: 'Courier New', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.02em;
-    color: #8f8f8f;
+    font-family: ${({ theme }) => theme.font.monoFontFamily};
+    font-size: 0.7rem;
+    letter-spacing: 0.01em;
+    color: ${({ theme, $isSent }) =>
+      $isSent ? 'rgba(21, 18, 28, 0.6)' : theme.surface.textMuted};
     word-break: break-all;
-    opacity: 0.75;
+    opacity: 0.85;
   }
 
   .message-time {
     display: block;
     font-size: 0.65rem;
-    color: #b3b3b3;
+    color: ${({ theme, $isSent }) =>
+      $isSent ? 'rgba(21, 18, 28, 0.55)' : theme.surface.textMuted};
     text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
     margin-top: 0.4rem;
   }

@@ -65,7 +65,6 @@ export const useRealtimeSync = (): { isConnected: boolean } => {
     return () => {
       disconnectWebSocket();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, dispatch]);
 
   return { isConnected };

@@ -12,7 +12,7 @@ import { Theme } from '../../styles/config/Themes';
  * and the app falls back to the theme's background color instead of failing
  * the build or showing a broken video frame.
  */
-export default function BackgroundWaves() {
+export default function BackgroundWaves(): React.JSX.Element | null {
   const { state } = useContext(AppContext);
   const [hasError, setHasError] = useState(false);
 
@@ -41,9 +41,9 @@ const Wrap = styled.div<{ $state: IAppState }>`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: -2;
+  z-index: 9;
   overflow: hidden;
-  background-color: black;
+  background-color: ${({ theme }: { theme: Theme }) => theme.surface.canvas};
 
   .background-video {
     width: 100%;

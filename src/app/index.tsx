@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './routes/router';
 import styled from 'styled-components';
 import { AppContextProvider } from './core/state/AppContext';
+import { ToastProvider } from './core/state/ToastContext';
 import BackgroundWaves from './ui/components/general/WavesBackground';
 
 export const App = (): ReactElement => {
@@ -13,9 +14,11 @@ export const App = (): ReactElement => {
       <BackgroundWaves />
       <StyledApp>
         <GlobalStyle />
-        <AppContextProvider>
-          <RouterProvider router={router} />
-        </AppContextProvider>
+        <ToastProvider>
+          <AppContextProvider>
+            <RouterProvider router={router} />
+          </AppContextProvider>
+        </ToastProvider>
       </StyledApp>
     </ThemeProvider>
   );

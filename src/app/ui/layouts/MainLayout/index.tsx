@@ -10,42 +10,27 @@ export const MainLayout = (): ReactElement => {
 
   return (
     <StyledMainLayout>
-      <NavBarContainer />
-      <StyledOulet>
+      <NavBarContainer isConnected={isConnected} />
+      <StyledOutlet>
         <Outlet />
-      </StyledOulet>
-      <ConnectionIndicator
-        $isConnected={isConnected}
-        title={isConnected ? 'Conectado en tiempo real' : 'Reconectando...'}
-      />
+      </StyledOutlet>
     </StyledMainLayout>
   );
 };
 
 export const StyledMainLayout = styled(GenericContainer)`
   z-index: 1;
-  padding: 3rem;
-  position: relative;
-`;
-
-const StyledOulet = styled(GenericContainer)`
+  padding: 2rem;
   flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
 `;
 
-const ConnectionIndicator = styled.div<{ $isConnected: boolean }>`
-  position: absolute;
-  bottom: 0.75rem;
-  right: 0.75rem;
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 50%;
-  z-index: 2;
-
-  background-color: ${({ $isConnected }) =>
-    $isConnected ? '#3ddc84' : '#f2a33c'};
-
-  box-shadow: 0 0 6px ${({ $isConnected }) =>
-    $isConnected ? '#3ddc84' : '#f2a33c'};
-
-  transition: background-color 0.4s ease;
+const StyledOutlet = styled(GenericContainer)`
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
 `;

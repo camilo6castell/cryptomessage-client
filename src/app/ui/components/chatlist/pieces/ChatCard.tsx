@@ -7,6 +7,7 @@ import { AppContext } from '../../../../core/state/AppContext';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { GenericContainer } from '../../../layouts/GenericContainer';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import { ChatStatus } from '../../../../core/models/enums/ChatStatus.enum';
 
 export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
@@ -62,7 +63,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
           <span>{lastMessagePreview}</span>
         </div>
 
-        {chat.status === 'PENDING' && (
+        {chat.status === ChatStatus.PENDING && (
           <span className="card__status-badge">Pendiente</span>
         )}
       </div>
@@ -81,7 +82,7 @@ const StyledChatCard = styled(GenericContainer)<{
   margin-bottom: 0.4rem;
 
   background-color: ${({ $isSelected }) =>
-    $isSelected ? 'rgba(244, 190, 243, 0.1)' : 'rgba(255, 255, 255, 0.03)'};
+    $isSelected ? 'rgba(244, 190, 243, 0.1)' : 'transparent'};
   border: 1px solid
     ${({ $isSelected }) =>
       $isSelected ? 'rgba(244, 190, 243, 0.35)' : 'transparent'};
@@ -92,7 +93,7 @@ const StyledChatCard = styled(GenericContainer)<{
     border-color 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: ${({ theme }) => theme.surface.borderSubtle};
   }
 
   .card__avatar-wrap {
@@ -110,7 +111,7 @@ const StyledChatCard = styled(GenericContainer)<{
     border-radius: 50%;
     background-color: ${({ theme }) => theme.color.highlight};
     box-shadow: 0 0 6px ${({ theme }) => theme.color.highlight};
-    border: 2px solid #12121c;
+    border: 2px solid ${({ theme }) => theme.surface.surface};
   }
 
   .card__details {
@@ -128,13 +129,14 @@ const StyledChatCard = styled(GenericContainer)<{
   }
 
   .card__name {
-    font-weight: ${({ $isUnread }) => ($isUnread ? 800 : 600)};
+    font-weight: ${({ $isUnread }) => ($isUnread ? 700 : 600)};
     font-size: 0.95rem;
+    color: ${({ theme }) => theme.surface.textPrimary};
   }
 
   .card__time {
     font-size: 0.7rem;
-    color: #999;
+    color: ${({ theme }) => theme.surface.textMuted};
     white-space: nowrap;
   }
 
@@ -144,7 +146,7 @@ const StyledChatCard = styled(GenericContainer)<{
     gap: 0.3rem;
 
     font-size: 0.8rem;
-    color: #8f8f8f;
+    color: ${({ theme }) => theme.surface.textMuted};
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -158,6 +160,6 @@ const StyledChatCard = styled(GenericContainer)<{
     font-size: 0.65rem;
     font-weight: 700;
     color: ${({ theme }) => theme.color.warning};
-    background-color: rgba(255, 255, 0, 0.08);
+    background-color: rgba(242, 184, 75, 0.12);
   }
 `;

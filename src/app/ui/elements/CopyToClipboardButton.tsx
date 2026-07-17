@@ -6,10 +6,14 @@ export const CopyToClipboardButton = ({
   textToCopy,
   textButton,
   className,
+  variant,
+  isSubmit,
 }: {
   textToCopy: string;
   textButton: string;
   className?: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  isSubmit?: boolean;
 }): ReactElement => {
   const [copied, setCopied] = useState(false);
 
@@ -29,9 +33,13 @@ export const CopyToClipboardButton = ({
   return (
     <StyledButton
       textButton={copied ? '¡Copiado!' : textButton}
-      onClick={handleCopy}
+      onClick={() => {
+        void handleCopy();
+      }}
       disabled={copied}
       className={className}
+      variant={variant}
+      isSubmit={isSubmit}
     />
   );
 };

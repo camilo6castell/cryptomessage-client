@@ -8,19 +8,22 @@ import { FrontPage } from '../ui/components/welcome/pieces/FrontPage';
 
 import { useLogin } from '../core/hooks/useLogin';
 import { useRegister } from '../core/hooks/useRegister';
-import { useToast } from '../core/hooks/useToast';
+import { useGlobalToast } from '../core/state/ToastContext';
 
-import { Toast } from '../ui/components/general/Toast';
 import { animationConfig } from '../ui/styles/config/Themes';
 import { frontPageContent } from '../ui/static/frontPageContent';
 
 export const StartContainer = (): ReactElement => {
   const location = useLocation();
 
-  const { toast, showToast, hideToast } = useToast();
+  const { showToast } = useGlobalToast();
 
-  const { loginForm, handleLoginInput, handleLoginSubmit, isSubmitting: isLoggingIn } =
-    useLogin(showToast);
+  const {
+    loginForm,
+    handleLoginInput,
+    handleLoginSubmit,
+    isSubmitting: isLoggingIn,
+  } = useLogin(showToast);
 
   const {
     registerForm,
@@ -58,21 +61,13 @@ export const StartContainer = (): ReactElement => {
 
   return (
     <>
-      {toast && (
-        <Toast
-          message={toast.message}
-          isDanger={toast.isDanger}
-          onClose={hideToast}
-        />
-      )}
-
       <Form
         key={isLogin ? 'login' : 'register'} // 🔥 importante
         $visible={visible}
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
         formText={isLogin ? 'Welcome back!' : 'Join us!'}
-        helpText={isLogin ? "Don't have an account?" : 'Already registered?'}
+        helpText={isLogin ? 'Don\'t have an account?' : 'Already registered?'}
         helpLink={isLogin ? '/register' : '/login'}
         helpTextLink={isLogin ? 'Register' : 'Login'}
       >

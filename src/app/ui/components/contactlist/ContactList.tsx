@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { IContact } from '../../../core/models/main/IContact.model';
 import { ContactItem } from './pieces/ContactItem';
 import { GenericContainer } from '../../layouts/GenericContainer';
+import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
+import { RiContactsBookLine } from 'react-icons/ri';
 
 export const ContactList = ({
   contacts,
@@ -17,21 +20,37 @@ export const ContactList = ({
 }): ReactElement => {
   return (
     <StyledContactList>
-      {loadingContacts ? (
-        <p>Loading contacts...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : contacts.length === 0 ? (
-        <p>No contacts available</p>
-      ) : (
-        contacts.map((contact) => (
-          <ContactItem
-            key={contact.contactId}
-            contact={contact}
-            deleteContact={deleteContact}
-          />
-        ))
-      )}
+      <header className="contact-list__header">
+        <h1>Contactos</h1>
+      </header>
+
+      <div className="contact-list__scroll">
+        {loadingContacts ? (
+          <EmptyState>
+            <p>Cargando contactos...</p>
+          </EmptyState>
+        ) : error ? (
+          <EmptyState>
+            <p className="empty-state__error">Error: {error}</p>
+          </EmptyState>
+        ) : contacts.length === 0 ? (
+          <EmptyState>
+            <RiContactsBookLine size={32} />
+            <p>Aún no tienes contactos</p>
+            <span>Búscalos por su usuario en el panel de la derecha.</span>
+          </EmptyState>
+        ) : (
+          <div className="list">
+            {contacts.map((contact) => (
+              <ContactItem
+                key={contact.contactId}
+                contact={contact}
+                deleteContact={deleteContact}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </StyledContactList>
   );
 };
@@ -39,7 +58,61 @@ export const ContactList = ({
 const StyledContactList = styled(GenericContainer)`
   justify-content: flex-start;
   width: ${({ theme }) => theme.general.mainSectionWidth};
+  height: 100%;
 
-  border-radius: 0 0 0 ${({ theme }) => theme.general.borderRadius};
-  border: 1px solid #ffffff;
+  ${darkGlassEffect}
+  border-radius: 0;
+  border-left: none;
+
+  .contact-list__header {
+    width: 100%;
+    padding: 1.1rem 1.1rem 0.8rem;
+    flex-shrink: 0;
+
+    h1 {
+      font-family: ${({ theme }) => theme.font.displayFontFamily};
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: ${({ theme }) => theme.surface.textPrimary};
+      margin: 0;
+    }
+  }
+
+  .contact-list__scroll {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    ${mainScrollBar}
+  }
+
+  .list {
+    padding: 0.4rem 0.6rem 0.6rem;
+    width: 100%;
+  }
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+
+  height: 100%;
+  width: 100%;
+  padding: 1.5rem;
+
+  color: ${({ theme }) => theme.surface.textMuted};
+  font-size: 0.9rem;
+  text-align: center;
+
+  span {
+    font-size: 0.78rem;
+    max-width: 15rem;
+    opacity: 0.8;
+  }
+
+  .empty-state__error {
+    color: ${({ theme }) => theme.error.color};
+  }
 `;

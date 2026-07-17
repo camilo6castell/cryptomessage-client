@@ -15,14 +15,38 @@ import {
   loadKeys,
   clearCrypto,
 } from '../core/services/crypto.manager';
+import { LoadingScreen } from '../ui/components/general/LoadingScreen';
+import { PassphraseModal } from '../ui/components/general/PassphraseModal';
 
 const storageService = new StorageService();
+
+type RestoredUser = {
+  token: string;
+  userId: number;
+  username: string;
+  createdAt: string;
+  publicKey: string | null;
+  encryptedPrivateKey: string | null;
+  contacts: [];
+  chats: [];
+};
 
 export const PrivateGuard = ({
   children,
 }: IReactElementChildrenProps): ReactNode => {
   const { dispatch } = useContext(AppContext);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [pendingUser, setPendingUser] = useState<RestoredUser | null>(null);
+  const [passphraseError, setPassphraseError] = useState<string | null>(null);
+  const [isVerifyingPassphrase, setIsVerifyingPassphrase] = useState(false);
+
+  const forceLogout = () => {
+    clearCrypto();
+    storageService.remove('APP_STATE');
+    dispatch({ type: Actions.Logout, payload: null });
+    setPendingUser(null);
+    setIsAuthenticated(false);
+  };
 
   useEffect(() => {
     const user = storageService.get<IAppState>('APP_STATE')?.user;
@@ -32,24 +56,11 @@ export const PrivateGuard = ({
       return;
     }
 
-    const forceLogout = () => {
-      clearCrypto();
-
-      storageService.remove('APP_STATE');
-
-      dispatch({
-        type: Actions.Logout,
-        payload: null,
-      });
-
-      setIsAuthenticated(false);
-    };
-
     const verifyToken = async () => {
       try {
         const data: UserResponse = await authApi.verify();
 
-        const restoredUser = {
+        const restoredUser: RestoredUser = {
           token: data.token,
           userId: data.userId,
           username: data.username,
@@ -60,39 +71,18 @@ export const PrivateGuard = ({
           chats: [],
         };
 
-        // 🔐 Cargar claves si no están
         if (!hasPrivateKey()) {
-          const passphrase = prompt('Ingresa tu passphrase');
-
-          // ❌ canceló → logout
-          if (!passphrase) {
-            forceLogout();
-            return;
-          }
-
-          try {
-            await loadKeys(
-              restoredUser.publicKey!,
-              restoredUser.encryptedPrivateKey!,
-              passphrase
-            );
-          } catch (err) {
-            console.error('❌ Error desencriptando clave privada', err);
-
-            alert('Passphrase incorrecta');
-            forceLogout();
-            return;
-          }
+          // The private key only ever lives in memory — a reload needs the
+          // passphrase again. Hand off to the modal instead of blocking here.
+          setPendingUser(restoredUser);
+          return;
         }
 
-        dispatch({
-          type: Actions.LoadUser,
-          payload: restoredUser,
-        });
-
+        dispatch({ type: Actions.LoadUser, payload: restoredUser });
         setIsAuthenticated(true);
-      } catch (err: any) {
-        if (err.status === 401) {
+      } catch (err: unknown) {
+        const status = (err as { status?: number })?.status;
+        if (status === 401) {
           forceLogout();
         } else {
           console.error(err);
@@ -102,10 +92,47 @@ export const PrivateGuard = ({
     };
 
     void verifyToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  const handlePassphraseSubmit = async (passphrase: string) => {
+    if (!pendingUser) return;
+
+    setIsVerifyingPassphrase(true);
+    setPassphraseError(null);
+
+    try {
+      await loadKeys(
+        pendingUser.publicKey!,
+        pendingUser.encryptedPrivateKey!,
+        passphrase
+      );
+
+      dispatch({ type: Actions.LoadUser, payload: pendingUser });
+      setPendingUser(null);
+      setIsAuthenticated(true);
+    } catch (err) {
+      console.error('❌ Error desencriptando clave privada', err);
+      setPassphraseError('Passphrase incorrecta. Intenta de nuevo.');
+    } finally {
+      setIsVerifyingPassphrase(false);
+    }
+  };
+
+  if (pendingUser) {
+    return (
+      <PassphraseModal
+        username={pendingUser.username}
+        error={passphraseError}
+        isVerifying={isVerifyingPassphrase}
+        onSubmit={handlePassphraseSubmit}
+        onCancel={forceLogout}
+      />
+    );
+  }
+
   if (isAuthenticated === null) {
-    return <div>Cargando...</div>;
+    return <LoadingScreen />;
   }
 
   if (!isAuthenticated) {

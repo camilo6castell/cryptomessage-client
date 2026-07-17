@@ -1,35 +1,42 @@
 import { createGlobalStyle } from 'styled-components';
 
 import { Reset } from './reset';
-import { Buttons } from './variables/buttons.tsx';
 import { Scrollbar } from './variables/scrollbar.tsx';
 
+// Self-hosted fonts — no runtime dependency on a third-party font CDN,
+// which fits an app whose whole premise is not phoning home. Latin subset
+// only: the UI copy is Spanish/English, no need to ship Cyrillic/Greek/etc.
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/space-grotesk/latin-700.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+
 export const GlobalStyle = createGlobalStyle`
-  ${Reset}   
+  ${Reset}
 
   :root {
-    /* SECTIONS WIDTH SIZES */
-    /* --main-section-width: 35dvw;
-    --aux-section-width: 65dvw; */
-    --main-section-width: 50dvw;
-    --aux-section-width: 50dvw;
-    
-    /* MAINBAR */
-    --flex-on-main-bar: 1;
-    --height-mainbar: 10%;
-
-    --flex-under-main-bar: 3;
-    --section-under-mainbar: 90%;
-
-    /* COLORS */
-
-    --element-background-color: #ff0000;
-    --component-background-color: #ff0000;
-    /* --primary-gradient: linear-gradient(to right, var(--button-primary-background-color), var(--primary-color)); */
-
-    /* BREAKPOINTS ----- NO FUNCIONA */
-    --md-breakpoint: 900px;
     ${Scrollbar}
-    ${Buttons} 
-  }  
+  }
+
+  html {
+    background-color: ${({ theme }) => theme.surface.canvas};
+  }
+
+  /* Visible keyboard focus everywhere — accessibility floor, not optional. */
+  :focus-visible {
+    outline: 2px solid ${({ theme }) => theme.color.highlight};
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 `;

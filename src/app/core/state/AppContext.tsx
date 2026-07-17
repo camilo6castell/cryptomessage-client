@@ -10,7 +10,7 @@ import { StorageService } from '../services/storage.service';
 // Crear el contexto con un valor inicial que contenga el state y dispatch
 export const AppContext = createContext<IAppContext>({
   state: initialAppState, // state se inicializa con el valor de initialAppState
-  dispatch: (() => undefined) as React.Dispatch<any>, // dispatch se inicializa como una función vacíagit a
+  dispatch: () => undefined, // dispatch se inicializa como una función vacíagit a
 });
 export const AppContextProvider = ({
   children,

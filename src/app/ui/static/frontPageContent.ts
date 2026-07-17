@@ -26,6 +26,7 @@ export const frontPageContent = {
     ],
   },
   register: {
+    // eslint-disable-next-line quotes
     pretitle: "Let's get started!",
     title: 'Create your user',
     elements: [

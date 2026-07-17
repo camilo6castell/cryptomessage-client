@@ -1,16 +1,7 @@
 import { keyframes } from 'styled-components';
 import { animationConfig } from '../config/Themes';
 
-export const colorTextAnimation = (color: string): unknown => keyframes`
-    0%, 100% {
-      color: ${color};
-    }
-    50% {
-      color: var(--main-font-color);
-    }
-  `;
-
-export const pulse = (color: string, pulseSize: number = 1) => keyframes`
+export const pulse = (color: string, pulseSize = 1) => keyframes`
   0% {
     box-shadow: 0 0 0 0 ${color}66;
   }

@@ -7,9 +7,10 @@ import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { ContactFoundCard } from './pieces/ContactFoundCard';
 import { SearchBox } from './pieces/SearchBox';
 import { GenericContainer } from '../../layouts/GenericContainer';
+import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 import { MessageStatus } from '../../../core/models/enums/MessageStatus.enum';
-import { H1, P1 } from '../../elements/font';
+import { RiUserSearchLine, RiErrorWarningLine } from 'react-icons/ri';
 
 export const ContactListAux = ({
   form,
@@ -22,63 +23,98 @@ export const ContactListAux = ({
 }: {
   form: Record<string, string>;
   handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSearch: (
+    event: React.FormEvent<HTMLFormElement>
+  ) => void | Promise<void>;
   contact: IContact | null;
   message: IMessageForm;
   createChat: (contact: IContact) => Promise<void>;
   isAlreadyAdded: boolean;
 }): ReactElement => {
   return (
-    <StyledUserInfoAux>
-      {message.result === MessageStatus.Idle && (
-        <>
-          <H1>Search an user</H1>
-          <P1>Here you can search for a user to add as a contact:</P1>
-          <SearchBox
-            handleSearchContactSubmit={handleSearch}
-            handleInput={handleInput}
-            value={form.username}
-          />
-        </>
-      )}
+    <StyledContactListAux>
+      <div className="contact-search__intro">
+        <RiUserSearchLine size={36} />
+        <h1>Buscar un usuario</h1>
+        <p>
+          Encuentra a alguien por su nombre de usuario y envíale una solicitud
+          de chat.
+        </p>
+      </div>
+
+      <SearchBox
+        handleSearchContactSubmit={handleSearch}
+        handleInput={handleInput}
+        value={form.username}
+      />
+
       {message.result === MessageStatus.Error && (
-        <>
-          <H1>Error</H1>
-          <P1>{message.message}</P1>
-        </>
+        <div className="contact-search__feedback is-error">
+          <RiErrorWarningLine size={16} />
+          <span>{message.message}</span>
+        </div>
       )}
+
       {message.result === MessageStatus.Success && contact && (
-        <>
-          <H1>Success</H1>
-          <P1>{message.message}</P1>
-          <ContactFoundCard
-            contact={contact}
-            createChat={createChat}
-            isAlreadyAdded={isAlreadyAdded}
-          />
-        </>
+        <ContactFoundCard
+          contact={contact}
+          createChat={createChat}
+          isAlreadyAdded={isAlreadyAdded}
+        />
       )}
-    </StyledUserInfoAux>
+    </StyledContactListAux>
   );
 };
 
-const StyledUserInfoAux = styled(GenericContainer)`
+const StyledContactListAux = styled(GenericContainer)`
+  justify-content: flex-start;
   width: ${({ theme }) => theme.general.auxSectionWidth};
+  height: 100%;
 
-  padding: 2rem;
+  padding: 3rem 2.5rem;
+  gap: 1.25rem;
 
-  overflow-y: scroll;
+  overflow-y: auto;
 
-  background-color: var(--aux-background-color);
-
-  border: 1px solid #ffff;
-  border-radius: 0 0 ${({ theme }) => theme.general.borderRadius} 0;
-
-  overflow: scroll;
+  ${darkGlassEffect}
+  border-radius: 0 ${({ theme }) => theme.general.borderRadius}
+    ${({ theme }) => theme.general.borderRadius} 0;
 
   ${mainScrollBar}
 
-  @media (width < 900px) {
-    display: none;
+  .contact-search__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    color: ${({ theme }) => theme.surface.textMuted};
+    max-width: 24rem;
+
+    svg {
+      color: ${({ theme }) => theme.color.highlight};
+      margin-bottom: 0.3rem;
+    }
+
+    h1 {
+      font-family: ${({ theme }) => theme.font.displayFontFamily};
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: ${({ theme }) => theme.surface.textPrimary};
+      margin: 0;
+    }
+
+    p {
+      font-size: 0.85rem;
+      margin: 0;
+    }
+  }
+
+  .contact-search__feedback {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: ${({ theme }) => theme.error.color};
   }
 `;
