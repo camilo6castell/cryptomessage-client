@@ -23,7 +23,7 @@ export const ContactItem = ({
     (c) => c.participant?.userId === contact.contactId
   );
 
-  const handleOpenChat = () => {
+  const handleOpenChat = (): void => {
     if (!existingChat) return;
 
     dispatch({
@@ -37,7 +37,7 @@ export const ContactItem = ({
     });
   };
 
-  const handleCreateChat = () => {
+  const handleCreateChat = (): void => {
     createChat(contact).catch(console.error);
   };
 

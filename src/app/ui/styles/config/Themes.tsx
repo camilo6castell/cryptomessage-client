@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 // (no styled-components imports needed here — this file is pure config)
 
 /**
@@ -146,7 +147,7 @@ export interface Theme {
 export const themes: Record<string, Theme> = {
   dark: {
     mode: 'dark',
-    mainBackgroundColor: '#0a0c10',
+    mainBackgroundColor: '#0a0c1041',
     mainBackgroundFilter: 'blur(10px)',
     mainFontColor: '#ecebf5',
     surface: {
@@ -182,7 +183,7 @@ export const themes: Record<string, Theme> = {
 
   light: {
     mode: 'light',
-    mainBackgroundColor: '#f2f0f7',
+    mainBackgroundColor: '#f2f0f78c',
     mainBackgroundFilter: 'blur(10px)',
     mainFontColor: '#181420',
     surface: {

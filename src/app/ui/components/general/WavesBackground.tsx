@@ -41,7 +41,7 @@ const Wrap = styled.div<{ $state: IAppState }>`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 9;
+  z-index: -1;
   overflow: hidden;
   background-color: ${({ theme }: { theme: Theme }) => theme.surface.canvas};
 

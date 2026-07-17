@@ -30,7 +30,10 @@ const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
 
 /* ================= KEY DERIVATION ================= */
 
-const deriveKey = async (passphrase: string, salt: Uint8Array) => {
+const deriveKey = async (
+  passphrase: string,
+  salt: Uint8Array
+): Promise<CryptoKey> => {
   const encoder = new TextEncoder();
 
   const baseKey = await crypto.subtle.importKey(
@@ -44,7 +47,7 @@ const deriveKey = async (passphrase: string, salt: Uint8Array) => {
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt.buffer,
+      salt: new Uint8Array(salt).buffer,
       iterations: ITERATIONS,
       hash: 'SHA-256',
     },
