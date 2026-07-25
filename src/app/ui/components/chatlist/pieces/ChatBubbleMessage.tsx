@@ -4,8 +4,10 @@ import { IMessage } from '../../../../core/models/main/IMessage.model';
 import { AppContext } from '../../../../core/state/AppContext';
 import { decryptMessage } from '../../../../core/services/crypto.manager';
 import { mainScrollBar } from '../../../styles/scrollbar/mainScrollBar';
-import { useFirendlyDateFormat } from '../../../../core/hooks/useFirendlyDateFormat';
+import { useFriendlyDateFormat } from '../../../../core/hooks/useFriendlyDateFormat';
+import { MessageStatusIcon } from './MessageStatusIcon';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
+import { slideUp } from '../../../styles/keyframes';
 import { RiLockLine, RiLockUnlockLine } from 'react-icons/ri';
 
 export const ChatBubbleMessage = ({
@@ -20,10 +22,10 @@ export const ChatBubbleMessage = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sentAt = useFirendlyDateFormat(message.sentAt);
+  const sentAt = useFriendlyDateFormat(message.sentAt);
   const isSent = message.senderId === state.user.userId;
 
-  const handleDecrypt = async () => {
+  const handleDecrypt = async (): Promise<void> => {
     if (isShown) {
       setIsShown(false);
       return;
@@ -79,7 +81,10 @@ export const ChatBubbleMessage = ({
           : message.encryptedContent}
       </p>
 
-      <span className="message-time">{sentAt}</span>
+      <span className="message-meta">
+        <span className="message-time">{sentAt}</span>
+        <MessageStatusIcon isSent={isSent} isRead={message.isRead} />
+      </span>
     </StyledChatBubbleMessage>
   );
 };
@@ -119,6 +124,8 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
     $isSent ? '#15121c' : theme.surface.textPrimary};
   border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
+  animation: ${slideUp} 0.2s ${({ theme }) => theme.animation.easing.out} both;
+
   .bubble-message__reveal {
     display: flex;
     align-items: center;
@@ -130,13 +137,13 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
     border: none;
     background: none;
 
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme, $isSent }) =>
       $isSent ? '#3a2f4d' : theme.color.highlight};
     cursor: pointer;
     opacity: 0.85;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s ${({ theme }) => theme.animation.easing.default};
 
     &:hover {
       opacity: 1;
@@ -152,8 +159,8 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
 
     overflow-y: auto;
 
-    font-size: 0.95rem;
-    line-height: 1.4;
+    font-size: ${({ theme }) => theme.typography.fontSize.md};
+    line-height: ${({ theme }) => theme.typography.lineHeight.snug};
     text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
     white-space: pre-wrap;
     word-break: break-word;
@@ -161,21 +168,28 @@ const StyledChatBubbleMessage = styled.div<{ $isSent: boolean }>`
 
   .message-text.is-ciphertext {
     font-family: ${({ theme }) => theme.font.monoFontFamily};
-    font-size: 0.7rem;
-    letter-spacing: 0.01em;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    letter-spacing: ${({ theme }) => theme.typography.letterSpacing.wider};
     color: ${({ theme, $isSent }) =>
       $isSent ? 'rgba(21, 18, 28, 0.6)' : theme.surface.textMuted};
     word-break: break-all;
     opacity: 0.85;
+    transition: opacity 0.3s ${({ theme }) => theme.animation.easing.default};
+  }
+
+  .message-meta {
+    display: flex;
+    align-items: center;
+    justify-content: ${({ $isSent }): string =>
+      $isSent ? 'flex-end' : 'flex-start'};
+    gap: 0.3rem;
+    margin-top: 0.4rem;
   }
 
   .message-time {
-    display: block;
-    font-size: 0.65rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
     color: ${({ theme, $isSent }) =>
       $isSent ? 'rgba(21, 18, 28, 0.55)' : theme.surface.textMuted};
-    text-align: ${({ $isSent }): string => ($isSent ? 'right' : 'left')};
-    margin-top: 0.4rem;
   }
 
   ${mainScrollBar}

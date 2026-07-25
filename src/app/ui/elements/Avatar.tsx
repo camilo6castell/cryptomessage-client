@@ -53,6 +53,6 @@ const StyledAvatar = styled.div<{
   background-color: ${({ theme }) => theme.surface.surfaceRaised};
 
   border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
-  box-shadow: 0 0 0 2px rgba(244, 190, 243, 0.12);
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 0 0 2px ${({ theme }) => theme.color.highlightTint10};
+  transition: box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
 `;

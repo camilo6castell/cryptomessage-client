@@ -1,4 +1,4 @@
-export const useFirendlyDateFormat = (dateString: string): string => {
+export const useFriendlyDateFormat = (dateString: string): string => {
   const date = new Date(dateString);
 
   const day = new Intl.DateTimeFormat('es-ES', { day: 'numeric' }).format(date);

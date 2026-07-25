@@ -1,4 +1,10 @@
-import { FormEvent, ReactElement, useContext } from 'react';
+import {
+  FormEvent,
+  ReactElement,
+  useContext,
+  useRef,
+  useCallback,
+} from 'react';
 import styled from 'styled-components';
 import { useHandleInput } from '../../../../core/hooks/useHandleInput';
 import { useSendMessage } from '../../../../core/hooks/useSendMessage';
@@ -17,6 +23,8 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
     messageContent: '',
   });
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
   const { sendMessage } = useSendMessage();
   const { acceptChat } = useAcceptChat();
   const { loadContacts } = useLoadContacts();
@@ -25,12 +33,6 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
   const isPending = chat.status === ChatStatus.PENDING;
 
-  /**
-   * Como el modelo del frontend no expone initiatedBy explícito antes de
-   * cargar el chat completo, inferimos el rol:
-   * - si yo envié el primer mensaje → soy iniciador
-   * - si no → soy receptor
-   */
   const iAmInitiator = chat.initiatedBy === myId;
   const iAlreadySent = messages.some((m) => m.senderId === myId);
 
@@ -40,6 +42,12 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
   const canSend = form.messageContent.trim().length > 0 && !isInputDisabled;
 
+  const autoResize = useCallback(() => {
+    if (!textareaRef.current) return;
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+  }, []);
+
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
 
@@ -48,9 +56,24 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
     await sendMessage(chat.chatId, form.messageContent);
     resetForm();
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
   };
 
-  const handleAccept = async () => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ): void => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      if (canSend) {
+        void handleSubmit(event);
+      }
+    }
+  };
+
+  const handleAccept = async (): Promise<void> => {
     if (!chat.chatId) return;
     await acceptChat(chat.chatId);
     await loadContacts();
@@ -71,13 +94,13 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
 
       {isPending && !iAmInitiator && (
         <div className="chat-warning">
-          Si aceptas este chat, este contacto se agregará y podrás responder.
+          Si aceptas este chat, este contacto se agregara y podras responder.
         </div>
       )}
 
       <div className="input-row">
-        <input
-          type="text"
+        <textarea
+          ref={textareaRef}
           name="messageContent"
           className="chat-input"
           placeholder={
@@ -86,8 +109,13 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
               : 'Escribe tu mensaje'
           }
           value={form.messageContent}
-          onChange={handleInput}
+          onChange={(e) => {
+            handleInput(e);
+            autoResize();
+          }}
+          onKeyDown={handleKeyDown}
           disabled={isInputDisabled}
+          rows={1}
         />
 
         {isReceiverBlocked ? (
@@ -124,30 +152,39 @@ const StyledChatWindowInput = styled.form`
   border-top: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
   .chat-warning {
-    font-size: 0.75rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.color.warning};
     margin-bottom: 0.5rem;
   }
 
   .input-row {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 0.6rem;
   }
 
   .chat-input {
     flex: 1;
-    background-color: ${({ theme }) => theme.surface.surfaceRaised};
+    background-color: ${({ theme }) => theme.surface.surfaceInput};
     border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
     padding: 0.65rem 0.9rem;
     color: ${({ theme }) => theme.surface.textPrimary};
     border-radius: 1.25rem;
     outline: none;
-    font-size: 0.9rem;
-    transition: border-color 0.2s ease;
+    font-size: ${({ theme }) => theme.typography.fontSize.md};
+    font-family: ${({ theme }) => theme.font.mainFontFamily};
+    line-height: ${({ theme }) => theme.typography.lineHeight.snug};
+    resize: none;
+    max-height: 120px;
+    transition: border-color 0.2s
+      ${({ theme }) => theme.animation.easing.default};
+
+    &::placeholder {
+      color: ${({ theme }) => theme.surface.textMuted};
+    }
 
     &:focus {
-      border-color: ${({ theme }) => theme.color.highlight};
+      border-color: ${({ theme }) => theme.surface.borderFocus};
     }
   }
 
@@ -166,8 +203,9 @@ const StyledChatWindowInput = styled.form`
     border: none;
     cursor: pointer;
     transition:
-      opacity 0.2s ease,
-      transform 0.1s ease;
+      opacity 0.2s ${({ theme }) => theme.animation.easing.default},
+      transform 0.1s ease,
+      box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
   }
 
   .send-button {
@@ -183,7 +221,12 @@ const StyledChatWindowInput = styled.form`
     }
 
     &:not(:disabled):hover {
-      transform: scale(1.06);
+      transform: scale(1.08);
+      box-shadow: 0 2px 10px ${({ theme }) => theme.color.highlightTint20};
+    }
+
+    &:not(:disabled):active {
+      transform: scale(0.95);
     }
   }
 
@@ -191,14 +234,15 @@ const StyledChatWindowInput = styled.form`
     padding: 0 1rem;
     height: 2.5rem;
     border-radius: 1.25rem;
-    font-weight: 700;
-    font-size: 0.8rem;
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: #12121c;
     background-color: ${({ theme }) => theme.color.highlight};
     white-space: nowrap;
 
     &:hover {
-      opacity: 0.9;
+      filter: brightness(1.05);
+      box-shadow: 0 2px 10px ${({ theme }) => theme.color.highlightTint20};
     }
   }
 `;

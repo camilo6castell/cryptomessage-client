@@ -10,34 +10,37 @@ const baseFont = styled.span`
 
 export const H1 = styled(baseFont)`
   font-family: ${({ theme }) => theme.font.displayFontFamily};
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
 `;
 
 export const H2 = styled(baseFont)`
   font-family: ${({ theme }) => theme.font.displayFontFamily};
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
 `;
 
 export const P1 = styled(baseFont)`
-  font-size: 1.05rem;
-  font-weight: 400;
-  letter-spacing: -0.2px;
-  line-height: 1.5;
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.normal};
+  letter-spacing: ${({ theme }) => theme.typography.letterSpacing.tight};
+  line-height: ${({ theme }) => theme.typography.lineHeight.normal};
   color: ${({ theme }) => theme.surface.textMuted};
 `;
 
 export const P2 = styled(baseFont)`
-  font-size: 0.9rem;
-  letter-spacing: 0.1px;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  letter-spacing: ${({ theme }) => theme.typography.letterSpacing.wide};
   color: ${({ theme }) => theme.surface.textMuted};
 `;
 
 export const H3 = styled(baseFont)`
   font-family: ${({ theme }) => theme.font.displayFontFamily};
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
 `;
 
 export const Link1 = styled.a`

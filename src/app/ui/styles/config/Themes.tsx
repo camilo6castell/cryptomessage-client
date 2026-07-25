@@ -1,15 +1,15 @@
 /* eslint-disable quotes */
-// (no styled-components imports needed here — this file is pure config)
+import { spacing } from '../tokens/spacing';
+import { motion } from '../tokens/motion';
+import { typography } from '../tokens/typography';
 
 /**
- * Design tokens — "Quiet Vault"
+ * Design tokens — "Quiet Vault" v2
  *
- * Direction: a messenger that feels like a calm, low-glare secure room rather
- * than a flashy chat app. One signature accent (lilac) carries all emphasis;
- * everything else is a small set of neutral surfaces at different elevations.
- * The signature interaction of the product — ciphertext that must be
- * deliberately unsealed — gets its own monospace voice so it always reads as
- * "encrypted data", never as a rendering glitch.
+ * A messenger that feels like a calm, low-glare secure room. One signature
+ * accent (lilac) carries all emphasis; everything else is a small set of
+ * neutral surfaces at different elevations. Ciphertext gets its own monospace
+ * voice so it always reads as "encrypted data", never as a rendering glitch.
  */
 
 interface FontConfig {
@@ -26,47 +26,59 @@ export const fontConfig: FontConfig = {
   mainFontWeight: 450,
 };
 
-interface AnimationConfig {
-  general_duration: number;
-  general_fade_duration: number;
-}
-
-export const animationConfig: AnimationConfig = {
-  general_duration: 0.7,
-  general_fade_duration: 0.8,
-};
-
 interface ColorConfig {
   highlight: string;
   highlightDeep: string;
+  highlightTint10: string;
+  highlightTint14: string;
+  highlightTint20: string;
+  highlightTint30: string;
   idle: string;
   disable: string;
   success: string;
+  successTint12: string;
   danger: string;
+  dangerTint12: string;
   warning: string;
+  warningTint12: string;
 }
 
 export const colorConfig: ColorConfig = {
   highlight: '#f4bef3',
   highlightDeep: '#6c4ba6',
+  highlightTint10: 'rgba(244, 190, 243, 0.10)',
+  highlightTint14: 'rgba(244, 190, 243, 0.14)',
+  highlightTint20: 'rgba(244, 190, 243, 0.20)',
+  highlightTint30: 'rgba(244, 190, 243, 0.35)',
   idle: 'rgb(59, 51, 59)',
   disable: '#9b9b9b',
   success: '#4cd9a3',
+  successTint12: 'rgba(76, 217, 163, 0.12)',
   danger: '#ff6b6b',
+  dangerTint12: 'rgba(255, 107, 107, 0.12)',
   warning: '#f2b84b',
+  warningTint12: 'rgba(242, 184, 75, 0.12)',
 };
 
 interface SurfaceConfig {
   canvas: string;
   surface: string;
   surfaceRaised: string;
+  surfaceInput: string;
   borderSubtle: string;
+  borderFocus: string;
   textPrimary: string;
   textMuted: string;
+  interactiveHover: string;
+  interactiveActive: string;
+  overlay: string;
+  scrim: string;
 }
 
 interface GeneralConfig {
   borderRadius: string;
+  borderRadiusSm: string;
+  borderRadiusLg: string;
   mainBackdropdFilter: string;
   navBarheight: string;
   railWidth: string;
@@ -76,6 +88,8 @@ interface GeneralConfig {
 
 const generalConfig: GeneralConfig = {
   borderRadius: '20px',
+  borderRadiusSm: '12px',
+  borderRadiusLg: '24px',
   mainBackdropdFilter: 'blur(10px)',
   navBarheight: '10%',
   railWidth: '4.5rem',
@@ -116,6 +130,9 @@ export const toastConfig: ToastConfig = {
 interface ShadowConfig {
   textHighlighted: string;
   primaryBoxShadow: string;
+  sm: string;
+  md: string;
+  lg: string;
 }
 
 interface WavesConfig {
@@ -140,7 +157,9 @@ export interface Theme {
   general: GeneralConfig;
   color: ColorConfig;
   font: FontConfig;
-  animation: AnimationConfig;
+  animation: typeof motion;
+  spacing: typeof spacing;
+  typography: typeof typography;
   error: ErrorConfig;
 }
 
@@ -154,9 +173,15 @@ export const themes: Record<string, Theme> = {
       canvas: '#0a0c10',
       surface: '#12151c',
       surfaceRaised: '#1b1f2a',
+      surfaceInput: '#161a24',
       borderSubtle: 'rgba(255, 255, 255, 0.07)',
+      borderFocus: 'rgba(244, 190, 243, 0.50)',
       textPrimary: '#ecebf5',
       textMuted: '#8d8fa3',
+      interactiveHover: 'rgba(255, 255, 255, 0.06)',
+      interactiveActive: 'rgba(255, 255, 255, 0.09)',
+      overlay: 'rgba(5, 6, 10, 0.55)',
+      scrim: 'rgba(5, 6, 10, 0.70)',
     },
     darkGlassEffect: {
       background:
@@ -168,6 +193,9 @@ export const themes: Record<string, Theme> = {
     shadow: {
       textHighlighted: '0 1px 12px rgba(244, 190, 243, 0.45)',
       primaryBoxShadow: '0 8px 30px rgba(0,0,0,0.35)',
+      sm: '0 1px 3px rgba(0,0,0,0.25)',
+      md: '0 4px 16px rgba(0,0,0,0.30)',
+      lg: '0 12px 40px rgba(0,0,0,0.40)',
     },
     waves: {
       filterPrimary: 'brightness(0.9) saturate(1.1) hue-rotate(0deg)',
@@ -177,7 +205,9 @@ export const themes: Record<string, Theme> = {
     general: generalConfig,
     color: colorConfig,
     font: fontConfig,
-    animation: animationConfig,
+    animation: motion,
+    spacing,
+    typography,
     error: errorConfig,
   },
 
@@ -190,9 +220,15 @@ export const themes: Record<string, Theme> = {
       canvas: '#f2f0f7',
       surface: '#ffffff',
       surfaceRaised: '#f7f5fb',
+      surfaceInput: '#f0eef5',
       borderSubtle: 'rgba(20, 10, 30, 0.08)',
+      borderFocus: 'rgba(108, 75, 166, 0.50)',
       textPrimary: '#181420',
       textMuted: '#6b6478',
+      interactiveHover: 'rgba(20, 10, 30, 0.05)',
+      interactiveActive: 'rgba(20, 10, 30, 0.08)',
+      overlay: 'rgba(20, 10, 30, 0.40)',
+      scrim: 'rgba(20, 10, 30, 0.55)',
     },
     darkGlassEffect: {
       background:
@@ -204,6 +240,9 @@ export const themes: Record<string, Theme> = {
     shadow: {
       textHighlighted: '0 1px 12px rgba(108, 75, 166, 0.25)',
       primaryBoxShadow: '0 8px 30px rgba(24,20,32,0.08)',
+      sm: '0 1px 3px rgba(24,20,32,0.06)',
+      md: '0 4px 16px rgba(24,20,32,0.08)',
+      lg: '0 12px 40px rgba(24,20,32,0.10)',
     },
     waves: {
       filterPrimary:
@@ -215,7 +254,9 @@ export const themes: Record<string, Theme> = {
     general: generalConfig,
     color: colorConfig,
     font: fontConfig,
-    animation: animationConfig,
+    animation: motion,
+    spacing,
+    typography,
     error: errorConfig,
   },
 };

@@ -22,7 +22,7 @@ const StyledLoadingScreen = styled.div`
   height: 100dvh;
 
   color: ${({ theme }) => theme.surface.textMuted};
-  font-size: 0.85rem;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
 
   .loading-screen__dot {
     width: 0.65rem;

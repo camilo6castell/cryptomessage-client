@@ -6,6 +6,7 @@ import { GenericContainer } from '../../../layouts/GenericContainer';
 import { Button } from '../../../elements/Button';
 import { CopyToClipboardButton } from '../../../elements/CopyToClipboardButton';
 import { darkGlassEffect } from '../../../styles/effects/DarkGlassEffect';
+import { slideUp } from '../../../styles/keyframes';
 
 export const ContactFoundCard = ({
   contact,
@@ -29,7 +30,7 @@ export const ContactFoundCard = ({
 
         <CopyToClipboardButtonForContactFoundCard
           textToCopy={contact.publicKey}
-          textButton="Copiar llave pública"
+          textButton="Copiar llave publica"
           variant="secondary"
           isSubmit={false}
         />
@@ -61,6 +62,8 @@ const StyledContactFoundCard = styled(GenericContainer)`
 
   ${darkGlassEffect}
 
+  animation: ${slideUp} 0.25s ${({ theme }) => theme.animation.easing.out} both;
+
   .info-container {
     display: flex;
     flex-direction: column;
@@ -71,8 +74,8 @@ const StyledContactFoundCard = styled(GenericContainer)`
 
   .contact-found__name {
     font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.surface.textPrimary};
   }
 `;

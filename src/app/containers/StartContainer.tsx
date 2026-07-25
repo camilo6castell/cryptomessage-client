@@ -10,7 +10,7 @@ import { useLogin } from '../core/hooks/useLogin';
 import { useRegister } from '../core/hooks/useRegister';
 import { useGlobalToast } from '../core/state/ToastContext';
 
-import { animationConfig } from '../ui/styles/config/Themes';
+import { motion } from '../ui/styles/tokens/motion';
 import { frontPageContent } from '../ui/static/frontPageContent';
 
 export const StartContainer = (): ReactElement => {
@@ -45,13 +45,16 @@ export const StartContainer = (): ReactElement => {
     // 1️⃣ fade out
     setVisible(false);
 
-    const timer = setTimeout(() => {
-      // 2️⃣ cambiar contenido
-      setActiveView(isLoginRoute);
+    const timer = setTimeout(
+      () => {
+        // 2️⃣ cambiar contenido
+        setActiveView(isLoginRoute);
 
-      // 3️⃣ fade in
-      setVisible(true);
-    }, animationConfig.general_fade_duration * 1000);
+        // 3️⃣ fade in
+        setVisible(true);
+      },
+      parseInt(motion.duration.slower, 10)
+    );
 
     return () => clearTimeout(timer);
   }, [isLoginRoute, activeView]);
@@ -67,7 +70,7 @@ export const StartContainer = (): ReactElement => {
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
         formText={isLogin ? 'Welcome back!' : 'Join us!'}
-        helpText={isLogin ? 'Don\'t have an account?' : 'Already registered?'}
+        helpText={isLogin ? "Don't have an account?" : 'Already registered?'}
         helpLink={isLogin ? '/register' : '/login'}
         helpTextLink={isLogin ? 'Register' : 'Login'}
       >

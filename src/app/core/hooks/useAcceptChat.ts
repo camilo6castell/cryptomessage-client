@@ -1,16 +1,15 @@
 import { useContext } from 'react';
 import { AppContext } from '../state/AppContext';
-import { httpClient } from '../api/http.client';
-import urls from '../resources/url.resource';
+import { chatsApi } from '../api/chats.api';
 import { Actions } from '../models/enums/Actions.enum';
 import { ChatStatus } from '../models/enums/ChatStatus.enum';
 
-export const useAcceptChat = () => {
+export const useAcceptChat = (): { acceptChat: (chatId: number) => Promise<void> } => {
   const { dispatch } = useContext(AppContext);
 
   const acceptChat = async (chatId: number): Promise<void> => {
     try {
-      await httpClient.post(urls.chats.accept(chatId));
+      await chatsApi.accept(chatId);
       dispatch({
         type: Actions.UpdateChatStatus,
         payload: {

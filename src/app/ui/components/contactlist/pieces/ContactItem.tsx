@@ -87,11 +87,15 @@ const StyledContactItem = styled(GenericContainer)`
   padding: 0.65rem 0.75rem;
   margin-bottom: 0.4rem;
   border-radius: 0.85rem;
+  cursor: pointer;
 
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+    box-shadow 0.15s ${({ theme }) => theme.animation.easing.default};
 
   &:hover {
-    background-color: ${({ theme }) => theme.surface.borderSubtle};
+    background-color: ${({ theme }) => theme.surface.interactiveHover};
+    box-shadow: ${({ theme }) => theme.shadow.sm};
   }
 
   .contact-info {
@@ -103,8 +107,8 @@ const StyledContactItem = styled(GenericContainer)`
   }
 
   .contact-name {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     color: ${({ theme }) => theme.surface.textPrimary};
     overflow: hidden;
     text-overflow: ellipsis;
@@ -118,7 +122,7 @@ const StyledContactItem = styled(GenericContainer)`
 
     button {
       padding: 0.35rem 0.8rem;
-      font-size: 0.72rem;
+      font-size: ${({ theme }) => theme.typography.fontSize.xs};
     }
   }
 `;

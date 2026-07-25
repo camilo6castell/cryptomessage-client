@@ -31,6 +31,24 @@ export const GlobalStyle = createGlobalStyle`
     outline-offset: 2px;
   }
 
+  /* Skeleton shimmer global */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.surface.surfaceRaised} 25%,
+      ${({ theme }) => theme.surface.interactiveHover} 50%,
+      ${({ theme }) => theme.surface.surfaceRaised} 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 0.5rem;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;

@@ -23,7 +23,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
 
   const lastMessagePreview = chat.lastMessage
     ? 'Mensaje cifrado'
-    : 'Sin mensajes aún';
+    : 'Sin mensajes aun';
 
   const lastMessageTime = chat.lastMessage?.sentAt
     ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
@@ -32,7 +32,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
       })
     : '';
 
-  const handleSelectChat = () => {
+  const handleSelectChat = (): void => {
     dispatch({
       type: Actions.SetSelectedChatId,
       payload: chat.chatId,
@@ -81,19 +81,29 @@ const StyledChatCard = styled(GenericContainer)<{
   padding: 0.65rem 0.75rem;
   margin-bottom: 0.4rem;
 
-  background-color: ${({ $isSelected }) =>
-    $isSelected ? 'rgba(244, 190, 243, 0.1)' : 'transparent'};
+  background-color: ${({ $isSelected, theme }) =>
+    $isSelected ? theme.color.highlightTint10 : 'transparent'};
   border: 1px solid
-    ${({ $isSelected }) =>
-      $isSelected ? 'rgba(244, 190, 243, 0.35)' : 'transparent'};
+    ${({ $isSelected, theme }) =>
+      $isSelected ? theme.color.highlightTint30 : 'transparent'};
   border-radius: 0.85rem;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+    background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+    border-color 0.15s ${({ theme }) => theme.animation.easing.default},
+    box-shadow 0.15s ${({ theme }) => theme.animation.easing.default},
+    transform 0.1s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.surface.borderSubtle};
+    background-color: ${({ $isSelected, theme }) =>
+      $isSelected
+        ? theme.color.highlightTint14
+        : theme.surface.interactiveHover};
+    box-shadow: ${({ theme }) => theme.shadow.sm};
+  }
+
+  &:active {
+    transform: scale(0.99);
   }
 
   .card__avatar-wrap {
@@ -130,12 +140,12 @@ const StyledChatCard = styled(GenericContainer)<{
 
   .card__name {
     font-weight: ${({ $isUnread }) => ($isUnread ? 700 : 600)};
-    font-size: 0.95rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
     color: ${({ theme }) => theme.surface.textPrimary};
   }
 
   .card__time {
-    font-size: 0.7rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
     color: ${({ theme }) => theme.surface.textMuted};
     white-space: nowrap;
   }
@@ -145,7 +155,7 @@ const StyledChatCard = styled(GenericContainer)<{
     align-items: center;
     gap: 0.3rem;
 
-    font-size: 0.8rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.surface.textMuted};
     overflow: hidden;
     text-overflow: ellipsis;
@@ -157,9 +167,9 @@ const StyledChatCard = styled(GenericContainer)<{
     margin-top: 0.15rem;
     padding: 0.05rem 0.5rem;
     border-radius: 1rem;
-    font-size: 0.65rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.color.warning};
-    background-color: rgba(242, 184, 75, 0.12);
+    background-color: ${({ theme }) => theme.color.warningTint12};
   }
 `;

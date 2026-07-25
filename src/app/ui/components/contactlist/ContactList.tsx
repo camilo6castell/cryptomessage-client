@@ -2,10 +2,12 @@ import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { IContact } from '../../../core/models/main/IContact.model';
 import { ContactItem } from './pieces/ContactItem';
+import { ContactItemSkeleton } from '../../elements/Skeleton';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
-import { RiContactsBookLine } from 'react-icons/ri';
+import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
+import { fade } from '../../styles/keyframes';
 
 export const ContactList = ({
   contacts,
@@ -26,18 +28,20 @@ export const ContactList = ({
 
       <div className="contact-list__scroll">
         {loadingContacts ? (
-          <EmptyState>
-            <p>Cargando contactos...</p>
-          </EmptyState>
+          <SkeletonWrap>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <ContactItemSkeleton key={i} />
+            ))}
+          </SkeletonWrap>
         ) : error ? (
           <EmptyState>
             <p className="empty-state__error">Error: {error}</p>
           </EmptyState>
         ) : contacts.length === 0 ? (
           <EmptyState>
-            <RiContactsBookLine size={32} />
-            <p>Aún no tienes contactos</p>
-            <span>Búscalos por su usuario en el panel de la derecha.</span>
+            <EmptyStateIllustration type="no-contacts" />
+            <p>Aun no tienes contactos</p>
+            <span>Busalos por su usuario en el panel de la derecha.</span>
           </EmptyState>
         ) : (
           <div className="list">
@@ -71,8 +75,8 @@ const StyledContactList = styled(GenericContainer)`
 
     h1 {
       font-family: ${({ theme }) => theme.font.displayFontFamily};
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0;
     }
@@ -91,6 +95,10 @@ const StyledContactList = styled(GenericContainer)`
   }
 `;
 
+const SkeletonWrap = styled.div`
+  padding: 0.4rem 0.6rem 0.6rem;
+`;
+
 const EmptyState = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,11 +111,14 @@ const EmptyState = styled.div`
   padding: 1.5rem;
 
   color: ${({ theme }) => theme.surface.textMuted};
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   text-align: center;
 
+  animation: ${fade.fadeIn} 0.3s ${({ theme }) => theme.animation.easing.out}
+    both;
+
   span {
-    font-size: 0.78rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     max-width: 15rem;
     opacity: 0.8;
   }

@@ -6,7 +6,9 @@ export const useHandleInput = <T extends Record<string, unknown>>(
 ): IUseHandleInput<T> => {
   const [form, setForm] = useState(initialForm);
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,

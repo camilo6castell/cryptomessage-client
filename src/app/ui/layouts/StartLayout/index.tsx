@@ -14,4 +14,11 @@ export const StartLayout = (): ReactElement => {
 const Layout = styled(GenericContainer)`
   flex-direction: row;
   gap: 4rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+  }
 `;

@@ -1,11 +1,13 @@
 import { ReactElement, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ChatCard } from './pieces/ChatCard';
+import { ChatCardSkeleton } from '../../elements/Skeleton';
 import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { IChat } from '../../../core/models/main/IChat.model';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
-import { TbMessageCircle } from 'react-icons/tb';
+import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
+import { fade } from '../../styles/keyframes';
 import { RiSearchLine } from 'react-icons/ri';
 
 export const ChatList = ({
@@ -35,7 +37,7 @@ export const ChatList = ({
           <RiSearchLine size={15} />
           <input
             type="text"
-            placeholder="Buscar conversación"
+            placeholder="Buscar conversacion"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -44,24 +46,27 @@ export const ChatList = ({
 
       <div className="chat-list__scroll">
         {loadingChats ? (
-          <EmptyState>
-            <p>Cargando conversaciones...</p>
-          </EmptyState>
+          <SkeletonWrap>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <ChatCardSkeleton key={i} />
+            ))}
+          </SkeletonWrap>
         ) : errorLoadingChats ? (
           <EmptyState>
             <p className="empty-state__error">Error: {errorLoadingChats}</p>
           </EmptyState>
         ) : chatList.length === 0 ? (
           <EmptyState>
-            <TbMessageCircle size={32} />
-            <p>Aún no tienes conversaciones</p>
+            <EmptyStateIllustration type="no-chats" />
+            <p>Aun no tienes conversaciones</p>
             <span>
-              Busca un contacto y empieza una — solo tú y ellos tienen la llave.
+              Busca un contacto y empieza una — solo tu y ellos tienen la llave.
             </span>
           </EmptyState>
         ) : filteredChats.length === 0 ? (
           <EmptyState>
-            <p>Ningún chat coincide con &ldquo;{query}&rdquo;</p>
+            <EmptyStateIllustration type="search-empty" size={80} />
+            <p>Ningun chat coincide con &ldquo;{query}&rdquo;</p>
           </EmptyState>
         ) : (
           <div className="list">
@@ -92,8 +97,8 @@ const StyledChatList = styled(GenericContainer)`
 
     h1 {
       font-family: ${({ theme }) => theme.font.displayFontFamily};
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0 0 0.75rem;
     }
@@ -106,9 +111,15 @@ const StyledChatList = styled(GenericContainer)`
 
     padding: 0.55rem 0.85rem;
     border-radius: 1.5rem;
-    background-color: ${({ theme }) => theme.surface.surfaceRaised};
+    background-color: ${({ theme }) => theme.surface.surfaceInput};
     border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
     color: ${({ theme }) => theme.surface.textMuted};
+    transition: border-color 0.2s
+      ${({ theme }) => theme.animation.easing.default};
+
+    &:focus-within {
+      border-color: ${({ theme }) => theme.surface.borderFocus};
+    }
 
     input {
       flex: 1;
@@ -116,7 +127,7 @@ const StyledChatList = styled(GenericContainer)`
       outline: none;
       background: transparent;
       color: ${({ theme }) => theme.surface.textPrimary};
-      font-size: 0.85rem;
+      font-size: ${({ theme }) => theme.typography.fontSize.base};
 
       &::placeholder {
         color: ${({ theme }) => theme.surface.textMuted};
@@ -138,6 +149,10 @@ const StyledChatList = styled(GenericContainer)`
   }
 `;
 
+const SkeletonWrap = styled.div`
+  padding: 0.4rem 0.6rem 0.6rem;
+`;
+
 const EmptyState = styled.div`
   display: flex;
   flex-direction: column;
@@ -150,11 +165,14 @@ const EmptyState = styled.div`
   padding: 1.5rem;
 
   color: ${({ theme }) => theme.surface.textMuted};
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
   text-align: center;
 
+  animation: ${fade.fadeIn} 0.3s ${({ theme }) => theme.animation.easing.out}
+    both;
+
   span {
-    font-size: 0.78rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     max-width: 15rem;
     opacity: 0.8;
   }

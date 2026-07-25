@@ -5,6 +5,7 @@ import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { getKeyFingerprint } from '../../../core/services/crypto.service';
 import { CopyToClipboardButton } from '../../elements/CopyToClipboardButton';
+import { fade } from '../../styles/keyframes';
 import { RiShieldKeyholeLine, RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 
 export const UserInfoAux = (): ReactElement => {
@@ -28,11 +29,11 @@ export const UserInfoAux = (): ReactElement => {
         </div>
 
         <div>
-          <h2>Tu identidad criptográfica</h2>
+          <h2>Tu identidad criptografica</h2>
           <p>
-            Este identificador nace de tu llave pública. Compártelo con un
+            Este identificador nace de tu llave publica. Compartelo con un
             contacto por otro canal para confirmar que ambos ven la misma llave
-            — así sabes que nadie se interpuso en el intercambio.
+            — asi sabes que nadie se interpuso en el intercambio.
           </p>
         </div>
 
@@ -54,7 +55,7 @@ export const UserInfoAux = (): ReactElement => {
         <section className="advanced-panel">
           <div className="advanced-panel__block">
             <div className="advanced-panel__label-row">
-              <h3>Llave pública</h3>
+              <h3>Llave publica</h3>
               <CopyToClipboardButton
                 textToCopy={state.user.publicKey ?? ''}
                 textButton="Copiar"
@@ -77,7 +78,7 @@ export const UserInfoAux = (): ReactElement => {
             </div>
             <p className="advanced-panel__hint">
               Nunca sale de tu dispositivo en texto claro: el servidor solo
-              guarda esta versión cifrada con tu passphrase.
+              guarda esta version cifrada con tu passphrase.
             </p>
             <p className="advanced-panel__blob">
               {state.user.encryptedPrivateKey}
@@ -112,9 +113,12 @@ const StyledUserInfoAux = styled.div`
     flex-direction: column;
     gap: 0.85rem;
     padding: 1.5rem;
-    border-radius: 1rem;
+    border-radius: ${({ theme }) => theme.general.borderRadiusSm};
     background-color: ${({ theme }) => theme.surface.surfaceRaised};
     border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
+
+    animation: ${fade.fadeIn} 0.3s ${({ theme }) => theme.animation.easing.out}
+      both;
   }
 
   .security-card__icon {
@@ -125,32 +129,32 @@ const StyledUserInfoAux = styled.div`
     height: 2.6rem;
     border-radius: 0.8rem;
     color: ${({ theme }) => theme.color.highlight};
-    background-color: rgba(244, 190, 243, 0.1);
+    background-color: ${({ theme }) => theme.color.highlightTint10};
   }
 
   .security-card h2 {
     font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.surface.textPrimary};
     margin: 0 0 0.4rem;
   }
 
   .security-card p {
-    font-size: 0.85rem;
-    line-height: 1.5;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    line-height: ${({ theme }) => theme.typography.lineHeight.normal};
     color: ${({ theme }) => theme.surface.textMuted};
     margin: 0;
   }
 
   .security-card__fingerprint {
     font-family: ${({ theme }) => theme.font.monoFontFamily};
-    font-size: 1rem;
-    letter-spacing: 0.05em;
+    font-size: ${({ theme }) => theme.typography.fontSize.md};
+    letter-spacing: ${({ theme }) => theme.typography.letterSpacing.wider};
     color: ${({ theme }) => theme.color.highlight};
     padding: 0.7rem 0.9rem;
     border-radius: 0.6rem;
-    background-color: rgba(244, 190, 243, 0.06);
+    background-color: ${({ theme }) => theme.color.highlightTint10};
     width: fit-content;
   }
 
@@ -164,9 +168,11 @@ const StyledUserInfoAux = styled.div`
     border: none;
     cursor: pointer;
 
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     color: ${({ theme }) => theme.surface.textMuted};
+
+    transition: color 0.2s ${({ theme }) => theme.animation.easing.default};
 
     &:hover {
       color: ${({ theme }) => theme.surface.textPrimary};
@@ -177,6 +183,8 @@ const StyledUserInfoAux = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    animation: ${fade.fadeIn} 0.2s ${({ theme }) => theme.animation.easing.out}
+      both;
   }
 
   .advanced-panel__block {
@@ -192,28 +200,28 @@ const StyledUserInfoAux = styled.div`
     gap: 0.75rem;
 
     h3 {
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: ${({ theme }) => theme.typography.fontSize.base};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0;
     }
 
     button {
       padding: 0.3rem 0.75rem;
-      font-size: 0.72rem;
+      font-size: ${({ theme }) => theme.typography.fontSize.xs};
     }
   }
 
   .advanced-panel__hint {
-    font-size: 0.78rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.surface.textMuted};
     margin: 0;
   }
 
   .advanced-panel__blob {
     font-family: ${({ theme }) => theme.font.monoFontFamily};
-    font-size: 0.72rem;
-    line-height: 1.6;
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
     color: ${({ theme }) => theme.surface.textMuted};
     word-break: break-all;
 
@@ -226,9 +234,5 @@ const StyledUserInfoAux = styled.div`
     margin: 0;
 
     ${mainScrollBar}
-  }
-
-  @media (width < 900px) {
-    display: none;
   }
 `;

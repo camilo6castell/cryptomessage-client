@@ -1,7 +1,9 @@
 import { keyframes } from 'styled-components';
-import { animationConfig } from '../config/Themes';
 
-export const pulse = (color: string, pulseSize = 1) => keyframes`
+export const pulse = (
+  color: string,
+  pulseSize = 1
+): ReturnType<typeof keyframes> => keyframes`
   0% {
     box-shadow: 0 0 0 0 ${color}66;
   }
@@ -13,9 +15,50 @@ export const pulse = (color: string, pulseSize = 1) => keyframes`
   }
 `;
 
+export const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
+export const slideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+export const scaleIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+export const pulseRing = keyframes`
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+`;
+
 export const waves = {
   floatA: keyframes`
-    /* arranca totalmente fuera a la izquierda, pasa por el centro y sale totalmente a la derecha */
     0%   { transform: translate3d(-120%, -30%, 0) rotate(-8deg)  scale(1.05); opacity: 0.62; filter: blur(96px); }
     15%  { transform: translate3d(-60%,  -10%, 0) rotate(-4deg)  scale(1.02); opacity: 0.70; filter: blur(90px);  }
     30%  { transform: translate3d(-10%,   6%,   0) rotate(-1deg)  scale(1.00); opacity: 0.78; filter: blur(84px);  }
@@ -26,7 +69,6 @@ export const waves = {
   `,
 
   floatB: keyframes`
-    /* recorrido contrario con trayectoria vertical distinta para dar profundidad */
     0%   { transform: translate3d(120%,  30%, 0)    rotate(6deg)   scale(1.00); opacity: 0.60; filter: blur(110px); }
     12%  { transform: translate3d(80%,   12%, 0)    rotate(3deg)   scale(0.99); opacity: 0.68; filter: blur(104px); }
     28%  { transform: translate3d(30%,   -6%, 0)    rotate(1deg)   scale(1.01); opacity: 0.74; filter: blur(100px); }
@@ -41,41 +83,41 @@ export const fade = {
   up: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, ${animationConfig.general_fade_duration}rem, 0);
+      transform: translateY(0.8rem);
     }
     to {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateY(0);
     }
   `,
   down: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(0, -${animationConfig.general_fade_duration}rem, 0);
+      transform: translateY(-0.8rem);
     }
     to {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateY(0);
     }
   `,
   left: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(${animationConfig.general_fade_duration}rem, 0, 0);
+      transform: translateX(0.8rem);
     }
     to {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateX(0);
     }
   `,
   right: keyframes`
     from {
       opacity: 0;
-      transform: translate3d(-${animationConfig.general_fade_duration}rem, 0, 0);
+      transform: translateX(-0.8rem);
     }
     to {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateX(0);
     }
   `,
   fadeIn: keyframes`
@@ -97,11 +139,11 @@ export const fade = {
   upOut: keyframes`
     from {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateY(0);
     }
     to {
       opacity: 0;
-      transform: translate3d(0, ${animationConfig.general_fade_duration}rem, 0);
+      transform: translateY(0.8rem);
     }
   `,
 };

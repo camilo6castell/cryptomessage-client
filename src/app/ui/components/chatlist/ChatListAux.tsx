@@ -5,8 +5,9 @@ import { ChatWindow } from './pieces/ChatWindow';
 import { ChatWindowInput } from './pieces/ChatWindowInput';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
+import { fade } from '../../styles/keyframes';
 import { Avatar } from '../../elements/Avatar';
-import { TbLockSquareRounded } from 'react-icons/tb';
 import { RiShieldCheckLine, RiTimeLine } from 'react-icons/ri';
 import { ChatStatus } from '../../../core/models/enums/ChatStatus.enum';
 
@@ -19,7 +20,7 @@ export const ChatListAux = ({
     return (
       <StyledChatListAux>
         <EmptyState>
-          <TbLockSquareRounded size={40} />
+          <EmptyStateIllustration type="select-chat" />
           <h1>Selecciona un chat</h1>
           <p>Tus mensajes viajan cifrados de extremo a extremo.</p>
         </EmptyState>
@@ -77,6 +78,11 @@ const StyledChatListAux = styled(GenericContainer)`
 
     padding: 0.85rem 1.25rem;
     border-bottom: 1px solid ${({ theme }) => theme.surface.borderSubtle};
+    background: ${({ theme }) =>
+      theme.mode === 'dark'
+        ? 'rgba(18, 21, 28, 0.60)'
+        : 'rgba(255, 255, 255, 0.60)'};
+    backdrop-filter: blur(1rem);
   }
 
   .chat-header__details {
@@ -87,8 +93,8 @@ const StyledChatListAux = styled(GenericContainer)`
   }
 
   .chat-header__name {
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
     color: ${({ theme }) => theme.surface.textPrimary};
     overflow: hidden;
     text-overflow: ellipsis;
@@ -99,7 +105,7 @@ const StyledChatListAux = styled(GenericContainer)`
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.72rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.color.success};
   }
 `;
@@ -116,16 +122,19 @@ const EmptyState = styled.div`
   color: ${({ theme }) => theme.surface.textMuted};
   text-align: center;
 
+  animation: ${fade.fadeIn} 0.3s ${({ theme }) => theme.animation.easing.out}
+    both;
+
   h1 {
     font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-size: 1.15rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.surface.textPrimary};
     margin: 0.25rem 0 0;
   }
 
   p {
-    font-size: 0.85rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
     max-width: 20rem;
   }
 `;

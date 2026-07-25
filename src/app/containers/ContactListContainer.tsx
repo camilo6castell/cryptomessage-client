@@ -7,7 +7,7 @@ import { useLoadChats } from '../core/hooks/useLoadChats';
 export const ContactListContainer = (): ReactElement => {
   const { contacts, loadingContacts, error } = useLoadContacts();
   const { deleteContact } = useDeleteContact();
-  const {} = useLoadChats();
+  void useLoadChats();
 
   return (
     <ContactList

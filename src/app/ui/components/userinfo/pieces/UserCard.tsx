@@ -20,8 +20,8 @@ const StyledUserCard = styled.div`
 
   .user-card__name {
     font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize['3xl']};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.surface.textPrimary};
   }
 `;

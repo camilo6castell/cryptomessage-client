@@ -35,6 +35,6 @@ export const StyledApp = styled.div`
   background-color: ${({ theme }) => theme.mainBackgroundColor};
   backdrop-filter: ${({ theme }) => theme.general.mainBackdropdFilter};
 
-  transition: all ${({ theme }) => theme.animation.general_duration}s
-    ease-in-out;
+  transition: all ${({ theme }) => theme.animation.duration.slower}
+    ${({ theme }) => theme.animation.easing.default};
 `;

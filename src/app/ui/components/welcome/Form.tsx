@@ -83,9 +83,9 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
 
   ${darkGlassEffect}
 
-  animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)} ${({
-    theme,
-  }) => theme.animation.general_fade_duration}s ease both;
+  animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)}
+    ${({ theme }) => theme.animation.duration.slower}
+    ${({ theme }) => theme.animation.easing.default} both;
 
   z-index: 1;
   .aux-link-container {
@@ -97,10 +97,10 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
     padding-right: 1rem;
   }
   a {
-    font-size: 1.1rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
     color: ${({ theme }) => theme.color.highlight};
-    font-weight: 700;
-    transition: all 0.3s ease;
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    transition: all 0.3s ${({ theme }) => theme.animation.easing.default};
     &:hover {
       color: ${({ theme }) => theme.mainFontColor};
       text-shadow: ${({ theme }) => theme.shadow.textHighlighted};

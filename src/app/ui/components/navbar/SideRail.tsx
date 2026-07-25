@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useContext } from 'react';
+import { ReactElement, ReactNode, useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../../../core/state/AppContext';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
@@ -24,11 +24,24 @@ export const SideRail = ({
   const { state, dispatch } = useContext(AppContext);
   const { theme, toggleTheme } = useThemeContext();
 
-  const goTo = (section: MainComponentsEnum) => {
+  const unreadCount = useMemo(() => {
+    return state.user.chats.reduce((count, chat) => {
+      if (
+        chat.lastMessage &&
+        chat.lastMessage.senderId !== state.user.userId &&
+        !chat.lastMessage.isRead
+      ) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+  }, [state.user.chats, state.user.userId]);
+
+  const goTo = (section: MainComponentsEnum): void => {
     dispatch({ type: Actions.SetMainState, payload: section });
   };
 
-  const isActive = (section: MainComponentsEnum) =>
+  const isActive = (section: MainComponentsEnum): boolean =>
     state.app.mainState === section;
 
   return (
@@ -42,6 +55,7 @@ export const SideRail = ({
           label="Chats"
           isActive={isActive(MainComponentsEnum.ChatList)}
           onClick={() => goTo(MainComponentsEnum.ChatList)}
+          badge={unreadCount > 0 ? unreadCount : undefined}
         >
           {isActive(MainComponentsEnum.ChatList) ? (
             <RiChat3Fill />
@@ -100,11 +114,13 @@ const RailButton = ({
   label,
   isActive,
   onClick,
+  badge,
 }: {
   children: ReactNode;
   label: string;
   isActive: boolean;
   onClick: () => void;
+  badge?: number;
 }): ReactElement => {
   return (
     <StyledRailButton
@@ -115,6 +131,9 @@ const RailButton = ({
       title={label}
     >
       {children}
+      {badge !== undefined && badge > 0 && (
+        <span className="rail__badge">{badge > 99 ? '99+' : badge}</span>
+      )}
     </StyledRailButton>
   );
 };
@@ -146,6 +165,7 @@ const StyledSideRail = styled.div`
       ${({ theme }) => theme.color.highlight} 0%,
       ${({ theme }) => theme.color.highlightDeep} 100%
     );
+    box-shadow: 0 2px 8px ${({ theme }) => theme.color.highlightTint20};
   }
 
   .rail__brand-mark {
@@ -182,21 +202,23 @@ const StyledSideRail = styled.div`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    transition: background-color 0.4s ease;
+    transition: background-color 0.4s
+      ${({ theme }) => theme.animation.easing.default};
   }
 
   .rail__status-dot.on {
     background-color: ${({ theme }) => theme.color.success};
-    box-shadow: 0 0 6px ${({ theme }) => theme.color.success};
+    box-shadow: 0 0 8px ${({ theme }) => theme.color.success};
   }
 
   .rail__status-dot.off {
     background-color: ${({ theme }) => theme.color.warning};
-    box-shadow: 0 0 6px ${({ theme }) => theme.color.warning};
+    box-shadow: 0 0 8px ${({ theme }) => theme.color.warning};
   }
 `;
 
 const StyledRailButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,16 +233,39 @@ const StyledRailButton = styled.button`
   font-size: 1.3rem;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color 0.2s ${({ theme }) => theme.animation.easing.default},
+    color 0.2s ${({ theme }) => theme.animation.easing.default},
+    transform 0.1s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.surface.borderSubtle};
+    background-color: ${({ theme }) => theme.surface.interactiveHover};
     color: ${({ theme }) => theme.surface.textPrimary};
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 
   &.active {
-    background-color: rgba(244, 190, 243, 0.14);
+    background-color: ${({ theme }) => theme.color.highlightTint14};
     color: ${({ theme }) => theme.color.highlight};
+  }
+
+  .rail__badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.3rem;
+    border-radius: 0.5rem;
+    background-color: ${({ theme }) => theme.color.danger};
+    color: #ffffff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1rem;
+    text-align: center;
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.surface.surface};
   }
 `;

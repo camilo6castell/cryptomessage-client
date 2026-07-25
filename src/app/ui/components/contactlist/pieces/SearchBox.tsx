@@ -45,9 +45,14 @@ const StyledSearchBox = styled.form`
   padding: 0.55rem 0.6rem 0.55rem 1rem;
   border-radius: 1.5rem;
 
-  background-color: ${({ theme }) => theme.surface.surfaceRaised};
+  background-color: ${({ theme }) => theme.surface.surfaceInput};
   border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
   color: ${({ theme }) => theme.surface.textMuted};
+  transition: border-color 0.2s ${({ theme }) => theme.animation.easing.default};
+
+  &:focus-within {
+    border-color: ${({ theme }) => theme.surface.borderFocus};
+  }
 
   input {
     flex: 1;
@@ -55,7 +60,7 @@ const StyledSearchBox = styled.form`
     outline: none;
     background: transparent;
     color: ${({ theme }) => theme.surface.textPrimary};
-    font-size: 0.9rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.md};
 
     &::placeholder {
       color: ${({ theme }) => theme.surface.textMuted};
@@ -68,8 +73,8 @@ const StyledSearchBox = styled.form`
     padding: 0.45rem 1rem;
     border-radius: 1.2rem;
 
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     color: #15121c;
     background: linear-gradient(
       135deg,
@@ -78,10 +83,13 @@ const StyledSearchBox = styled.form`
     );
 
     cursor: pointer;
-    transition: filter 0.2s ease;
+    transition:
+      filter 0.2s ${({ theme }) => theme.animation.easing.default},
+      box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
 
     &:hover {
-      filter: brightness(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 2px 8px ${({ theme }) => theme.color.highlightTint20};
     }
   }
 `;

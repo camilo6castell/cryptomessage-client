@@ -5,7 +5,7 @@ import { useLoadMessages } from '../core/hooks/useLoadMessages';
 
 export const ChatListContainer = (): ReactElement => {
   const { chatList, loadingChats, errorLoadingChats } = useLoadChats();
-  const {} = useLoadMessages();
+  void useLoadMessages();
   return (
     <ChatList
       chatList={chatList}

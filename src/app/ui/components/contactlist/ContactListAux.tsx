@@ -8,9 +8,11 @@ import { ContactFoundCard } from './pieces/ContactFoundCard';
 import { SearchBox } from './pieces/SearchBox';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
 import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 import { MessageStatus } from '../../../core/models/enums/MessageStatus.enum';
-import { RiUserSearchLine, RiErrorWarningLine } from 'react-icons/ri';
+import { fade } from '../../styles/keyframes';
+import { RiErrorWarningLine } from 'react-icons/ri';
 
 export const ContactListAux = ({
   form,
@@ -34,10 +36,10 @@ export const ContactListAux = ({
   return (
     <StyledContactListAux>
       <div className="contact-search__intro">
-        <RiUserSearchLine size={36} />
+        <EmptyStateIllustration type="no-contacts" size={80} />
         <h1>Buscar un usuario</h1>
         <p>
-          Encuentra a alguien por su nombre de usuario y envíale una solicitud
+          Encuentra a alguien por su nombre de usuario y enviale una solicitud
           de chat.
         </p>
       </div>
@@ -91,21 +93,19 @@ const StyledContactListAux = styled(GenericContainer)`
     color: ${({ theme }) => theme.surface.textMuted};
     max-width: 24rem;
 
-    svg {
-      color: ${({ theme }) => theme.color.highlight};
-      margin-bottom: 0.3rem;
-    }
+    animation: ${fade.fadeIn} 0.3s ${({ theme }) => theme.animation.easing.out}
+      both;
 
     h1 {
       font-family: ${({ theme }) => theme.font.displayFontFamily};
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: ${({ theme }) => theme.typography.fontSize.xl};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0;
     }
 
     p {
-      font-size: 0.85rem;
+      font-size: ${({ theme }) => theme.typography.fontSize.base};
       margin: 0;
     }
   }
@@ -114,7 +114,7 @@ const StyledContactListAux = styled(GenericContainer)`
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.85rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
     color: ${({ theme }) => theme.error.color};
   }
 `;

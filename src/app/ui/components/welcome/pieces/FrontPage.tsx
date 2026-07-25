@@ -48,7 +48,8 @@ const StyledFrontPage = styled(GenericContainer)<{ $visible: boolean }>`
 
   transition: all 1s ease-in-out;
   animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)}
-    ${({ theme }) => theme.animation.general_fade_duration}s ease both;
+    ${({ theme }) => theme.animation.duration.slower}
+    ${({ theme }) => theme.animation.easing.default} both;
 `;
 
 const H1FrontPage = styled(H1)`

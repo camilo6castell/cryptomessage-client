@@ -1,13 +1,15 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 import { UserCard } from './pieces/UserCard';
 import { Button } from '../../elements/Button';
+import { ConfirmDialog } from '../general/ConfirmDialog';
 import { useLogout } from '../../../core/hooks/useLogout';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 
 export const UserInfo = ({ username }: { username: string }): ReactElement => {
   const logout = useLogout();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <StyledUserInfo>
@@ -19,12 +21,27 @@ export const UserInfo = ({ username }: { username: string }): ReactElement => {
         <UserCard username={username} />
 
         <Button
-          textButton="Cerrar sesión"
+          textButton="Cerrar sesion"
           variant="danger"
           isSubmit={false}
-          onClick={logout}
+          onClick={() => setShowConfirm(true)}
         />
       </div>
+
+      {showConfirm && (
+        <ConfirmDialog
+          title="Cerrar sesion"
+          message="Se cerrara tu sesion y necesitaras tu passphrase para volver a acceder. Tu llave privada se descargara de la memoria."
+          confirmLabel="Cerrar sesion"
+          cancelLabel="Cancelar"
+          isDanger={true}
+          onConfirm={() => {
+            setShowConfirm(false);
+            logout();
+          }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </StyledUserInfo>
   );
 };
@@ -45,8 +62,8 @@ const StyledUserInfo = styled(GenericContainer)`
 
     h1 {
       font-family: ${({ theme }) => theme.font.displayFontFamily};
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0;
     }

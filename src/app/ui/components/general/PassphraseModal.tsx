@@ -1,7 +1,7 @@
 import { FormEvent, ReactElement, useState } from 'react';
 import styled from 'styled-components';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
-import { fade } from '../../styles/keyframes';
+import { fade, scaleIn } from '../../styles/keyframes';
 import { RiLockPasswordLine } from 'react-icons/ri';
 
 /**
@@ -38,7 +38,7 @@ export const PassphraseModal = ({
           <RiLockPasswordLine size={22} />
         </div>
 
-        <h1>Desbloquea tu sesión</h1>
+        <h1>Desbloquea tu sesion</h1>
         <p>
           Tu llave privada solo vive en la memoria de este navegador — nunca se
           guarda. Ingresa tu passphrase para descifrarla de nuevo,{' '}
@@ -63,7 +63,7 @@ export const PassphraseModal = ({
             onClick={onCancel}
             disabled={isVerifying}
           >
-            Cerrar sesión
+            Cerrar sesion
           </button>
           <button
             type="submit"
@@ -87,9 +87,10 @@ const Backdrop = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(5, 6, 10, 0.55);
-  backdrop-filter: blur(4px);
-  animation: ${fade.fadeIn} 0.2s ease both;
+  background-color: ${({ theme }) => theme.surface.overlay};
+  backdrop-filter: blur(6px);
+  animation: ${fade.fadeIn} 0.15s ${({ theme }) => theme.animation.easing.out}
+    both;
 `;
 
 const ModalCard = styled.form`
@@ -105,6 +106,8 @@ const ModalCard = styled.form`
 
   ${darkGlassEffect}
 
+  animation: ${scaleIn} 0.2s ${({ theme }) => theme.animation.easing.spring} both;
+
   .modal__icon {
     display: flex;
     align-items: center;
@@ -114,20 +117,20 @@ const ModalCard = styled.form`
     border-radius: 0.9rem;
     margin-bottom: 0.4rem;
     color: ${({ theme }) => theme.color.highlight};
-    background-color: rgba(244, 190, 243, 0.1);
+    background-color: ${({ theme }) => theme.color.highlightTint10};
   }
 
   h1 {
     font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     color: ${({ theme }) => theme.surface.textPrimary};
     margin: 0;
   }
 
   p {
-    font-size: 0.85rem;
-    line-height: 1.5;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    line-height: ${({ theme }) => theme.typography.lineHeight.normal};
     color: ${({ theme }) => theme.surface.textMuted};
     margin: 0 0 0.5rem;
 
@@ -141,19 +144,23 @@ const ModalCard = styled.form`
     padding: 0.7rem 0.9rem;
     border-radius: 0.7rem;
     border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
-    background-color: ${({ theme }) => theme.surface.surfaceRaised};
+    background-color: ${({ theme }) => theme.surface.surfaceInput};
     color: ${({ theme }) => theme.surface.textPrimary};
-    font-size: 0.9rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.md};
     outline: none;
     text-align: center;
+    transition:
+      border-color 0.2s ${({ theme }) => theme.animation.easing.default},
+      box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
 
     &:focus {
-      border-color: ${({ theme }) => theme.color.highlight};
+      border-color: ${({ theme }) => theme.surface.borderFocus};
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.color.highlightTint20};
     }
   }
 
   .modal__error {
-    font-size: 0.8rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.error.color};
   }
 
@@ -169,13 +176,14 @@ const ModalCard = styled.form`
     flex: 1;
     padding: 0.65rem 1rem;
     border: none;
-    border-radius: 1.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    border-radius: 1rem;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     cursor: pointer;
     transition:
-      filter 0.2s ease,
-      opacity 0.2s ease;
+      filter 0.2s ${({ theme }) => theme.animation.easing.default},
+      opacity 0.2s ${({ theme }) => theme.animation.easing.default},
+      transform 0.1s ease;
 
     &:disabled {
       opacity: 0.5;
@@ -187,6 +195,10 @@ const ModalCard = styled.form`
     color: ${({ theme }) => theme.surface.textPrimary};
     background-color: ${({ theme }) => theme.surface.surfaceRaised};
     border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
+
+    &:hover:not(:disabled) {
+      background-color: ${({ theme }) => theme.surface.interactiveHover};
+    }
   }
 
   .modal__submit {
@@ -199,6 +211,10 @@ const ModalCard = styled.form`
 
     &:hover:not(:disabled) {
       filter: brightness(1.05);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
     }
   }
 `;

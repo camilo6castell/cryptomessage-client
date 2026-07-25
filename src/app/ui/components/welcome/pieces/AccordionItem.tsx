@@ -51,17 +51,17 @@ const StyledAccordionItem = styled.section<StyledAccordionItemProps>`
     $isOpen ? '0fr 1fr' : '0fr 0fr'};
   background-color: ${({ $isOpen, theme }): string =>
     $isOpen
-      ? 'rgba(244, 190, 243, 0.06)'
+      ? theme.color.highlightTint10
       : theme.mode === 'dark'
         ? 'rgba(10, 13, 18, 0.28)'
         : 'rgba(255, 255, 255, 0.4)'};
   transition:
-    grid-template-rows 400ms ease,
+    grid-template-rows 400ms ${({ theme }) => theme.animation.easing.default},
     box-shadow 200ms;
   cursor: pointer;
 
   &:not(:target):hover {
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.surface.interactiveHover};
   }
 
   a {
@@ -70,7 +70,7 @@ const StyledAccordionItem = styled.section<StyledAccordionItemProps>`
     color: inherit;
     display: flex;
     align-items: center;
-    transition: transform 400ms ease;
+    transition: transform 400ms ${({ theme }) => theme.animation.easing.default};
 
     &::before {
       content: '';
@@ -88,7 +88,8 @@ const StyledAccordionItem = styled.section<StyledAccordionItemProps>`
 
   .content {
     overflow: hidden;
-    transition: max-height 400ms ease;
+    transition: max-height 400ms
+      ${({ theme }) => theme.animation.easing.default};
     max-height: ${({ $isOpen }): string => ($isOpen ? '1000px' : '0')};
     padding: ${({ $isOpen }): string =>
       $isOpen ? '1.05rem 1.25rem' : '0 1.25rem'};
