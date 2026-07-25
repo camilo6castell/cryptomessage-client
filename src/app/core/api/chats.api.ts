@@ -20,20 +20,20 @@ export interface ChatApiResponse {
 }
 
 export const chatsApi = {
-  list: (status?: ChatStatus) => {
+  list: (status?: ChatStatus): Promise<ChatApiResponse[]> => {
     const url = status ? `${base}/chats?status=${status}` : `${base}/chats`;
     return httpClient.get<ChatApiResponse[]>(url);
   },
 
-  create: (username: string) =>
+  create: (username: string): Promise<ChatApiResponse> =>
     httpClient.post<ChatApiResponse>(`${base}/chats`, { username }),
 
-  accept: (chatId: number) =>
+  accept: (chatId: number): Promise<void> =>
     httpClient.post<void>(`${base}/chats/${chatId}/accept`),
 
-  block: (chatId: number) =>
+  block: (chatId: number): Promise<void> =>
     httpClient.post<void>(`${base}/chats/${chatId}/block`),
 
-  getMessages: (chatId: number) =>
+  getMessages: (chatId: number): Promise<IMessage[]> =>
     httpClient.get<IMessage[]>(`${base}/messages/chat/${chatId}`),
 };

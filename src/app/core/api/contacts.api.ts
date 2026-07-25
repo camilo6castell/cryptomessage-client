@@ -10,13 +10,15 @@ export interface ContactApiResponse {
 }
 
 export const contactsApi = {
-  list: () => httpClient.get<ContactApiResponse[]>(base),
+  list: (): Promise<ContactApiResponse[]> =>
+    httpClient.get<ContactApiResponse[]>(base),
 
-  search: (username: string) =>
+  search: (username: string): Promise<ContactApiResponse> =>
     httpClient.post<ContactApiResponse>(`${base}/search`, { username }),
 
-  add: (contactId: number) => httpClient.post<void>(base, { contactId }),
+  add: (contactId: number): Promise<void> =>
+    httpClient.post<void>(base, { contactId }),
 
-  remove: (contactId: number) =>
+  remove: (contactId: number): Promise<void> =>
     httpClient.delete<void>(`${base}/${contactId}`),
 };

@@ -13,13 +13,17 @@ export interface RegisterPayload {
 
 export const authApi = {
   /* ================= REGISTER ================= */
-  register: (payload: RegisterPayload) =>
+  register: (payload: RegisterPayload): Promise<void> =>
     httpClient.post<void>(`${base}/register`, payload),
 
   /* ================= LOGIN ================= */
-  login: (payload: { username: string; passphrase: string }) =>
+  login: (payload: {
+    username: string;
+    passphrase: string;
+  }): Promise<UserResponse> =>
     httpClient.post<UserResponse>(`${base}/login`, payload),
 
   /* ================= VERIFY ================= */
-  verify: () => httpClient.get<UserResponse>(`${base}/verify`),
+  verify: (): Promise<UserResponse> =>
+    httpClient.get<UserResponse>(`${base}/verify`),
 };

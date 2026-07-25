@@ -75,13 +75,16 @@ async function request<T>(
 }
 
 export const httpClient = {
-  get: <T>(url: string) => request<T>('GET', url),
+  get: <T>(url: string): Promise<T> => request<T>('GET', url),
 
-  post: <T>(url: string, body?: unknown) => request<T>('POST', url, body),
+  post: <T>(url: string, body?: unknown): Promise<T> =>
+    request<T>('POST', url, body),
 
-  put: <T>(url: string, body?: unknown) => request<T>('PUT', url, body),
+  put: <T>(url: string, body?: unknown): Promise<T> =>
+    request<T>('PUT', url, body),
 
-  patch: <T>(url: string, body?: unknown) => request<T>('PATCH', url, body),
+  patch: <T>(url: string, body?: unknown): Promise<T> =>
+    request<T>('PATCH', url, body),
 
-  delete: <T>(url: string) => request<T>('DELETE', url),
+  delete: <T>(url: string): Promise<T> => request<T>('DELETE', url),
 };

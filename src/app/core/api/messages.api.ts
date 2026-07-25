@@ -6,15 +6,18 @@ import { IMessage } from '../models/main/IMessage.model';
 const base = `${API_BASE_URL}/api/v1/messages`;
 
 export const messagesApi = {
-  send: (chatId: number, encryptedContentByUser: Record<string, string>) =>
+  send: (
+    chatId: number,
+    encryptedContentByUser: Record<string, string>
+  ): Promise<unknown> =>
     httpClient.post(`${base}`, {
       chatId,
       encryptedContentByUser,
     }),
 
-  getByChat: (chatId: number) =>
+  getByChat: (chatId: number): Promise<IMessage[]> =>
     httpClient.get<IMessage[]>(`${base}/chat/${chatId}`),
 
-  markAsRead: (chatId: number) =>
+  markAsRead: (chatId: number): Promise<unknown> =>
     httpClient.patch(`${base}/chat/${chatId}/read`),
 };
