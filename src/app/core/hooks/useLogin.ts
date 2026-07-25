@@ -14,7 +14,14 @@ import { loadKeys } from '../services/crypto.manager';
 
 export const useLogin = (
   showToast: (message: string, isDanger: boolean) => void
-) => {
+): {
+  loginForm: Record<string, string>;
+  handleLoginInput: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleLoginSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  isSubmitting: boolean;
+} => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AppContext);
   const [isSubmitting, setIsSubmitting] = useState(false);

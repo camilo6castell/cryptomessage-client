@@ -12,7 +12,7 @@ import { decryptPrivateKeyAES } from './crypto-aes.service';
 
 /* ================= CHECK PRIVATE KEY ================= */
 
-export const hasPrivateKey = () => privateKey !== null;
+export const hasPrivateKey = (): boolean => privateKey !== null;
 
 /* ================= LOAD KEYS ================= */
 
@@ -20,7 +20,7 @@ export const loadKeys = async (
   publicKeyStr: string,
   encryptedPrivateKeyStr: string,
   passphrase: string
-) => {
+): Promise<void> => {
   if (!publicKeyStr || !encryptedPrivateKeyStr) {
     throw new Error('Missing key data');
   }
@@ -54,14 +54,14 @@ const getPublicKey = async (publicKeyStr: string): Promise<CryptoKey> => {
 export const encryptMessage = async (
   targetPublicKeyStr: string,
   message: string
-) => {
+): Promise<string> => {
   const key = await getPublicKey(targetPublicKeyStr);
   return encrypt(key, message);
 };
 
 /* ================= DECRYPT ================= */
 
-export const decryptMessage = async (encrypted: string) => {
+export const decryptMessage = async (encrypted: string): Promise<string> => {
   if (!privateKey) {
     throw new Error('Private key not loaded');
   }
@@ -71,7 +71,7 @@ export const decryptMessage = async (encrypted: string) => {
 
 /* ================= CLEAR KEYS ================= */
 
-export const clearCrypto = () => {
+export const clearCrypto = (): void => {
   privateKey = null;
   publicKeyCache.clear();
 };

@@ -3,13 +3,17 @@ import { AppContext } from '../state/AppContext';
 import { Actions } from '../models/enums/Actions.enum';
 import { messagesApi } from '../api/messages.api';
 
-export const useLoadMessages = () => {
+export const useLoadMessages = (): {
+  loading: boolean;
+  error: string | null;
+  loadMessages: () => Promise<void>;
+} => {
   const { state, dispatch } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadMessages = async () => {
+  const loadMessages = async (): Promise<void> => {
     if (!state.app.selectedChatId) return;
 
     setLoading(true);

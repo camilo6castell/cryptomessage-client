@@ -22,7 +22,7 @@ const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
   return bytes.buffer;
 };
 
-export const generateKeyPair = async () => {
+export const generateKeyPair = async (): Promise<CryptoKeyPair> => {
   return crypto.subtle.generateKey(
     {
       name: 'RSA-OAEP',
@@ -35,7 +35,10 @@ export const generateKeyPair = async () => {
   );
 };
 
-export const encrypt = async (publicKey: CryptoKey, data: string) => {
+export const encrypt = async (
+  publicKey: CryptoKey,
+  data: string
+): Promise<string> => {
   const encoded = new TextEncoder().encode(data);
 
   const encrypted = await crypto.subtle.encrypt(
@@ -47,7 +50,10 @@ export const encrypt = async (publicKey: CryptoKey, data: string) => {
   return arrayBufferToBase64(encrypted);
 };
 
-export const decrypt = async (privateKey: CryptoKey, encrypted: string) => {
+export const decrypt = async (
+  privateKey: CryptoKey,
+  encrypted: string
+): Promise<string> => {
   const buffer = base64ToArrayBuffer(encrypted);
 
   const decrypted = await crypto.subtle.decrypt(
@@ -59,7 +65,9 @@ export const decrypt = async (privateKey: CryptoKey, encrypted: string) => {
   return new TextDecoder().decode(decrypted);
 };
 
-export const importPublicKey = async (base64Key: string) => {
+export const importPublicKey = async (
+  base64Key: string
+): Promise<CryptoKey> => {
   const buffer = base64ToArrayBuffer(base64Key);
 
   return crypto.subtle.importKey(
@@ -71,7 +79,9 @@ export const importPublicKey = async (base64Key: string) => {
   );
 };
 
-export const importPrivateKey = async (base64Key: string) => {
+export const importPrivateKey = async (
+  base64Key: string
+): Promise<CryptoKey> => {
   const buffer = base64ToArrayBuffer(base64Key);
 
   return crypto.subtle.importKey(

@@ -5,7 +5,9 @@ import { Actions } from '../models/enums/Actions.enum';
 import { encryptMessage } from '../services/crypto.manager';
 import { useGlobalToast } from '../state/ToastContext';
 
-export const useSendMessage = () => {
+export const useSendMessage = (): {
+  sendMessage: (chatId: number, messageContent: string) => Promise<void>;
+} => {
   const { state, dispatch } = useContext(AppContext);
   const { showToast } = useGlobalToast();
 

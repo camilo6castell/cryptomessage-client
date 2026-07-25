@@ -17,7 +17,7 @@ export const AppContextProvider = ({
 }: IReactElementChildrenProps): ReactElement => {
   const storageService = new StorageService();
 
-  const loadInitialState = () => {
+  const loadInitialState = (): IAppState => {
     return storageService.get<IAppState>('APP_STATE')
       ? storageService.get<IAppState>('APP_STATE')!
       : initialAppState;

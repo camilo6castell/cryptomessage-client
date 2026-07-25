@@ -3,14 +3,20 @@ import { AppContext } from '../state/AppContext';
 import { contactsApi } from '../api/contacts.api';
 import { mapContact } from '../mappers/loadUser.map';
 import { Actions } from '../models/enums/Actions.enum';
+import { IContact } from '../models/main/IContact.model';
 
-export const useLoadContacts = () => {
+export const useLoadContacts = (): {
+  contacts: IContact[];
+  loadingContacts: boolean;
+  error: string | null;
+  loadContacts: () => Promise<void>;
+} => {
   const { state, dispatch } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadContacts = async () => {
+  const loadContacts = async (): Promise<void> => {
     setLoading(true);
     setError(null);
 

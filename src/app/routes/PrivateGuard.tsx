@@ -40,7 +40,7 @@ export const PrivateGuard = ({
   const [passphraseError, setPassphraseError] = useState<string | null>(null);
   const [isVerifyingPassphrase, setIsVerifyingPassphrase] = useState(false);
 
-  const forceLogout = () => {
+  const forceLogout = (): void => {
     clearCrypto();
     storageService.remove('APP_STATE');
     dispatch({ type: Actions.Logout, payload: null });
@@ -56,7 +56,7 @@ export const PrivateGuard = ({
       return;
     }
 
-    const verifyToken = async () => {
+    const verifyToken = async (): Promise<void> => {
       try {
         const data: UserResponse = await authApi.verify();
 
@@ -95,7 +95,7 @@ export const PrivateGuard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const handlePassphraseSubmit = async (passphrase: string) => {
+  const handlePassphraseSubmit = async (passphrase: string): Promise<void> => {
     if (!pendingUser) return;
 
     setIsVerifyingPassphrase(true);

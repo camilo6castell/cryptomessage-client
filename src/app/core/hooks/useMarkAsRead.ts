@@ -5,10 +5,12 @@ import { AppContext } from '../state/AppContext';
 import { messagesApi } from '../api/messages.api';
 import { Actions } from '../models/enums/Actions.enum';
 
-export const useMarkAsRead = () => {
+export const useMarkAsRead = (): {
+  markAsRead: (chatId: number) => Promise<void>;
+} => {
   const { dispatch } = useContext(AppContext);
 
-  const markAsRead = async (chatId: number) => {
+  const markAsRead = async (chatId: number): Promise<void> => {
     try {
       await messagesApi.markAsRead(chatId);
 

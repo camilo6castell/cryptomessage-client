@@ -70,7 +70,9 @@ export const StartContainer = (): ReactElement => {
         handleSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
         formTitle={isLogin ? 'Sign in' : 'Sign up'}
         formText={isLogin ? 'Welcome back!' : 'Join us!'}
-        helpText={isLogin ? "Don't have an account?" : 'Already registered?'}
+        helpText={
+          isLogin ? 'Don\u2019t have an account?' : 'Already registered?'
+        }
         helpLink={isLogin ? '/register' : '/login'}
         helpTextLink={isLogin ? 'Register' : 'Login'}
       >

@@ -5,14 +5,20 @@ import { chatsApi } from '../api/chats.api';
 import { mapChat } from '../mappers/loadUser.map';
 
 import { Actions } from '../models/enums/Actions.enum';
+import { IChat } from '../models/main/IChat.model';
 
-export const useLoadChats = () => {
+export const useLoadChats = (): {
+  chatList: IChat[];
+  loadingChats: boolean;
+  errorLoadingChats: string | null;
+  reloadChats: () => Promise<void>;
+} => {
   const { state, dispatch } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadChats = async () => {
+  const loadChats = async (): Promise<void> => {
     setLoading(true);
     setError(null);
 

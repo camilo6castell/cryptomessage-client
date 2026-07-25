@@ -14,7 +14,15 @@ import { initialContactSearchForm } from '../models/ui/IContactSearchForm.model'
 import { Actions } from '../models/enums/Actions.enum';
 import { MessageStatus } from '../models/enums/MessageStatus.enum';
 
-export const useContactSearch = () => {
+export const useContactSearch = (): {
+  form: Record<string, string>;
+  handleInput: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  message: IMessageForm;
+  loading: boolean;
+  handleSearch: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+} => {
   const { state, dispatch } = useContext(AppContext);
 
   // const [contact, setNewContact] = useState<IContact>(initialContact);
@@ -26,7 +34,9 @@ export const useContactSearch = () => {
   );
 
   // 🔍 Buscar contacto
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     // Validación básica

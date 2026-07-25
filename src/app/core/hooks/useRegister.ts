@@ -16,7 +16,14 @@ import { encryptPrivateKeyAES } from '../services/crypto-aes.service';
 
 export const useRegister = (
   showToast: (message: string, isDanger: boolean) => void
-) => {
+): {
+  registerForm: Record<string, string>;
+  handleRegisterInput: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleRegisterSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  isSubmitting: boolean;
+} => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {

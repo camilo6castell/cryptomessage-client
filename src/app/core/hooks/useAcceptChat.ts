@@ -4,7 +4,9 @@ import { chatsApi } from '../api/chats.api';
 import { Actions } from '../models/enums/Actions.enum';
 import { ChatStatus } from '../models/enums/ChatStatus.enum';
 
-export const useAcceptChat = (): { acceptChat: (chatId: number) => Promise<void> } => {
+export const useAcceptChat = (): {
+  acceptChat: (chatId: number) => Promise<void>;
+} => {
   const { dispatch } = useContext(AppContext);
 
   const acceptChat = async (chatId: number): Promise<void> => {
