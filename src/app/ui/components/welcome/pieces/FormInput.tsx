@@ -44,7 +44,7 @@ export const FormInput = ({
 const StyledFormInput = styled(GenericContainer)`
   align-items: flex-start;
   position: relative;
-  padding: 2rem 0 0;
+  padding: 1.4rem 0 0;
 
   .form__field {
     font-family: inherit;
@@ -54,8 +54,9 @@ const StyledFormInput = styled(GenericContainer)`
     outline: 0;
     font-size: ${({ theme }) => theme.typography.fontSize.md};
     color: ${({ theme }) => theme.surface.textPrimary};
-    padding: 0.6rem 0.7rem;
-    background: ${({ theme }) => (theme.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'transparent')};
+    padding: 0.8rem 0.85rem;
+    background: ${({ theme }) =>
+      theme.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'transparent'};
     transition:
       border-color 0.2s ${({ theme }) => theme.animation.easing.default},
       box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
@@ -69,8 +70,8 @@ const StyledFormInput = styled(GenericContainer)`
   .form__field:placeholder-shown ~ .form__label {
     font-size: ${({ theme }) => theme.typography.fontSize.md};
     cursor: text;
-    top: 2.7rem;
-    padding-left: 0.7rem;
+    top: 2.3rem;
+    padding-left: 0.85rem;
     color: ${({ theme }): string => theme.surface.textMuted};
     font-weight: 400;
   }
@@ -79,7 +80,7 @@ const StyledFormInput = styled(GenericContainer)`
   .form__field:focus ~ .form__label,
   .form__field:not(:placeholder-shown) ~ .form__label {
     position: absolute;
-    top: 0.8rem;
+    top: 0.5rem;
     display: block;
     transition: 0.2s;
     font-size: ${({ theme }) => theme.typography.fontSize.sm};

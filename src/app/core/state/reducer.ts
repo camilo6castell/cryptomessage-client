@@ -129,22 +129,31 @@ const useCases: {
   [Actions.SetMessages]: (
     state: IAppState,
     payload: { chatId: number; messages: IMessage[] }
-  ): IAppState => ({
-    ...state,
-    user: {
-      ...state.user,
-      chats: state.user.chats.map((chat) =>
-        chat.chatId === payload.chatId
-          ? {
-              ...chat,
-              messages: payload.messages,
-              lastMessage:
-                payload.messages[payload.messages.length - 1] ?? null,
-            }
-          : chat
-      ),
-    },
-  }),
+  ): IAppState => {
+    const isActive = state.app.selectedChatId === payload.chatId;
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        chats: state.user.chats.map((chat) =>
+          chat.chatId === payload.chatId
+            ? {
+                ...chat,
+                messages: payload.messages,
+                lastMessage: (() => {
+                  const last =
+                    payload.messages[payload.messages.length - 1] ?? null;
+                  if (last && isActive) {
+                    return { ...last, isRead: true };
+                  }
+                  return last;
+                })(),
+              }
+            : chat
+        ),
+      },
+    };
+  },
   [Actions.AddMessage]: (state: IAppState, payload: IMessage): IAppState => ({
     ...state,
     user: {

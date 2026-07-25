@@ -101,7 +101,7 @@ const ghostStyles = css`
 const StyledButton = styled.button<{
   $variant: 'primary' | 'secondary' | 'danger' | 'ghost';
 }>`
-  padding: 0.65rem 1.4rem;
+  padding: 0.75rem 1.6rem;
   border: none;
   border-radius: 1rem;
 

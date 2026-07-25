@@ -21,7 +21,7 @@ interface FontConfig {
 
 export const fontConfig: FontConfig = {
   mainFontFamily: "'Inter', sans-serif",
-  displayFontFamily: "'Space Grotesk', sans-serif",
+  displayFontFamily: "'Montserrat', sans-serif",
   monoFontFamily: "'JetBrains Mono', monospace",
   mainFontWeight: 450,
 };

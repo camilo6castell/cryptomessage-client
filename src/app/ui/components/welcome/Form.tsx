@@ -88,10 +88,19 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
     ${({ theme }) => theme.animation.easing.default} both;
 
   z-index: 1;
+
+  gap: 0.25rem;
+
+  button[type='submit'] {
+    margin-top: 1.25rem;
+    width: 100%;
+  }
+
   .aux-link-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 0.5rem;
   }
   span {
     padding-right: 1rem;

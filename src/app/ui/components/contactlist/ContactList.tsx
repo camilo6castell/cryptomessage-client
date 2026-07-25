@@ -66,7 +66,7 @@ const StyledContactList = styled(GenericContainer)`
 
   ${darkGlassEffect}
   border-radius: 0;
-  border-left: none;
+  border-left: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
   .contact-list__header {
     width: 100%;
@@ -90,7 +90,7 @@ const StyledContactList = styled(GenericContainer)`
   }
 
   .list {
-    padding: 0.4rem 0.6rem 0.6rem;
+    padding: 0.5rem 0.75rem 0.75rem;
     width: 100%;
   }
 `;

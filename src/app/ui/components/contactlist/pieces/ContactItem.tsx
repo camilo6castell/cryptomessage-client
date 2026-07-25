@@ -84,24 +84,29 @@ const StyledContactItem = styled(GenericContainer)`
   align-items: center;
   gap: 0.75rem;
 
-  padding: 0.65rem 0.75rem;
-  margin-bottom: 0.4rem;
-  border-radius: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.35rem;
+  border-radius: 0.7rem;
+  border: 1px solid ${({ theme }) => theme.surface.borderSubtle};
+  background: ${({ theme }) =>
+    theme.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)'};
   cursor: pointer;
 
   transition:
     background-color 0.15s ${({ theme }) => theme.animation.easing.default},
-    box-shadow 0.15s ${({ theme }) => theme.animation.easing.default};
+    box-shadow 0.15s ${({ theme }) => theme.animation.easing.default},
+    border-color 0.15s ${({ theme }) => theme.animation.easing.default};
 
   &:hover {
     background-color: ${({ theme }) => theme.surface.interactiveHover};
+    border-color: ${({ theme }) => theme.color.highlightTint10};
     box-shadow: ${({ theme }) => theme.shadow.sm};
   }
 
   .contact-info {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.45rem;
     flex: 1;
     min-width: 0;
   }
