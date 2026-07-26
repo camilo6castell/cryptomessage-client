@@ -35,6 +35,9 @@ export const StyledApp = styled.div`
   background-color: ${({ theme }) => theme.mainBackgroundColor};
   backdrop-filter: ${({ theme }) => theme.general.mainBackdropFilter};
 
-  transition: all ${({ theme }) => theme.animation.duration.slower};
-  transition-timing-function: ${({ theme }) => theme.animation.easing.default};
+  transition: ${({ theme }) =>
+    `
+      background-color ${theme.animation.duration.slower} ${theme.animation.easing.default},
+      color ${theme.animation.duration.slower} ${theme.animation.easing.default}
+    `};
 `;

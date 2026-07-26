@@ -8,6 +8,7 @@ import { Button } from '../../../elements/Button';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../../core/models/enums/MainComponents.enum';
 import { GenericContainer } from '../../../layouts/GenericContainer';
+import { breakpoints } from '../../../styles/maps/breakpoints';
 
 export const ContactItem = ({
   contact,
@@ -96,6 +97,11 @@ const StyledContactItem = styled(GenericContainer)`
     background-color 0.15s ${({ theme }) => theme.animation.easing.default},
     box-shadow 0.15s ${({ theme }) => theme.animation.easing.default},
     border-color 0.15s ${({ theme }) => theme.animation.easing.default};
+
+  @media (${breakpoints.mobile}) {
+    padding: 0.85rem 0.9rem;
+    min-height: 3.5rem;
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.surface.interactiveHover};

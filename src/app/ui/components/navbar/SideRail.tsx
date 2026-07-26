@@ -6,6 +6,8 @@ import { Actions } from '../../../core/models/enums/Actions.enum';
 import { useThemeContext } from '../../../core/hooks/useThemeContext';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { LogoIcon } from './pieces/LogoIcon';
+import { useMediaQuery } from '../../../core/hooks/useMediaQuery';
+import { breakpoints } from '../../styles/maps/breakpoints';
 import {
   RiChat3Line,
   RiChat3Fill,
@@ -24,6 +26,7 @@ export const SideRail = ({
 }): ReactElement => {
   const { state, dispatch } = useContext(AppContext);
   const { theme, toggleTheme } = useThemeContext();
+  const isMobile = useMediaQuery(breakpoints.mobile);
 
   const unreadCount = useMemo(() => {
     return state.user.chats.reduce((count, chat) => {
@@ -44,6 +47,68 @@ export const SideRail = ({
 
   const isActive = (section: MainComponentsEnum): boolean =>
     state.app.mainState === section;
+
+  if (isMobile) {
+    return (
+      <StyledBottomBar>
+        <BottomBarButton
+          label="Chats"
+          isActive={isActive(MainComponentsEnum.ChatList)}
+          onClick={() => goTo(MainComponentsEnum.ChatList)}
+          badge={unreadCount > 0 ? unreadCount : undefined}
+        >
+          {isActive(MainComponentsEnum.ChatList) ? (
+            <RiChat3Fill />
+          ) : (
+            <RiChat3Line />
+          )}
+        </BottomBarButton>
+
+        <BottomBarButton
+          label="Contactos"
+          isActive={isActive(MainComponentsEnum.ContactList)}
+          onClick={() => goTo(MainComponentsEnum.ContactList)}
+        >
+          {isActive(MainComponentsEnum.ContactList) ? (
+            <RiContactsBookFill />
+          ) : (
+            <RiContactsBookLine />
+          )}
+        </BottomBarButton>
+
+        <BottomBarButton
+          label="Perfil"
+          isActive={isActive(MainComponentsEnum.UserInfo)}
+          onClick={() => goTo(MainComponentsEnum.UserInfo)}
+        >
+          {isActive(MainComponentsEnum.UserInfo) ? (
+            <RiUserFill />
+          ) : (
+            <RiUserLine />
+          )}
+        </BottomBarButton>
+
+        <BottomBarDivider />
+
+        <BottomBarButton
+          label={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}
+          isActive={false}
+          onClick={toggleTheme}
+        >
+          {theme === 'dark' ? <RiSunLine /> : <RiMoonLine />}
+        </BottomBarButton>
+
+        <div
+          className="bottom-bar__status"
+          title={isConnected ? 'Conectado en tiempo real' : 'Reconectando...'}
+        >
+          <span
+            className={`bottom-bar__status-dot ${isConnected ? 'on' : 'off'}`}
+          />
+        </div>
+      </StyledBottomBar>
+    );
+  }
 
   return (
     <StyledSideRail>
@@ -144,6 +209,115 @@ const RailButton = ({
     </StyledRailButton>
   );
 };
+
+const BottomBarButton = ({
+  children,
+  label,
+  isActive,
+  onClick,
+  badge,
+}: {
+  children: ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+  badge?: number;
+}): ReactElement => {
+  return (
+    <StyledBottomBarButton
+      type="button"
+      onClick={onClick}
+      className={isActive ? 'active' : ''}
+      aria-label={label}
+      title={label}
+    >
+      {children}
+      {badge !== undefined && badge > 0 && (
+        <span className="bar__badge">{badge > 99 ? '99+' : badge}</span>
+      )}
+    </StyledBottomBarButton>
+  );
+};
+
+const BottomBarDivider = styled.div`
+  width: 1px;
+  height: 1.5rem;
+  background-color: ${({ theme }) => theme.surface.borderSubtle};
+  margin: 0 0.25rem;
+`;
+
+const StyledBottomBar = styled.nav`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+
+  padding: 0.5rem 1rem;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+
+  background: ${({ theme }) => theme.darkGlassEffect.background};
+  backdrop-filter: ${({ theme }) => theme.darkGlassEffect.backdropFilter};
+  border-top: 1px solid ${({ theme }) => theme.surface.borderSubtle};
+  box-shadow: ${({ theme }) => theme.darkGlassEffect.boxShadow};
+`;
+
+const StyledBottomBarButton = styled.button`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 0.75rem;
+  background-color: transparent;
+  color: ${({ theme }) => theme.surface.textMuted};
+
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ${({ theme }) => theme.animation.easing.default},
+    color 0.2s ${({ theme }) => theme.animation.easing.default},
+    transform 0.1s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.surface.interactiveHover};
+    color: ${({ theme }) => theme.surface.textPrimary};
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  &.active {
+    background-color: ${({ theme }) => theme.color.highlightTint14};
+    color: ${({ theme }) => theme.color.highlight};
+  }
+
+  .bar__badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.3rem;
+    border-radius: 0.5rem;
+    background-color: ${({ theme }) => theme.color.danger};
+    color: #ffffff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1rem;
+    text-align: center;
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.surface.surface};
+  }
+`;
 
 const StyledSideRail = styled.div`
   display: flex;

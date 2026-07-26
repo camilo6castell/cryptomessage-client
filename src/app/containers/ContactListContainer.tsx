@@ -4,7 +4,11 @@ import { useDeleteContact } from '../core/hooks/useDeleteContact';
 import { useLoadContacts } from '../core/hooks/useLoadContacts';
 import { useLoadChats } from '../core/hooks/useLoadChats';
 
-export const ContactListContainer = (): ReactElement => {
+export const ContactListContainer = ({
+  onSearchNew,
+}: {
+  onSearchNew?: () => void;
+}): ReactElement => {
   const { contacts, loadingContacts, error } = useLoadContacts();
   const { deleteContact } = useDeleteContact();
   void useLoadChats();
@@ -15,6 +19,7 @@ export const ContactListContainer = (): ReactElement => {
       loadingContacts={loadingContacts}
       error={error}
       deleteContact={deleteContact}
+      onSearchNew={onSearchNew}
     />
   );
 };

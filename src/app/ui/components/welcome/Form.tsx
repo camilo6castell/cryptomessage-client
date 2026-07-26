@@ -6,6 +6,7 @@ import { Logo } from '../../elements/Logo';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 
 import { fade } from '../../styles/keyframes';
+import { breakpoints } from '../../styles/maps/breakpoints';
 import { AppContext } from '../../../core/state/AppContext';
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
@@ -91,6 +92,13 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
 
   gap: 0.25rem;
 
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    max-width: 100%;
+    padding: 2.5rem 1.5rem;
+    border-radius: ${({ theme }) => theme.general.borderRadius};
+  }
+
   button[type='submit'] {
     margin-top: 1.25rem;
     width: 100%;
@@ -109,7 +117,9 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
     font-size: ${({ theme }) => theme.typography.fontSize.xl};
     color: ${({ theme }) => theme.color.highlight};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-    transition: all 0.3s ${({ theme }) => theme.animation.easing.default};
+    transition:
+      color 0.3s ${({ theme }) => theme.animation.easing.default},
+      text-shadow 0.3s ${({ theme }) => theme.animation.easing.default};
     &:hover {
       color: ${({ theme }) => theme.mainFontColor};
       text-shadow: ${({ theme }) => theme.shadow.textHighlighted};

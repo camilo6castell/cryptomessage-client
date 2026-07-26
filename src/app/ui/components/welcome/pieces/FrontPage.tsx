@@ -4,6 +4,7 @@ import { AccordionItem } from './AccordionItem';
 import { GenericContainer } from '../../../layouts/GenericContainer';
 import { H1, P2 } from '../../../../ui/elements/font';
 import { fade } from '../../../../ui/styles/keyframes';
+import { breakpoints } from '../../../../ui/styles/maps/breakpoints';
 
 export const FrontPage = ({
   frontPageContent,
@@ -46,10 +47,13 @@ const StyledFrontPage = styled(GenericContainer)<{ $visible: boolean }>`
   width: fit-content;
   height: fit-content;
 
-  transition: all 1s ease-in-out;
   animation: ${({ $visible }) => ($visible ? fade.fadeIn : fade.fadeOut)}
     ${({ theme }) => theme.animation.duration.slower}
     ${({ theme }) => theme.animation.easing.default} both;
+
+  @media (${breakpoints.mobile}) {
+    display: none;
+  }
 `;
 
 const H1FrontPage = styled(H1)`

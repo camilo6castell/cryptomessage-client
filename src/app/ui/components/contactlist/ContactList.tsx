@@ -8,22 +8,39 @@ import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
 import { fade } from '../../styles/keyframes';
+import { breakpoints } from '../../styles/maps/breakpoints';
+import { useMediaQuery } from '../../../core/hooks/useMediaQuery';
+import { RiUserAddLine } from 'react-icons/ri';
 
 export const ContactList = ({
   contacts,
   loadingContacts,
   error,
   deleteContact,
+  onSearchNew,
 }: {
   contacts: IContact[];
   loadingContacts: boolean;
   error: string | null;
   deleteContact: (contact: IContact) => Promise<void>;
+  onSearchNew?: () => void;
 }): ReactElement => {
+  const isMobile = useMediaQuery(breakpoints.mobile);
+
   return (
     <StyledContactList>
       <header className="contact-list__header">
         <h1>Contactos</h1>
+        {isMobile && onSearchNew && (
+          <button
+            type="button"
+            className="contact-list__search-btn"
+            onClick={onSearchNew}
+            aria-label="Buscar nuevo contacto"
+          >
+            <RiUserAddLine size={18} />
+          </button>
+        )}
       </header>
 
       <div className="contact-list__scroll">
@@ -41,7 +58,7 @@ export const ContactList = ({
           <EmptyState>
             <EmptyStateIllustration type="no-contacts" />
             <p>Aun no tienes contactos</p>
-            <span>Busalos por su usuario en el panel de la derecha.</span>
+            <span>Busca un usuario nuevo con el boton de arriba.</span>
           </EmptyState>
         ) : (
           <div className="list">
@@ -68,10 +85,19 @@ const StyledContactList = styled(GenericContainer)`
   border-radius: 0;
   border-left: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+    border-left: none;
+  }
+
   .contact-list__header {
     width: 100%;
     padding: 1.1rem 1.1rem 0.8rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     h1 {
       font-family: ${({ theme }) => theme.font.displayFontFamily};
@@ -79,6 +105,32 @@ const StyledContactList = styled(GenericContainer)`
       font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
       color: ${({ theme }) => theme.surface.textPrimary};
       margin: 0;
+    }
+  }
+
+  .contact-list__search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: ${({ theme }) => theme.color.highlightTint14};
+    color: ${({ theme }) => theme.color.highlight};
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+      background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+      transform 0.1s ease;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.highlightTint20};
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 

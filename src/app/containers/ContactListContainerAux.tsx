@@ -4,7 +4,11 @@ import { useContactSearch } from '../core/hooks/useContactSearch';
 import { AppContext } from '../core/state/AppContext';
 import { useCreateChat } from '../core/hooks/useCreateChat';
 
-export const ContactListContainerAux = (): ReactElement => {
+export const ContactListContainerAux = ({
+  onBack,
+}: {
+  onBack?: () => void;
+}): ReactElement => {
   const { state } = useContext(AppContext);
 
   const { createChat } = useCreateChat();
@@ -23,6 +27,7 @@ export const ContactListContainerAux = (): ReactElement => {
       handleSearch={handleSearch}
       createChat={createChat}
       isAlreadyAdded={isAlreadyAdded}
+      onBack={onBack}
     />
   );
 };

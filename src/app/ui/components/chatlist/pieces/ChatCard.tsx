@@ -6,6 +6,7 @@ import { IChat } from '../../../../core/models/main/IChat.model';
 import { AppContext } from '../../../../core/state/AppContext';
 import { Actions } from '../../../../core/models/enums/Actions.enum';
 import { GenericContainer } from '../../../layouts/GenericContainer';
+import { breakpoints } from '../../../styles/maps/breakpoints';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { ChatStatus } from '../../../../core/models/enums/ChatStatus.enum';
 
@@ -93,6 +94,11 @@ const StyledChatCard = styled(GenericContainer)<{
     border-color 0.15s ${({ theme }) => theme.animation.easing.default},
     box-shadow 0.15s ${({ theme }) => theme.animation.easing.default},
     transform 0.1s ease;
+
+  @media (${breakpoints.mobile}) {
+    padding: 0.75rem 0.85rem;
+    min-height: 3.5rem;
+  }
 
   &:hover {
     background-color: ${({ $isSelected, theme }) =>

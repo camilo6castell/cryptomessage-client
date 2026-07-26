@@ -13,6 +13,7 @@ import { AppContext } from '../../../../core/state/AppContext';
 import { IChat } from '../../../../core/models/main/IChat.model';
 import { ChatStatus } from '../../../../core/models/enums/ChatStatus.enum';
 import { useLoadContacts } from '../../../../core/hooks/useLoadContacts';
+import { breakpoints } from '../../../styles/maps/breakpoints';
 import { IoSend } from 'react-icons/io5';
 
 export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
@@ -151,6 +152,11 @@ const StyledChatWindowInput = styled.form`
   padding: 0.85rem 1.25rem 1.1rem;
   border-top: 1px solid ${({ theme }) => theme.surface.borderSubtle};
 
+  @media (${breakpoints.mobile}) {
+    padding: 0.65rem 0.85rem;
+    padding-bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .chat-warning {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
     color: ${({ theme }) => theme.color.warning};
@@ -214,6 +220,11 @@ const StyledChatWindowInput = styled.form`
     border-radius: 50%;
     color: #12121c;
     background-color: ${({ theme }) => theme.color.highlight};
+
+    @media (${breakpoints.mobile}) {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
 
     &:disabled {
       opacity: 0.35;

@@ -8,6 +8,7 @@ import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
 import { fade } from '../../styles/keyframes';
+import { breakpoints } from '../../styles/maps/breakpoints';
 import { RiSearchLine } from 'react-icons/ri';
 
 export const ChatList = ({
@@ -89,6 +90,11 @@ const StyledChatList = styled(GenericContainer)`
   ${darkGlassEffect}
   border-radius: 0;
   border-left: none;
+
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+  }
 
   .chat-list__header {
     width: 100%;

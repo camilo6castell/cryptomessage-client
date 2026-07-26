@@ -5,13 +5,28 @@ import { mainScrollBar } from '../../styles/scrollbar/mainScrollBar';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { getKeyFingerprint } from '../../../core/services/crypto.service';
 import { CopyToClipboardButton } from '../../elements/CopyToClipboardButton';
+import { ConfirmDialog } from '../general/ConfirmDialog';
+import { useLogout } from '../../../core/hooks/useLogout';
 import { fade } from '../../styles/keyframes';
-import { RiShieldKeyholeLine, RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import { useMediaQuery } from '../../../core/hooks/useMediaQuery';
+import { breakpoints } from '../../styles/maps/breakpoints';
+import { Actions } from '../../../core/models/enums/Actions.enum';
+import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
+import {
+  RiShieldKeyholeLine,
+  RiEyeLine,
+  RiEyeOffLine,
+  RiArrowLeftSLine,
+  RiLogoutBoxRLine,
+} from 'react-icons/ri';
 
 export const UserInfoAux = (): ReactElement => {
-  const { state } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const [fingerprint, setFingerprint] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const isMobile = useMediaQuery(breakpoints.mobile);
+  const logout = useLogout();
 
   useEffect(() => {
     if (!state.user.publicKey) return;
@@ -21,8 +36,29 @@ export const UserInfoAux = (): ReactElement => {
       .catch((err) => console.error('No se pudo calcular el fingerprint', err));
   }, [state.user.publicKey]);
 
+  const handleBack = (): void => {
+    dispatch({
+      type: Actions.SetMainState,
+      payload: MainComponentsEnum.ChatList,
+    });
+  };
+
   return (
     <StyledUserInfoAux>
+      {isMobile && (
+        <div className="user-aux__mobile-header">
+          <button
+            type="button"
+            className="user-aux__back"
+            onClick={handleBack}
+            aria-label="Volver"
+          >
+            <RiArrowLeftSLine size={22} />
+          </button>
+          <span className="user-aux__mobile-title">Perfil</span>
+        </div>
+      )}
+
       <section className="security-card">
         <div className="security-card__icon">
           <RiShieldKeyholeLine size={22} />
@@ -86,6 +122,32 @@ export const UserInfoAux = (): ReactElement => {
           </div>
         </section>
       )}
+
+      {isMobile && (
+        <button
+          type="button"
+          className="logout-button"
+          onClick={() => setShowConfirm(true)}
+        >
+          <RiLogoutBoxRLine size={18} />
+          Cerrar sesion
+        </button>
+      )}
+
+      {showConfirm && (
+        <ConfirmDialog
+          title="Cerrar sesion"
+          message="Se cerrara tu sesion y necesitaras tu passphrase para volver a acceder. Tu llave privada se descargara de la memoria."
+          confirmLabel="Cerrar sesion"
+          cancelLabel="Cancelar"
+          isDanger={true}
+          onConfirm={() => {
+            setShowConfirm(false);
+            logout();
+          }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </StyledUserInfoAux>
   );
 };
@@ -107,6 +169,51 @@ const StyledUserInfoAux = styled.div`
     ${({ theme }) => theme.general.borderRadius} 0;
 
   ${mainScrollBar}
+
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+    padding: 1.5rem 1.25rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .user-aux__mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .user-aux__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: transparent;
+    color: ${({ theme }) => theme.surface.textMuted};
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: -0.4rem;
+    transition:
+      background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+      color 0.15s ${({ theme }) => theme.animation.easing.default};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.surface.interactiveHover};
+      color: ${({ theme }) => theme.surface.textPrimary};
+    }
+  }
+
+  .user-aux__mobile-title {
+    font-family: ${({ theme }) => theme.font.displayFontFamily};
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    color: ${({ theme }) => theme.surface.textPrimary};
+  }
 
   .security-card {
     display: flex;
@@ -234,5 +341,36 @@ const StyledUserInfoAux = styled.div`
     margin: 0;
 
     ${mainScrollBar}
+  }
+
+  .logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid ${({ theme }) => theme.color.dangerTint12};
+    border-radius: ${({ theme }) => theme.general.borderRadiusSm};
+    background-color: ${({ theme }) => theme.color.dangerTint12};
+    color: ${({ theme }) => theme.color.danger};
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+    font-family: ${({ theme }) => theme.font.mainFontFamily};
+    cursor: pointer;
+
+    transition:
+      background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+      filter 0.15s ${({ theme }) => theme.animation.easing.default};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.color.danger};
+      color: #ffffff;
+    }
+
+    &:active {
+      filter: brightness(0.9);
+    }
   }
 `;

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
 
 import { IContact } from '../../../core/models/main/IContact.model';
@@ -12,7 +12,11 @@ import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
 import { IMessageForm } from '../../../core/models/ui/IMessageForm.model';
 import { MessageStatus } from '../../../core/models/enums/MessageStatus.enum';
 import { fade } from '../../styles/keyframes';
-import { RiErrorWarningLine } from 'react-icons/ri';
+import { useMediaQuery } from '../../../core/hooks/useMediaQuery';
+import { breakpoints } from '../../styles/maps/breakpoints';
+import { AppContext } from '../../../core/state/AppContext';
+import { Actions } from '../../../core/models/enums/Actions.enum';
+import { RiErrorWarningLine, RiArrowLeftSLine } from 'react-icons/ri';
 
 export const ContactListAux = ({
   form,
@@ -22,6 +26,7 @@ export const ContactListAux = ({
   message,
   createChat,
   isAlreadyAdded,
+  onBack,
 }: {
   form: Record<string, string>;
   handleInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,9 +37,35 @@ export const ContactListAux = ({
   message: IMessageForm;
   createChat: (contact: IContact) => Promise<void>;
   isAlreadyAdded: boolean;
+  onBack?: () => void;
 }): ReactElement => {
+  const { dispatch } = useContext(AppContext);
+  const isMobile = useMediaQuery(breakpoints.mobile);
+
+  const handleBack = (): void => {
+    if (onBack) {
+      onBack();
+    } else {
+      dispatch({ type: Actions.SetSelectedContact, payload: null });
+    }
+  };
+
   return (
     <StyledContactListAux>
+      {isMobile && (
+        <div className="contact-search__mobile-header">
+          <button
+            type="button"
+            className="contact-search__back"
+            onClick={handleBack}
+            aria-label="Volver a la lista de contactos"
+          >
+            <RiArrowLeftSLine size={22} />
+          </button>
+          <span className="contact-search__mobile-title">Buscar usuario</span>
+        </div>
+      )}
+
       <div className="contact-search__intro">
         <EmptyStateIllustration type="no-contacts" size={80} />
         <h1>Buscar un usuario</h1>
@@ -83,6 +114,50 @@ const StyledContactListAux = styled(GenericContainer)`
     ${({ theme }) => theme.general.borderRadius} 0;
 
   ${mainScrollBar}
+
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .contact-search__mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-search__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: transparent;
+    color: ${({ theme }) => theme.surface.textMuted};
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: -0.4rem;
+    transition:
+      background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+      color 0.15s ${({ theme }) => theme.animation.easing.default};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.surface.interactiveHover};
+      color: ${({ theme }) => theme.surface.textPrimary};
+    }
+  }
+
+  .contact-search__mobile-title {
+    font-family: ${({ theme }) => theme.font.displayFontFamily};
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    color: ${({ theme }) => theme.surface.textPrimary};
+  }
 
   .contact-search__intro {
     display: flex;

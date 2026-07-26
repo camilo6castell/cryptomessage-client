@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../general/ConfirmDialog';
 import { useLogout } from '../../../core/hooks/useLogout';
 import { GenericContainer } from '../../layouts/GenericContainer';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+import { breakpoints } from '../../styles/maps/breakpoints';
 
 export const UserInfo = ({ username }: { username: string }): ReactElement => {
   const logout = useLogout();
@@ -54,6 +55,11 @@ const StyledUserInfo = styled(GenericContainer)`
   ${darkGlassEffect}
   border-radius: 0;
   border-left: none;
+
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+  }
 
   .user-info__header {
     width: 100%;

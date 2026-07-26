@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
 import { IChat } from '../../../core/models/main/IChat.model';
 import { ChatWindow } from './pieces/ChatWindow';
@@ -8,7 +8,15 @@ import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
 import { EmptyStateIllustration } from '../general/EmptyStateIllustration';
 import { fade } from '../../styles/keyframes';
 import { Avatar } from '../../elements/Avatar';
-import { RiShieldCheckLine, RiTimeLine } from 'react-icons/ri';
+import { useMediaQuery } from '../../../core/hooks/useMediaQuery';
+import { breakpoints } from '../../styles/maps/breakpoints';
+import { AppContext } from '../../../core/state/AppContext';
+import { Actions } from '../../../core/models/enums/Actions.enum';
+import {
+  RiShieldCheckLine,
+  RiTimeLine,
+  RiArrowLeftSLine,
+} from 'react-icons/ri';
 import { ChatStatus } from '../../../core/models/enums/ChatStatus.enum';
 
 export const ChatListAux = ({
@@ -16,6 +24,13 @@ export const ChatListAux = ({
 }: {
   selectedChat: IChat | null;
 }): ReactElement => {
+  const { dispatch } = useContext(AppContext);
+  const isMobile = useMediaQuery(breakpoints.mobile);
+
+  const handleBack = (): void => {
+    dispatch({ type: Actions.SetSelectedChatId, payload: null });
+  };
+
   if (!selectedChat || selectedChat.chatId === null) {
     return (
       <StyledChatListAux>
@@ -34,6 +49,17 @@ export const ChatListAux = ({
   return (
     <StyledChatListAux>
       <header className="chat-header">
+        {isMobile && (
+          <button
+            type="button"
+            className="chat-header__back"
+            onClick={handleBack}
+            aria-label="Volver a la lista de chats"
+          >
+            <RiArrowLeftSLine size={22} />
+          </button>
+        )}
+
         <Avatar username={otherUsername} size={38} cssSide="2.4rem" />
 
         <div className="chat-header__details">
@@ -69,6 +95,11 @@ const StyledChatListAux = styled(GenericContainer)`
   border-radius: 0 ${({ theme }) => theme.general.borderRadius}
     ${({ theme }) => theme.general.borderRadius} 0;
 
+  @media (${breakpoints.mobile}) {
+    width: 100%;
+    border-radius: 0;
+  }
+
   .chat-header {
     display: flex;
     align-items: center;
@@ -83,6 +114,29 @@ const StyledChatListAux = styled(GenericContainer)`
         ? 'rgba(18, 21, 28, 0.60)'
         : 'rgba(255, 255, 255, 0.60)'};
     backdrop-filter: blur(1rem);
+  }
+
+  .chat-header__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: 0.65rem;
+    background-color: transparent;
+    color: ${({ theme }) => theme.surface.textMuted};
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: -0.4rem;
+    transition:
+      background-color 0.15s ${({ theme }) => theme.animation.easing.default},
+      color 0.15s ${({ theme }) => theme.animation.easing.default};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.surface.interactiveHover};
+      color: ${({ theme }) => theme.surface.textPrimary};
+    }
   }
 
   .chat-header__details {
