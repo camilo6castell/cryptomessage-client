@@ -6,7 +6,7 @@ import { IContact } from '../../core/models/main/IContact.model';
 import { MainComponentsEnum } from '../models/enums/MainComponents.enum';
 import { ConflictError } from '../errors/ConflictError';
 import { mapChat } from '../mappers/loadUser.map';
-import { useGlobalToast } from '../state/ToastContext';
+import { useGlobalToast } from '../hooks/useGlobalToast';
 
 export const useCreateChat = (): {
   createChat: (contact: IContact) => Promise<void>;

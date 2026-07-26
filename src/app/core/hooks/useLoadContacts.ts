@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { AppContext } from '../state/AppContext';
 import { contactsApi } from '../api/contacts.api';
 import { mapContact } from '../mappers/loadUser.map';
@@ -16,7 +16,7 @@ export const useLoadContacts = (): {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadContacts = async (): Promise<void> => {
+  const loadContacts = useCallback(async (): Promise<void> => {
     setLoading(true);
     setError(null);
 
@@ -33,13 +33,13 @@ export const useLoadContacts = (): {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (state.user.contacts.length > 0) return;
 
     void loadContacts();
-  }, [state.user.contacts.length]);
+  }, [state.user.contacts.length, loadContacts]);
 
   return {
     contacts: state.user.contacts,

@@ -8,7 +8,7 @@ import { FrontPage } from '../ui/components/welcome/pieces/FrontPage';
 
 import { useLogin } from '../core/hooks/useLogin';
 import { useRegister } from '../core/hooks/useRegister';
-import { useGlobalToast } from '../core/state/ToastContext';
+import { useGlobalToast } from '../core/hooks/useGlobalToast';
 
 import { motion } from '../ui/styles/tokens/motion';
 import { frontPageContent } from '../ui/static/frontPageContent';

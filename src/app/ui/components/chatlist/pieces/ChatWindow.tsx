@@ -40,7 +40,7 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
     // marks lastMessage as read for the active chat), so we just need
     // to persist the read status on the server.
     markAsRead(chat.chatId).catch(console.error);
-  }, [chat.chatId, messages, state.user.userId]);
+  }, [chat.chatId, messages, state.user.userId, markAsRead]);
 
   /* ================= AUTO SCROLL ================= */
 

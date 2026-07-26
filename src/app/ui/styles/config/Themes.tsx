@@ -79,7 +79,7 @@ interface GeneralConfig {
   borderRadius: string;
   borderRadiusSm: string;
   borderRadiusLg: string;
-  mainBackdropdFilter: string;
+  mainBackdropFilter: string;
   navBarheight: string;
   railWidth: string;
   mainSectionWidth: string;
@@ -90,7 +90,7 @@ const generalConfig: GeneralConfig = {
   borderRadius: '20px',
   borderRadiusSm: '12px',
   borderRadiusLg: '24px',
-  mainBackdropdFilter: 'blur(10px)',
+  mainBackdropFilter: 'blur(10px)',
   navBarheight: '10%',
   railWidth: '4.5rem',
   mainSectionWidth: '32%',

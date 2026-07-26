@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { AppContext } from '../state/AppContext';
 
 import { chatsApi } from '../api/chats.api';
@@ -18,7 +18,7 @@ export const useLoadChats = (): {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadChats = async (): Promise<void> => {
+  const loadChats = useCallback(async (): Promise<void> => {
     setLoading(true);
     setError(null);
 
@@ -35,13 +35,13 @@ export const useLoadChats = (): {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (state.user.chats.length > 0) return;
 
     void loadChats();
-  }, []);
+  }, [loadChats, state.user.chats.length]);
 
   return {
     chatList: state.user.chats,

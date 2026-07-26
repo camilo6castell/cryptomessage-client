@@ -3,7 +3,7 @@ import { AppContext } from '../state/AppContext';
 import { messagesApi } from '../api/messages.api';
 import { Actions } from '../models/enums/Actions.enum';
 import { encryptMessage } from '../services/crypto.manager';
-import { useGlobalToast } from '../state/ToastContext';
+import { useGlobalToast } from '../hooks/useGlobalToast';
 
 export const useSendMessage = (): {
   sendMessage: (chatId: number, messageContent: string) => Promise<void>;

@@ -4,8 +4,8 @@ import { GlobalStyle } from './ui/styles';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes/router';
 import styled from 'styled-components';
-import { AppContextProvider } from './core/state/AppContext';
-import { ToastProvider } from './core/state/ToastContext';
+import { AppContextProvider } from './core/state/AppContextProvider';
+import { ToastContextProvider } from './core/state/ToastContextProvider';
 import BackgroundWaves from './ui/components/general/WavesBackground';
 
 export const App = (): ReactElement => {
@@ -14,11 +14,11 @@ export const App = (): ReactElement => {
       <BackgroundWaves />
       <StyledApp>
         <GlobalStyle />
-        <ToastProvider>
+        <ToastContextProvider>
           <AppContextProvider>
             <RouterProvider router={router} />
           </AppContextProvider>
-        </ToastProvider>
+        </ToastContextProvider>
       </StyledApp>
     </ThemeProvider>
   );
@@ -33,8 +33,8 @@ export const StyledApp = styled.div`
   color: ${({ theme }) => theme.mainFontColor};
 
   background-color: ${({ theme }) => theme.mainBackgroundColor};
-  backdrop-filter: ${({ theme }) => theme.general.mainBackdropdFilter};
+  backdrop-filter: ${({ theme }) => theme.general.mainBackdropFilter};
 
-  transition: all ${({ theme }) => theme.animation.duration.slower}
-    ${({ theme }) => theme.animation.easing.default};
+  transition: all ${({ theme }) => theme.animation.duration.slower};
+  transition-timing-function: ${({ theme }) => theme.animation.easing.default};
 `;
