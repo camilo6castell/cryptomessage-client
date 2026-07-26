@@ -44,7 +44,7 @@ interface ColorConfig {
 }
 
 export const colorConfig: ColorConfig = {
-  highlight: '#f4bef3',
+  highlight: '#f4bef2',
   highlightDeep: '#6c4ba6',
   highlightTint10: 'rgba(244, 190, 243, 0.10)',
   highlightTint14: 'rgba(244, 190, 243, 0.14)',

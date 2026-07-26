@@ -341,28 +341,20 @@ const StyledSideRail = styled.div`
     width: 2.4rem;
     height: 2.4rem;
     border-radius: 0.75rem;
-    background: linear-gradient(
-      135deg,
-      ${({ theme }) => theme.color.highlight} 0%,
-      ${({ theme }) => theme.color.highlightDeep} 100%
-    );
-    box-shadow: 0 2px 8px ${({ theme }) => theme.color.highlightTint20};
-    color: ${({ theme }) =>
-      theme.mode === 'dark' ? '#12121c' : 'rgba(255,255,255,0.95)'};
+    background: transparent;
+    color: ${({ theme }) => theme.surface.textPrimary};
     text-decoration: none;
-    transition:
-      transform 0.2s ${({ theme }) => theme.animation.easing.default},
-      box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
+    transition: transform 0.6s ${({ theme }) => theme.animation.easing.default};
+    padding: 0.3rem;
 
-    &:hover {
-      transform: scale(1.08);
-      box-shadow: 0 4px 14px ${({ theme }) => theme.color.highlightTint30};
-    }
+    /* &:hover {
+      transform: scale(1.01);
+    } */
   }
 
   .rail__brand-icon {
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .rail__nav {

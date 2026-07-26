@@ -1,6 +1,7 @@
 import { ReactElement, useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { RiSunLine, RiMoonLine } from 'react-icons/ri';
 import { H1, P2 } from '../../elements/font';
 import { Logo } from '../../elements/Logo';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
@@ -10,6 +11,7 @@ import { breakpoints } from '../../styles/maps/breakpoints';
 import { AppContext } from '../../../core/state/AppContext';
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.enum';
+import { useThemeContext } from '../../../core/hooks/useThemeContext';
 
 export const Form = ({
   children,
@@ -33,6 +35,7 @@ export const Form = ({
   $visible: boolean;
 }): ReactElement => {
   const { dispatch, state } = useContext(AppContext);
+  const { theme, toggleTheme } = useThemeContext();
   return (
     <StyledLoginForm
       onSubmit={(event) => {
@@ -40,8 +43,17 @@ export const Form = ({
       }}
       $visible={$visible}
     >
+      <ThemeToggleButton
+        type="button"
+        onClick={toggleTheme}
+        aria-label={
+          theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
+        }
+      >
+        {theme === 'dark' ? <RiSunLine /> : <RiMoonLine />}
+      </ThemeToggleButton>
       <LogoWrap>
-        <Logo />
+        <Logo $variant="form" />
       </LogoWrap>
       <P2Form>{formText}</P2Form>
       <H1Form>{formTitle}</H1Form>
@@ -74,13 +86,11 @@ export const Form = ({
 const StyledLoginForm = styled.form<{ $visible: boolean }>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: stretch;
 
   height: fit-content;
-  width: fit-content;
-  max-width: 30rem;
-  padding: 4rem;
+  width: 22rem;
+  padding: 2.5rem 2.5rem 2rem;
 
   ${darkGlassEffect}
 
@@ -88,19 +98,18 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
     ${({ theme }) => theme.animation.duration.slower}
     ${({ theme }) => theme.animation.easing.default} both;
 
+  position: relative;
   z-index: 1;
-
-  gap: 0.25rem;
 
   @media (${breakpoints.mobile}) {
     width: 100%;
     max-width: 100%;
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1.5rem;
     border-radius: ${({ theme }) => theme.general.borderRadius};
   }
 
   button[type='submit'] {
-    margin-top: 1.25rem;
+    margin-top: 0.75rem;
     width: 100%;
   }
 
@@ -108,15 +117,19 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 0.5rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid ${({ theme }) => theme.surface.borderSubtle};
   }
   span {
-    padding-right: 1rem;
+    color: ${({ theme }) => theme.surface.textMuted};
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
   }
   a {
-    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
     color: ${({ theme }) => theme.color.highlight};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    margin-left: 0.25rem;
     transition:
       color 0.3s ${({ theme }) => theme.animation.easing.default},
       text-shadow 0.3s ${({ theme }) => theme.animation.easing.default};
@@ -128,18 +141,43 @@ const StyledLoginForm = styled.form<{ $visible: boolean }>`
 `;
 
 const H1Form = styled(H1)`
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: ${({ theme }): string => theme.typography.fontSize['2xl']};
 `;
 
 const LogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
   margin-bottom: 1.5rem;
-
-  img {
-    height: 1.5rem;
-    opacity: 0.9;
-  }
 `;
 
 const P2Form = styled(P2)`
-  padding-bottom: 0.5rem;
+  color: ${({ theme }) => theme.surface.textMuted};
+  margin-bottom: 0.25rem;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+`;
+
+const ThemeToggleButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: ${({ theme }) => theme.general.borderRadiusSm};
+  background: ${({ theme }) => theme.surface.interactiveHover};
+  color: ${({ theme }) => theme.surface.textMuted};
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition:
+    background 0.2s ${({ theme }) => theme.animation.easing.default},
+    color 0.2s ${({ theme }) => theme.animation.easing.default};
+
+  &:hover {
+    background: ${({ theme }) => theme.surface.interactiveActive};
+    color: ${({ theme }) => theme.mainFontColor};
+  }
 `;
