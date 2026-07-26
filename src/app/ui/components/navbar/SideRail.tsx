@@ -5,6 +5,7 @@ import { MainComponentsEnum } from '../../../core/models/enums/MainComponents.en
 import { Actions } from '../../../core/models/enums/Actions.enum';
 import { useThemeContext } from '../../../core/hooks/useThemeContext';
 import { darkGlassEffect } from '../../styles/effects/DarkGlassEffect';
+import { LogoIcon } from './pieces/LogoIcon';
 import {
   RiChat3Line,
   RiChat3Fill,
@@ -46,9 +47,15 @@ export const SideRail = ({
 
   return (
     <StyledSideRail>
-      <div className="rail__brand" title="CryptoMessage">
-        <span className="rail__brand-mark">CM</span>
-      </div>
+      <a
+        className="rail__brand"
+        href="https://github.com/camilo6castell"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="CryptoMessage"
+      >
+        <LogoIcon className="rail__brand-icon" />
+      </a>
 
       <nav className="rail__nav">
         <RailButton
@@ -166,14 +173,22 @@ const StyledSideRail = styled.div`
       ${({ theme }) => theme.color.highlightDeep} 100%
     );
     box-shadow: 0 2px 8px ${({ theme }) => theme.color.highlightTint20};
+    color: ${({ theme }) =>
+      theme.mode === 'dark' ? '#12121c' : 'rgba(255,255,255,0.95)'};
+    text-decoration: none;
+    transition:
+      transform 0.2s ${({ theme }) => theme.animation.easing.default},
+      box-shadow 0.2s ${({ theme }) => theme.animation.easing.default};
+
+    &:hover {
+      transform: scale(1.08);
+      box-shadow: 0 4px 14px ${({ theme }) => theme.color.highlightTint30};
+    }
   }
 
-  .rail__brand-mark {
-    font-family: ${({ theme }) => theme.font.displayFontFamily};
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
-    color: #12121c;
+  .rail__brand-icon {
+    width: 1.35rem;
+    height: 1.35rem;
   }
 
   .rail__nav {
