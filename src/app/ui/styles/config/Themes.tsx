@@ -12,20 +12,6 @@ import { typography } from '../tokens/typography';
  * voice so it always reads as "encrypted data", never as a rendering glitch.
  */
 
-interface FontConfig {
-  mainFontFamily: string;
-  displayFontFamily: string;
-  monoFontFamily: string;
-  mainFontWeight: number;
-}
-
-export const fontConfig: FontConfig = {
-  mainFontFamily: "'Inter', sans-serif",
-  displayFontFamily: "'Montserrat', sans-serif",
-  monoFontFamily: "'JetBrains Mono', monospace",
-  mainFontWeight: 450,
-};
-
 interface ColorConfig {
   highlight: string;
   highlightDeep: string;
@@ -42,23 +28,6 @@ interface ColorConfig {
   warning: string;
   warningTint12: string;
 }
-
-export const colorConfig: ColorConfig = {
-  highlight: '#f4bef2',
-  highlightDeep: '#6c4ba6',
-  highlightTint10: 'rgba(244, 190, 243, 0.10)',
-  highlightTint14: 'rgba(244, 190, 243, 0.14)',
-  highlightTint20: 'rgba(244, 190, 243, 0.20)',
-  highlightTint30: 'rgba(244, 190, 243, 0.35)',
-  idle: 'rgb(59, 51, 59)',
-  disable: '#9b9b9b',
-  success: '#4cd9a3',
-  successTint12: 'rgba(76, 217, 163, 0.12)',
-  danger: '#ff6b6b',
-  dangerTint12: 'rgba(255, 107, 107, 0.12)',
-  warning: '#f2b84b',
-  warningTint12: 'rgba(242, 184, 75, 0.12)',
-};
 
 interface SurfaceConfig {
   canvas: string;
@@ -86,24 +55,9 @@ interface GeneralConfig {
   auxSectionWidth: string;
 }
 
-const generalConfig: GeneralConfig = {
-  borderRadius: '20px',
-  borderRadiusSm: '12px',
-  borderRadiusLg: '24px',
-  mainBackdropFilter: 'blur(10px)',
-  navBarheight: '10%',
-  railWidth: '4.5rem',
-  mainSectionWidth: '32%',
-  auxSectionWidth: '68%',
-};
-
 interface ErrorConfig {
   color: string;
 }
-
-const errorConfig: ErrorConfig = {
-  color: '#ff6b6b',
-};
 
 interface DarkGlassEffect {
   background: string;
@@ -115,17 +69,6 @@ interface ToastConfig {
   darkGlassEffectDanger: DarkGlassEffect;
   darkGlassEffectSuccess: DarkGlassEffect;
 }
-
-export const toastConfig: ToastConfig = {
-  WholeAnimationDurationMS: 3200,
-  TransitionAnimationDurationMS: 250,
-  darkGlassEffectDanger: {
-    background: 'linear-gradient(160deg, #3a1620 0%, #1f1016 100%)',
-  },
-  darkGlassEffectSuccess: {
-    background: 'linear-gradient(160deg, #16241f 0%, #101a1c 100%)',
-  },
-};
 
 interface ShadowConfig {
   textHighlighted: string;
@@ -163,6 +106,63 @@ export interface Theme {
   error: ErrorConfig;
 }
 
+interface FontConfig {
+  mainFontFamily: string;
+  displayFontFamily: string;
+  monoFontFamily: string;
+  mainFontWeight: number;
+}
+
+export const fontConfig: FontConfig = {
+  mainFontFamily: "'Inter', sans-serif",
+  displayFontFamily: "'Montserrat', sans-serif",
+  monoFontFamily: "'JetBrains Mono', monospace",
+  mainFontWeight: 450,
+};
+
+const generalConfig: GeneralConfig = {
+  borderRadius: '20px',
+  borderRadiusSm: '12px',
+  borderRadiusLg: '24px',
+  mainBackdropFilter: 'blur(10px)',
+  navBarheight: '10%',
+  railWidth: '4.5rem',
+  mainSectionWidth: '32%',
+  auxSectionWidth: '68%',
+};
+
+const errorConfig: ErrorConfig = {
+  color: '#ff6b6b',
+};
+
+export const toastConfig: ToastConfig = {
+  WholeAnimationDurationMS: 3200,
+  TransitionAnimationDurationMS: 250,
+  darkGlassEffectDanger: {
+    background: 'linear-gradient(160deg, #3a1620 0%, #1f1016 100%)',
+  },
+  darkGlassEffectSuccess: {
+    background: 'linear-gradient(160deg, #16241f 0%, #101a1c 100%)',
+  },
+};
+
+export const colorConfig: ColorConfig = {
+  highlight: '#f382ef',
+  highlightDeep: '#6c4ba6',
+  highlightTint10: 'rgba(244, 190, 243, 0.10)',
+  highlightTint14: 'rgba(244, 190, 243, 0.14)',
+  highlightTint20: 'rgba(244, 190, 243, 0.20)',
+  highlightTint30: 'rgba(244, 190, 243, 0.35)',
+  idle: 'rgb(59, 51, 59)',
+  disable: '#9b9b9b',
+  success: '#4cd9a3',
+  successTint12: 'rgba(76, 217, 163, 0.12)',
+  danger: '#ff6b6b',
+  dangerTint12: 'rgba(255, 107, 107, 0.12)',
+  warning: '#f2b84b',
+  warningTint12: 'rgba(242, 184, 75, 0.12)',
+};
+
 export const themes: Record<string, Theme> = {
   dark: {
     mode: 'dark',
@@ -175,7 +175,7 @@ export const themes: Record<string, Theme> = {
       surfaceRaised: '#1b1f2a',
       surfaceInput: '#161a24',
       borderSubtle: 'rgba(255, 255, 255, 0.07)',
-      borderFocus: 'rgba(244, 190, 243, 0.50)',
+      borderFocus: 'rgba(197, 244, 190, 0.5)',
       textPrimary: '#ecebf5',
       textMuted: '#8d8fa3',
       interactiveHover: 'rgba(255, 255, 255, 0.06)',

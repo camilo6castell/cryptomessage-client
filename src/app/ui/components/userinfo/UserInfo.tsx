@@ -15,14 +15,14 @@ export const UserInfo = ({ username }: { username: string }): ReactElement => {
   return (
     <StyledUserInfo>
       <header className="user-info__header">
-        <h1>Perfil</h1>
+        <h1>Profile</h1>
       </header>
 
       <div className="user-info__body">
         <UserCard username={username} />
 
         <Button
-          textButton="Cerrar sesion"
+          textButton="Sign out"
           variant="danger"
           isSubmit={false}
           onClick={() => setShowConfirm(true)}
@@ -31,10 +31,10 @@ export const UserInfo = ({ username }: { username: string }): ReactElement => {
 
       {showConfirm && (
         <ConfirmDialog
-          title="Cerrar sesion"
-          message="Se cerrara tu sesion y necesitaras tu passphrase para volver a acceder. Tu llave privada se descargara de la memoria."
-          confirmLabel="Cerrar sesion"
-          cancelLabel="Cancelar"
+          title="Sign out"
+          message="Your session will end and you'll need your passphrase to sign in again. Your private key will be unloaded from memory."
+          confirmLabel="Sign out"
+          cancelLabel="Cancel"
           isDanger={true}
           onConfirm={() => {
             setShowConfirm(false);

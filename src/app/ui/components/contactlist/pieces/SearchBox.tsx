@@ -22,14 +22,14 @@ export const SearchBox = ({
       <RiSearchLine size={16} />
       <input
         type="text"
-        placeholder="usuario"
+        placeholder="username"
         onChange={handleInput}
         value={value}
         id="username"
         name="username"
         autoComplete="off"
       />
-      <button type="submit">Buscar</button>
+      <button type="submit">Search</button>
     </StyledSearchBox>
   );
 };

@@ -30,13 +30,13 @@ export const ContactList = ({
   return (
     <StyledContactList>
       <header className="contact-list__header">
-        <h1>Contactos</h1>
+        <h1>Contacts</h1>
         {isMobile && onSearchNew && (
           <button
             type="button"
             className="contact-list__search-btn"
             onClick={onSearchNew}
-            aria-label="Buscar nuevo contacto"
+            aria-label="Add new contact"
           >
             <RiUserAddLine size={18} />
           </button>
@@ -57,8 +57,8 @@ export const ContactList = ({
         ) : contacts.length === 0 ? (
           <EmptyState>
             <EmptyStateIllustration type="no-contacts" />
-            <p>Aun no tienes contactos</p>
-            <span>Busca un usuario nuevo con el boton de arriba.</span>
+            <p>You don&apos;t have any contacts yet</p>
+            <span>Use the button above to find a new contact.</span>
           </EmptyState>
         ) : (
           <div className="list">

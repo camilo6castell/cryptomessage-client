@@ -30,15 +30,13 @@ export const ContactFoundCard = ({
 
         <CopyToClipboardButtonForContactFoundCard
           textToCopy={contact.publicKey}
-          textButton="Copiar llave publica"
+          textButton="Copy public key"
           variant="secondary"
           isSubmit={false}
         />
 
         <ButtonForContactFoundCard
-          textButton={
-            isAlreadyAdded ? 'Ya es tu contacto' : 'Invitar a chatear'
-          }
+          textButton={isAlreadyAdded ? 'Already a contact' : 'Invite to chat'}
           onClick={() => {
             void createChat(contact);
           }}

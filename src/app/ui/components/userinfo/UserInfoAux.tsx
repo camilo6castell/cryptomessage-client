@@ -51,11 +51,11 @@ export const UserInfoAux = (): ReactElement => {
             type="button"
             className="user-aux__back"
             onClick={handleBack}
-            aria-label="Volver"
+            aria-label="Back"
           >
             <RiArrowLeftSLine size={22} />
           </button>
-          <span className="user-aux__mobile-title">Perfil</span>
+          <span className="user-aux__mobile-title">Profile</span>
         </div>
       )}
 
@@ -65,16 +65,16 @@ export const UserInfoAux = (): ReactElement => {
         </div>
 
         <div>
-          <h2>Tu identidad criptografica</h2>
+          <h2>Your cryptographic identity</h2>
           <p>
-            Este identificador nace de tu llave publica. Compartelo con un
-            contacto por otro canal para confirmar que ambos ven la misma llave
-            — asi sabes que nadie se interpuso en el intercambio.
+            This identifier is derived from your public key. Share it with a
+            contact over another channel to confirm you both see the same key —
+            that way you know no one intercepted the exchange.
           </p>
         </div>
 
         <div className="security-card__fingerprint">
-          {fingerprint ?? 'Calculando...'}
+          {fingerprint ?? 'Calculating...'}
         </div>
       </section>
 
@@ -84,17 +84,17 @@ export const UserInfoAux = (): ReactElement => {
         onClick={() => setShowAdvanced((prev) => !prev)}
       >
         {showAdvanced ? <RiEyeOffLine /> : <RiEyeLine />}
-        {showAdvanced ? 'Ocultar detalles avanzados' : 'Ver detalles avanzados'}
+        {showAdvanced ? 'Hide advanced details' : 'Show advanced details'}
       </button>
 
       {showAdvanced && (
         <section className="advanced-panel">
           <div className="advanced-panel__block">
             <div className="advanced-panel__label-row">
-              <h3>Llave publica</h3>
+              <h3>Public key</h3>
               <CopyToClipboardButton
                 textToCopy={state.user.publicKey ?? ''}
-                textButton="Copiar"
+                textButton="Copy"
                 variant="secondary"
                 isSubmit={false}
               />
@@ -104,17 +104,17 @@ export const UserInfoAux = (): ReactElement => {
 
           <div className="advanced-panel__block">
             <div className="advanced-panel__label-row">
-              <h3>Llave privada (cifrada)</h3>
+              <h3>Private key (encrypted)</h3>
               <CopyToClipboardButton
                 textToCopy={state.user.encryptedPrivateKey ?? ''}
-                textButton="Copiar"
+                textButton="Copy"
                 variant="secondary"
                 isSubmit={false}
               />
             </div>
             <p className="advanced-panel__hint">
-              Nunca sale de tu dispositivo en texto claro: el servidor solo
-              guarda esta version cifrada con tu passphrase.
+              Never leaves your device in plaintext: the server only stores this
+              encrypted version protected by your passphrase.
             </p>
             <p className="advanced-panel__blob">
               {state.user.encryptedPrivateKey}
@@ -130,16 +130,16 @@ export const UserInfoAux = (): ReactElement => {
           onClick={() => setShowConfirm(true)}
         >
           <RiLogoutBoxRLine size={18} />
-          Cerrar sesion
+          Sign out
         </button>
       )}
 
       {showConfirm && (
         <ConfirmDialog
-          title="Cerrar sesion"
-          message="Se cerrara tu sesion y necesitaras tu passphrase para volver a acceder. Tu llave privada se descargara de la memoria."
-          confirmLabel="Cerrar sesion"
-          cancelLabel="Cancelar"
+          title="Sign out"
+          message="Your session will end and you'll need your passphrase to sign in again. Your private key will be unloaded from memory."
+          confirmLabel="Sign out"
+          cancelLabel="Cancel"
           isDanger={true}
           onConfirm={() => {
             setShowConfirm(false);

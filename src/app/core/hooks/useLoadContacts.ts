@@ -29,7 +29,7 @@ export const useLoadContacts = (): {
       });
     } catch (err) {
       console.error('Error cargando contactos', err);
-      setError('Error cargando contactos');
+      setError('Error loading contacts');
     } finally {
       setLoading(false);
     }

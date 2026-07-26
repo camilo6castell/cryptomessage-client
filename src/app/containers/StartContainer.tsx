@@ -98,8 +98,8 @@ export const StartContainer = (): ReactElement => {
           textButton={
             isBusy
               ? isLogin
-                ? 'Entrando...'
-                : 'Creando cuenta...'
+                ? 'Signing in...'
+                : 'Creating account...'
               : isLogin
                 ? 'Enter'
                 : 'Create account'

@@ -52,14 +52,14 @@ export const ContactItem = ({
         <div className="contact-actions">
           {existingChat ? (
             <Button
-              textButton="Ir al chat"
+              textButton="Go to chat"
               variant="secondary"
               isSubmit={false}
               onClick={handleOpenChat}
             />
           ) : (
             <Button
-              textButton="Crear chat"
+              textButton="Start chat"
               variant="secondary"
               isSubmit={false}
               onClick={handleCreateChat}
@@ -67,7 +67,7 @@ export const ContactItem = ({
           )}
 
           <Button
-            textButton="Eliminar"
+            textButton="Remove"
             variant="danger"
             isSubmit={false}
             onClick={() => {

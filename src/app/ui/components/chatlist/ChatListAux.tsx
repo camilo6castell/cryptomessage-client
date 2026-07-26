@@ -36,14 +36,14 @@ export const ChatListAux = ({
       <StyledChatListAux>
         <EmptyState>
           <EmptyStateIllustration type="select-chat" />
-          <h1>Selecciona un chat</h1>
-          <p>Tus mensajes viajan cifrados de extremo a extremo.</p>
+          <h1>Select a chat</h1>
+          <p>Your messages are end-to-end encrypted.</p>
         </EmptyState>
       </StyledChatListAux>
     );
   }
 
-  const otherUsername = selectedChat.participant?.username ?? 'Desconocido';
+  const otherUsername = selectedChat.participant?.username ?? 'Unknown';
   const isPending = selectedChat.status === ChatStatus.PENDING;
 
   return (
@@ -54,7 +54,7 @@ export const ChatListAux = ({
             type="button"
             className="chat-header__back"
             onClick={handleBack}
-            aria-label="Volver a la lista de chats"
+            aria-label="Back to chat list"
           >
             <RiArrowLeftSLine size={22} />
           </button>
@@ -67,11 +67,11 @@ export const ChatListAux = ({
           <span className="chat-header__badge">
             {isPending ? (
               <>
-                <RiTimeLine size={12} /> Solicitud pendiente
+                <RiTimeLine size={12} /> Pending request
               </>
             ) : (
               <>
-                <RiShieldCheckLine size={12} /> Cifrado de extremo a extremo
+                <RiShieldCheckLine size={12} /> End-to-end encrypted
               </>
             )}
           </span>

@@ -70,17 +70,17 @@ export const useLogin = (
         payload: MainComponentsEnum.ChatList,
       });
 
-      showToast('Inicio de sesión exitoso', false);
+      showToast('Login successful', false);
       resetLoginForm();
       navigate('/');
     } catch (err) {
       if (err instanceof UnauthorizedError) {
-        showToast('Usuario o passphrase incorrectos', true);
+        showToast('Invalid username or passphrase', true);
       } else if (err instanceof ApiError) {
-        showToast(`Error del servidor (${err.status})`, true);
+        showToast(`Server error (${err.status})`, true);
       } else {
         console.error(err);
-        showToast('Error de conexión', true);
+        showToast('Connection error', true);
       }
     } finally {
       setIsSubmitting(false);

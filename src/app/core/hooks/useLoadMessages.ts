@@ -27,8 +27,8 @@ export const useLoadMessages = (): {
         payload: { chatId: state.app.selectedChatId, messages },
       });
     } catch (err) {
-      console.error('Error cargando mensajes', err);
-      setError('Error cargando mensajes');
+      console.error('Error loading messages', err);
+      setError('Error loading messages');
     } finally {
       setLoading(false);
     }

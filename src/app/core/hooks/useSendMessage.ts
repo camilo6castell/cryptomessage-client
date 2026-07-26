@@ -26,7 +26,7 @@ export const useSendMessage = (): {
 
       if (!myId || !otherId || !myPublicKey || !otherPublicKey) {
         console.error('Missing required data for encryption');
-        showToast('No se pudo enviar: faltan datos de cifrado.', true);
+        showToast('Could not send: missing encryption data.', true);
         return;
       }
 
@@ -50,7 +50,7 @@ export const useSendMessage = (): {
       });
     } catch (err) {
       console.error('Error al enviar el mensaje:', err);
-      showToast('No se pudo enviar el mensaje. Intenta de nuevo.', true);
+      showToast('Failed to send message. Please try again.', true);
     }
   };
 

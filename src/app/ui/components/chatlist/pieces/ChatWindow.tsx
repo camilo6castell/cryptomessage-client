@@ -85,9 +85,7 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
   if (error) {
     return (
       <StyledChatWindow>
-        <StateMessage className="is-error">
-          Error cargando mensajes
-        </StateMessage>
+        <StateMessage className="is-error">Error loading messages</StateMessage>
       </StyledChatWindow>
     );
   }
@@ -97,9 +95,7 @@ export const ChatWindow = ({ chat }: { chat: IChat }): ReactElement => {
       <StyledChatWindow>
         <EmptyStateWrap>
           <EmptyStateIllustration type="no-messages" />
-          <StateMessage>
-            No hay mensajes todavia. Envia el primero.
-          </StateMessage>
+          <StateMessage>No messages yet. Send the first one.</StateMessage>
         </EmptyStateWrap>
       </StyledChatWindow>
     );

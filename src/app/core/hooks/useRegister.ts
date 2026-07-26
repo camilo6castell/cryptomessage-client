@@ -61,20 +61,17 @@ export const useRegister = (
         encryptedPrivateKey: encryptedPrivateKey,
       });
 
-      showToast(
-        'Usuario creado exitosamente. ¡Ya puedes iniciar sesión!',
-        false
-      );
+      showToast('Account created successfully. You can now sign in.', false);
 
       resetRegisterForm();
     } catch (err) {
       if (err instanceof ConflictError) {
-        showToast('Ese nombre de usuario ya existe. Intenta con otro.', true);
+        showToast('That username is already taken. Try another one.', true);
       } else if (err instanceof ApiError) {
-        showToast(`Error del servidor (${err.status})`, true);
+        showToast(`Server error (${err.status})`, true);
       } else {
         console.error(err);
-        showToast('Error de conexión', true);
+        showToast('Connection error', true);
       }
     } finally {
       setIsSubmitting(false);

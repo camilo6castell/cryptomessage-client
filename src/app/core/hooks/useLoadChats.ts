@@ -31,7 +31,7 @@ export const useLoadChats = (): {
       });
     } catch (err) {
       console.error('Error cargando chats', err);
-      setError('Error cargando chats');
+      setError('Error loading chats');
     } finally {
       setLoading(false);
     }

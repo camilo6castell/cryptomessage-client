@@ -113,7 +113,7 @@ export const PrivateGuard = ({
       setIsAuthenticated(true);
     } catch (err) {
       console.error('❌ Error desencriptando clave privada', err);
-      setPassphraseError('Passphrase incorrecta. Intenta de nuevo.');
+      setPassphraseError('Incorrect passphrase. Please try again.');
     } finally {
       setIsVerifyingPassphrase(false);
     }

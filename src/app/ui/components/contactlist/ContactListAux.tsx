@@ -58,21 +58,18 @@ export const ContactListAux = ({
             type="button"
             className="contact-search__back"
             onClick={handleBack}
-            aria-label="Volver a la lista de contactos"
+            aria-label="Back to contact list"
           >
             <RiArrowLeftSLine size={22} />
           </button>
-          <span className="contact-search__mobile-title">Buscar usuario</span>
+          <span className="contact-search__mobile-title">Find user</span>
         </div>
       )}
 
       <div className="contact-search__intro">
         <EmptyStateIllustration type="no-contacts" size={80} />
-        <h1>Buscar un usuario</h1>
-        <p>
-          Encuentra a alguien por su nombre de usuario y enviale una solicitud
-          de chat.
-        </p>
+        <h1>Find a user</h1>
+        <p>Look up someone by their username and send them a chat request.</p>
       </div>
 
       <SearchBox

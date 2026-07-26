@@ -54,7 +54,7 @@ export const useCreateChat = (): {
         }
       } else {
         console.error('Error al crear el chat:', err);
-        showToast('No se pudo iniciar el chat. Intenta de nuevo.', true);
+        showToast('Could not start the chat. Please try again.', true);
       }
     }
   };

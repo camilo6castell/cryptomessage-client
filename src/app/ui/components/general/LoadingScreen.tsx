@@ -6,7 +6,7 @@ export const LoadingScreen = (): ReactElement => {
   return (
     <StyledLoadingScreen>
       <span className="loading-screen__dot" />
-      <p>Cargando...</p>
+      <p>Loading...</p>
     </StyledLoadingScreen>
   );
 };

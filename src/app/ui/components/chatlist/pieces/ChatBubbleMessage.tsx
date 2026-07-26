@@ -67,16 +67,16 @@ export const ChatBubbleMessage = ({
         onClick={() => {
           void handleDecrypt();
         }}
-        aria-label={isShown ? 'Ocultar mensaje' : 'Revelar mensaje'}
+        aria-label={isShown ? 'Hide message' : 'Reveal message'}
       >
         {isShown ? <RiLockUnlockLine /> : <RiLockLine />}
-        <span>{isShown ? 'Ocultar' : 'Revelar'}</span>
+        <span>{isShown ? 'Hide' : 'Reveal'}</span>
       </button>
 
       <p className={`message-text ${isShown ? '' : 'is-ciphertext'}`}>
         {isShown
           ? isLoading
-            ? 'Desencriptando...'
+            ? 'Decrypting...'
             : (error ?? decryptedMessage)
           : message.encryptedContent}
       </p>

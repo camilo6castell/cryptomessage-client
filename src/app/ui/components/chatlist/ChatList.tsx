@@ -38,7 +38,7 @@ export const ChatList = ({
           <RiSearchLine size={15} />
           <input
             type="text"
-            placeholder="Buscar conversacion"
+            placeholder="Search conversations"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -59,15 +59,15 @@ export const ChatList = ({
         ) : chatList.length === 0 ? (
           <EmptyState>
             <EmptyStateIllustration type="no-chats" />
-            <p>Aun no tienes conversaciones</p>
+            <p>You don&apos;t have any conversations yet</p>
             <span>
-              Busca un contacto y empieza una — solo tu y ellos tienen la llave.
+              Find a contact and start one — only you and them have the key.
             </span>
           </EmptyState>
         ) : filteredChats.length === 0 ? (
           <EmptyState>
             <EmptyStateIllustration type="search-empty" size={80} />
-            <p>Ningun chat coincide con &ldquo;{query}&rdquo;</p>
+            <p>No chat matches &ldquo;{query}&rdquo;</p>
           </EmptyState>
         ) : (
           <div className="list">

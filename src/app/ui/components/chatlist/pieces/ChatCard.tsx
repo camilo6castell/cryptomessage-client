@@ -23,8 +23,8 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
     !chat.lastMessage.isRead;
 
   const lastMessagePreview = chat.lastMessage
-    ? 'Mensaje cifrado'
-    : 'Sin mensajes aun';
+    ? 'Encrypted message'
+    : 'No messages yet';
 
   const lastMessageTime = chat.lastMessage?.sentAt
     ? new Date(chat.lastMessage.sentAt).toLocaleTimeString([], {
@@ -65,7 +65,7 @@ export const ChatCard = ({ chat }: { chat: IChat }): ReactElement => {
         </div>
 
         {chat.status === ChatStatus.PENDING && (
-          <span className="card__status-badge">Pendiente</span>
+          <span className="card__status-badge">Pending</span>
         )}
       </div>
     </StyledChatCard>

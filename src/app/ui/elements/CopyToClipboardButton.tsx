@@ -32,7 +32,7 @@ export const CopyToClipboardButton = ({
 
   return (
     <StyledButton
-      textButton={copied ? '¡Copiado!' : textButton}
+      textButton={copied ? 'Copied!' : textButton}
       onClick={() => {
         void handleCopy();
       }}

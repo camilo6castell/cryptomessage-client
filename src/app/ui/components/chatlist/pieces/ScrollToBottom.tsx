@@ -16,7 +16,7 @@ export const ScrollToBottom = ({
     <StyledScrollToBottom
       type="button"
       onClick={onClick}
-      aria-label="Ir al último mensaje"
+      aria-label="Scroll to latest message"
     >
       <RiArrowDownLine size={18} />
     </StyledScrollToBottom>

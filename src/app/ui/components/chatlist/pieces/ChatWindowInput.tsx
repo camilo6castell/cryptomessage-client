@@ -88,14 +88,13 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
     >
       {isPending && iAmInitiator && (
         <div className="chat-warning">
-          Solo puedes enviar un mensaje hasta que el contacto acepte la
-          solicitud.
+          You can only send one message until the contact accepts the request.
         </div>
       )}
 
       {isPending && !iAmInitiator && (
         <div className="chat-warning">
-          Si aceptas este chat, este contacto se agregara y podras responder.
+          If you accept this chat, this contact will be added and you can reply.
         </div>
       )}
 
@@ -105,9 +104,7 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
           name="messageContent"
           className="chat-input"
           placeholder={
-            isReceiverBlocked
-              ? 'Acepta el chat para responder...'
-              : 'Escribe tu mensaje'
+            isReceiverBlocked ? 'Accept chat to reply...' : 'Type your message'
           }
           value={form.messageContent}
           onChange={(e) => {
@@ -127,14 +124,14 @@ export const ChatWindowInput = ({ chat }: { chat: IChat }): ReactElement => {
               void handleAccept();
             }}
           >
-            Aceptar chat
+            Accept chat
           </button>
         ) : (
           <button
             type="submit"
             className="send-button"
             disabled={!canSend}
-            aria-label="Enviar mensaje"
+            aria-label="Send message"
           >
             <IoSend size={16} />
           </button>

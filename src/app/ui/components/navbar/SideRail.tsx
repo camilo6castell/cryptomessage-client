@@ -65,7 +65,7 @@ export const SideRail = ({
         </BottomBarButton>
 
         <BottomBarButton
-          label="Contactos"
+          label="Contacts"
           isActive={isActive(MainComponentsEnum.ContactList)}
           onClick={() => goTo(MainComponentsEnum.ContactList)}
         >
@@ -77,7 +77,7 @@ export const SideRail = ({
         </BottomBarButton>
 
         <BottomBarButton
-          label="Perfil"
+          label="Profile"
           isActive={isActive(MainComponentsEnum.UserInfo)}
           onClick={() => goTo(MainComponentsEnum.UserInfo)}
         >
@@ -91,7 +91,7 @@ export const SideRail = ({
         <BottomBarDivider />
 
         <BottomBarButton
-          label={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}
+          label={theme === 'dark' ? 'Light theme' : 'Dark theme'}
           isActive={false}
           onClick={toggleTheme}
         >
@@ -100,7 +100,7 @@ export const SideRail = ({
 
         <div
           className="bottom-bar__status"
-          title={isConnected ? 'Conectado en tiempo real' : 'Reconectando...'}
+          title={isConnected ? 'Connected in real time' : 'Reconnecting...'}
         >
           <span
             className={`bottom-bar__status-dot ${isConnected ? 'on' : 'off'}`}
@@ -137,7 +137,7 @@ export const SideRail = ({
         </RailButton>
 
         <RailButton
-          label="Contactos"
+          label="Contacts"
           isActive={isActive(MainComponentsEnum.ContactList)}
           onClick={() => goTo(MainComponentsEnum.ContactList)}
         >
@@ -149,7 +149,7 @@ export const SideRail = ({
         </RailButton>
 
         <RailButton
-          label="Perfil"
+          label="Profile"
           isActive={isActive(MainComponentsEnum.UserInfo)}
           onClick={() => goTo(MainComponentsEnum.UserInfo)}
         >
@@ -163,7 +163,7 @@ export const SideRail = ({
 
       <div className="rail__footer">
         <RailButton
-          label={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'}
+          label={theme === 'dark' ? 'Light theme' : 'Dark theme'}
           isActive={false}
           onClick={toggleTheme}
         >
@@ -172,7 +172,7 @@ export const SideRail = ({
 
         <div
           className="rail__status"
-          title={isConnected ? 'Conectado en tiempo real' : 'Reconectando...'}
+          title={isConnected ? 'Connected in real time' : 'Reconnecting...'}
         >
           <span className={`rail__status-dot ${isConnected ? 'on' : 'off'}`} />
         </div>

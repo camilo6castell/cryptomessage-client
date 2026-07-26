@@ -47,7 +47,7 @@ export const Form = ({
         type="button"
         onClick={toggleTheme}
         aria-label={
-          theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
+          theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
         }
       >
         {theme === 'dark' ? <RiSunLine /> : <RiMoonLine />}

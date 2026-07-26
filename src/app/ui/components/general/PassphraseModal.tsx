@@ -38,17 +38,17 @@ export const PassphraseModal = ({
           <RiLockPasswordLine size={22} />
         </div>
 
-        <h1>Desbloquea tu sesion</h1>
+        <h1>Unlock your session</h1>
         <p>
-          Tu llave privada solo vive en la memoria de este navegador — nunca se
-          guarda. Ingresa tu passphrase para descifrarla de nuevo,{' '}
+          Your private key only lives in this browser&apos;s memory — it is
+          never stored. Enter your passphrase to decrypt it again,{' '}
           <strong>{username}</strong>.
         </p>
 
         <input
           type="password"
           autoFocus
-          placeholder="Tu passphrase"
+          placeholder="Your passphrase"
           value={passphrase}
           onChange={(e) => setPassphrase(e.target.value)}
           disabled={isVerifying}
@@ -63,14 +63,14 @@ export const PassphraseModal = ({
             onClick={onCancel}
             disabled={isVerifying}
           >
-            Cerrar sesion
+            Sign out
           </button>
           <button
             type="submit"
             className="modal__submit"
             disabled={!passphrase || isVerifying}
           >
-            {isVerifying ? 'Verificando...' : 'Desbloquear'}
+            {isVerifying ? 'Verifying...' : 'Unlock'}
           </button>
         </div>
       </ModalCard>
