@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../ui/layouts/MainLayout';
 import { StartLayout } from '../ui/layouts/StartLayout';
 import { StartPage } from '../pages/StartPage';
@@ -29,5 +29,11 @@ export const router = createBrowserRouter([
       </PrivateGuard>
     ),
     children: [{ index: true, element: <MainPage /> }],
+  },
+
+  // Catch-all
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ]);
