@@ -30,6 +30,7 @@
 - [Routing & Guards](#-routing--guards)
 - [Realtime](#-realtime)
 - [Getting Started](#-getting-started)
+- [Mock Backend (Development)](#-mock-backend-development)
 - [Environment Variables](#-environment-variables)
 - [Assets](#-assets)
 - [Contributing](#-contributing)
@@ -202,6 +203,7 @@ src/app/
 | Styling | Styled Components | 6.1 |
 | Realtime | STOMP over WebSocket (`@stomp/stompjs`) | 7 |
 | Cryptography | Web Crypto API (`crypto.subtle`) | Native browser |
+| Mocking | MSW (Mock Service Worker) | 2.15 |
 | Fonts | Inter, Space Grotesk, JetBrains Mono (self-hosted via `@fontsource`) | 5.2 |
 | Avatars | jdenticon | 3.3 |
 | Icons | react-icons | 5.5 |
@@ -214,8 +216,20 @@ src/app/
 
 ```
 src/
-├── main.tsx                          # React entry point
+├── main.tsx                          # React entry point (conditionally loads MSW)
 ├── vite-env.d.ts                     # Typed import.meta.env
+├── mocks/                            # Mock backend (MSW + WebSocket mock)
+│   ├── browser.ts                    # MSW Service Worker setup
+│   ├── ws.mock.ts                    # Mock WebSocket (STOMP simulation)
+│   ├── data/
+│   │   ├── factories.ts              # Fake data generators with real RSA keys
+│   │   └── db.ts                     # In-memory database + seed data
+│   └── handlers/
+│       ├── index.ts                  # Barrel — all handlers aggregated
+│       ├── auth.handlers.ts          # POST /auth/register, /auth/login, GET /auth/verify
+│       ├── chats.handlers.ts         # GET/POST /chats, POST accept/block
+│       ├── contacts.handlers.ts      # GET/POST/DELETE /contacts
+│       └── messages.handlers.ts      # POST /messages, GET/PATCH mark-read
 └── app/
     ├── index.tsx                     # ThemeProvider + ToastProvider + AppContextProvider + Router
     ├── pages/
@@ -359,25 +373,102 @@ git clone https://github.com/your-username/cryptomessage-frontend.git
 cd cryptomessage-frontend
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start the dev server
-npm run dev
+pnpm dev
 ```
 
 ### Build for production
 
 ```bash
-npm run build
-npm run preview   # preview the production build locally
+pnpm build
+pnpm preview   # preview the production build locally
 ```
 
 ### Lint & format
 
 ```bash
-npm run lint      # ESLint
-npm run format    # Prettier
+pnpm lint      # ESLint (includes Prettier)
+pnpm format    # Prettier
 ```
+
+---
+
+## 🧪 Mock Backend (Development)
+
+The project includes a full mock layer powered by [MSW (Mock Service Worker)](https://mswjs.io/) so you can develop and test the entire frontend **without the backend running**.
+
+### How it works
+
+- **MSW** intercepts `fetch()` at the Service Worker level — no code changes needed in the API modules.
+- **REST endpoints** (`auth`, `chats`, `contacts`, `messages`) are fully mocked with realistic responses.
+- **WebSocket** is replaced with a mock that simulates STOMP messages every 15 seconds.
+- **Crypto is real** — RSA keys are generated with Web Crypto API, AES encryption works end-to-end.
+
+### Quick start (mocked)
+
+1. Ensure `.env` has:
+   ```env
+   VITE_MOCK_ENABLED=true
+   VITE_MOCK_WS=true
+   ```
+2. Run `pnpm dev` — MSW activates automatically before the app renders.
+3. Log in with one of the pre-seeded users below.
+
+### Credentials
+
+All users share the same passphrase: **`mock-passphrase-123`**
+
+| User | Description |
+|---|---|
+| `alice` | Pre-created with real RSA keys |
+| `bob` | Pre-created with real RSA keys |
+| `charlie` | Pre-created with real RSA keys |
+
+### Pre-seeded data
+
+Two chats exist by default:
+- **alice ↔ bob** (`ACCEPTED`) — 3 messages already exchanged
+- **charlie → alice** (`PENDING`) — incoming chat request
+
+Two contacts for `alice`: `bob` and `charlie`.
+
+### Disabling mocks
+
+Set the env variables to `false` or comment them out:
+
+```env
+#VITE_MOCK_ENABLED=true
+#VITE_MOCK_WS=true
+```
+
+The app will connect to the backend at `VITE_API_URL` (`localhost:8080` by default).
+
+### Mock file structure
+
+```
+src/mocks/
+├── browser.ts                  # MSW browser setup (Service Worker)
+├── ws.mock.ts                  # Mock WebSocket (simulates STOMP without a server)
+├── data/
+│   ├── factories.ts            # Generators for fake users, chats, contacts, messages
+│   └── db.ts                   # In-memory database with seed data
+└── handlers/
+    ├── index.ts                # Barrel — aggregates all handlers
+    ├── auth.handlers.ts        # POST /auth/register, /auth/login, GET /auth/verify
+    ├── chats.handlers.ts       # GET/POST /chats, POST /chats/:id/accept|block
+    ├── contacts.handlers.ts    # GET/POST/DELETE /contacts
+    └── messages.handlers.ts    # POST /messages, GET/PATCH /messages/chat/:id
+```
+
+### Architecture note
+
+The mock layer is completely isolated:
+
+- **Zero code changes** to existing `api/`, `services/`, `hooks/`, or `components/` files.
+- Controlled by two env variables — `VITE_MOCK_ENABLED` (REST) and `VITE_MOCK_WS` (WebSocket).
+- In production builds without `VITE_MOCK_ENABLED=true`, the mocks are never loaded.
 
 ---
 
@@ -387,11 +478,15 @@ Create a `.env` file in the project root:
 
 ```env
 VITE_API_URL=http://localhost:8080
+VITE_MOCK_ENABLED=true
+VITE_MOCK_WS=true
 ```
 
 | Variable | Description |
 |---|---|
 | `VITE_API_URL` | Base URL for the CryptoMessage backend — REST calls append their own path (e.g. `/api/v1/chats`), and the WebSocket client derives its URL from this too (`http` → `ws`, `+ /ws`). |
+| `VITE_MOCK_ENABLED` | When `true`, MSW intercepts all REST API calls and serves mock data. No backend needed. Defaults to `false` if absent. |
+| `VITE_MOCK_WS` | When `true`, the real STOMP WebSocket client is replaced with a mock that simulates incoming messages. Requires `VITE_MOCK_ENABLED=true`. |
 
 ---
 
